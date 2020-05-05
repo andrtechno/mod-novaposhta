@@ -7,7 +7,7 @@ use Yii;
 use panix\engine\db\ActiveRecord;
 
 /**
- * This is the model class for table "news".
+ * This is the model class for table "novaposhta".
  *
  * @property integer $id
  * @property string $name
@@ -15,7 +15,7 @@ use panix\engine\db\ActiveRecord;
  * @property integer $created_at
  * @property integer $updated_at
  */
-class NovaposhtaCities extends ActiveRecord
+class Cities extends ActiveRecord
 {
 
     const route = '/admin/novaposhta/default';
@@ -87,7 +87,7 @@ class NovaposhtaCities extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%news}}';
+        return '{{%novaposhta_cities}}';
     }
 
     /**

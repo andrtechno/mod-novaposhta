@@ -10,7 +10,7 @@ namespace panix\mod\novaposhta\migrations;
  */
 use Yii;
 use yii\db\Migration;
-use panix\mod\novaposhta\models\NovaposhtaCities;
+use panix\mod\novaposhta\models\Cities;
 
 class m170908_125123_novaposhta extends Migration
 {
@@ -22,7 +22,7 @@ class m170908_125123_novaposhta extends Migration
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
 
-        $this->createTable(NovaposhtaCities::tableName(), [
+        $this->createTable(Cities::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
             'city_id' => $this->string(255)->notNull(),
             'name' => $this->string(255)->null(),
@@ -32,13 +32,13 @@ class m170908_125123_novaposhta extends Migration
         ], $tableOptions);
 
 
-        $this->createIndex('city_id', NovaposhtaCities::tableName(), 'city_id');
+        $this->createIndex('city_id', Cities::tableName(), 'city_id');
 
     }
 
     public function down()
     {
-        $this->dropTable(NovaposhtaCities::tableName());
+        $this->dropTable(Cities::tableName());
     }
 
 }
