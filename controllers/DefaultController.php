@@ -30,17 +30,6 @@ class DefaultController extends WebController
 
     public function actionView($slug)
     {
-        $layouts = [
-            "@theme/modules/pages/views/default/html",
-            "@pages/views/default/html",
-        ];
-
-        foreach ($layouts as $layout) {
-            if (file_exists(Yii::getAlias($layout) . DIRECTORY_SEPARATOR . $slug . '.' . $this->view->defaultExtension)) {
-                return $this->render($layout . '/' . $slug, []);
-            }
-        }
-
         $this->dataModel = Pages::find()
             ->where(['slug' => $slug])
             ->published()
