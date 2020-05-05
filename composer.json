@@ -1,8 +1,8 @@
 {
-    "name": "panix/mod-pages",
-    "description": "Module pages",
-    "keywords": ["pixelion-cms", "module", "pages"],
-    "homepage": "https://github.com/andrtechno/mod-pages",
+    "name": "panix/mod-novaposhta",
+    "description": "Module novaposhta",
+    "keywords": ["pixelion-cms", "module", "novaposhta"],
+    "homepage": "https://github.com/andrtechno/mod-novaposhta",
     "type": "yii2-extension",
     "license": "MIT",
     "authors": [
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "panix\\mod\\pages\\": ""
+            "panix\\mod\\novaposhta\\": ""
         }
     }
 }

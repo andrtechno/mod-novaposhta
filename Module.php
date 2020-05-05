@@ -1,6 +1,6 @@
 <?php
 
-namespace panix\mod\pages;
+namespace panix\mod\novaposhta;
 
 use Yii;
 use panix\engine\WebModule;
@@ -9,7 +9,7 @@ use yii\base\BootstrapInterface;
 class Module extends WebModule implements BootstrapInterface
 {
 
-    public $icon = 'edit';
+    public $icon = 'novaposhta';
 
     public function bootstrap($app)
     {
@@ -30,8 +30,8 @@ class Module extends WebModule implements BootstrapInterface
             'modules' => [
                 'items' => [
                     [
-                        'label' => Yii::t('pages/default', 'MODULE_NAME'),
-                        'url' => ['/admin/pages'],
+                        'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+                        'url' => ['/admin/novaposhta'],
                         'icon' => $this->icon,
                     ],
                 ],
@@ -43,12 +43,12 @@ class Module extends WebModule implements BootstrapInterface
     public function getInfo()
     {
         return [
-            'label' => Yii::t('pages/default', 'MODULE_NAME'),
+            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'author' => 'dev@pixelion.com.ua',
             'version' => '1.0',
             'icon' => $this->icon,
-            'description' => Yii::t('pages/default', 'MODULE_DESC'),
-            'url' => ['/admin/pages'],
+            'description' => Yii::t('novaposhta/default', 'MODULE_DESC'),
+            'url' => ['/admin/novaposhta'],
         ];
     }
 
