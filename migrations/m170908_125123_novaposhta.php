@@ -1,4 +1,5 @@
 <?php
+
 namespace panix\mod\novaposhta\migrations;
 
 /**
@@ -9,8 +10,8 @@ namespace panix\mod\novaposhta\migrations;
  */
 use Yii;
 use yii\db\Migration;
-use panix\mod\pages\models\Pages;
-use panix\mod\pages\models\PagesTranslate;
+use panix\mod\novaposhta\models\NovaposhtaCities;
+
 class m170908_125123_novaposhta extends Migration
 {
 
@@ -31,13 +32,13 @@ class m170908_125123_novaposhta extends Migration
         ], $tableOptions);
 
 
-        $this->createIndex('city_id', Pages::tableName(), 'city_id');
+        $this->createIndex('city_id', NovaposhtaCities::tableName(), 'city_id');
 
     }
 
     public function down()
     {
-        $this->dropTable(Pages::tableName());
+        $this->dropTable(NovaposhtaCities::tableName());
     }
 
 }
