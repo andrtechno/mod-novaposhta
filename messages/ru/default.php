@@ -1,6 +1,6 @@
 <?php
 return [
-    'MODULE_NAME' => 'Страницы',
-    'MODULE_DESC' => 'Статичные страницы',
+    'MODULE_NAME' => 'Новая почта',
+    'MODULE_DESC' => 'Новая почта',
     'CREATE_BTN' => 'Создать страницу',
 ];

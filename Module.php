@@ -36,9 +36,32 @@ class Module extends WebModule implements BootstrapInterface
                 'items' => [
                     [
                         'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-                        'url' => ['/admin/novaposhta'],
+                        'url' => '#',
                         'icon' => $this->icon,
+                        'items' => [
+                            [
+                                'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+                                'url' => ['/admin/novaposhta'],
+                                'icon' => $this->icon,
+                            ],
+                            [
+                                'label' => Yii::t('novaposhta/default', 'Экспресс-накладная'),
+                                'url' => ['/admin/novaposhta/express-invoice'],
+                                'icon' => $this->icon,
+                            ],
+                            [
+                                'label' => Yii::t('novaposhta/default', 'counterparties'),
+                                'url' => ['/admin/novaposhta/counterparties'],
+                                'icon' => $this->icon,
+                            ],
+                            [
+                                'label' => Yii::t('app/default', 'SETTINGS'),
+                                'url' => ['/admin/novaposhta/settings'],
+                                'icon' => 'settings',
+                            ]
+                        ]
                     ],
+
                 ],
             ],
         ];

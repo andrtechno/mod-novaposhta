@@ -4,6 +4,26 @@ use panix\engine\Html;
 use panix\engine\bootstrap\ActiveForm;
 use panix\mod\shop\models\ProductType;
 use yii\helpers\ArrayHelper;
+use panix\engine\CMS;
+use yii\httpclient\Client;
+
+
+$doc = new \simplehtmldom\HtmlWeb();
+$html= $doc->load('https://ramosu.com.ua/makiyazh/');
+foreach($html->find('.product-thumb .h4-replace a') as $element) {
+
+    $load_product= $doc->load($element->href);
+    foreach($load_product->find('.big_image .thumbnail') as $element) {
+        CMS::dump($element,30);
+       // echo $element->innertext;
+
+        die;
+    }
+
+
+}
+
+die;
 
 ?>
 
@@ -16,6 +36,10 @@ use yii\helpers\ArrayHelper;
     ?>
     <div class="card-body">
         <?= $form->field($model, 'api_key'); ?>
+
+
+        sender
+
 
     </div>
     <div class="card-footer text-center">
