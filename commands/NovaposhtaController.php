@@ -3,6 +3,8 @@
 namespace panix\mod\novaposhta\commands;
 
 use panix\mod\novaposhta\components\Novaposhta;
+use panix\mod\novaposhta\models\Area;
+use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\Warehouses;
 use Yii;
@@ -23,151 +25,14 @@ class NovaposhtaController extends ConsoleController
 
     public function actionCities()
     {
-
+        Yii::$app->db->createCommand()->truncateTable(Cities::tableName())->execute();
         $cities = $this->api->getCities();
 
 
         if ($cities['success']) {
-            $s = [];
-            foreach ($cities['data'] as $city) {
-                /* $s[] = [
-                     $city['Description'],
-                     $city['DescriptionRu'],
-                     $city['Ref'],
-                     $city['Delivery1'],
-                     $city['Delivery2'],
-                     $city['Delivery3'],
-                     $city['Delivery4'],
-                     $city['Delivery5'],
-                     $city['Delivery6'],
-                     $city['Delivery7'],
-                     $city['Area'],
-                     $city['SettlementType'],
-                     $city['IsBranch'],
-                     $city['PreventEntryNewStreetsUser'],
-                     $city['Conglomerates'],
-                     $city['CityID'],
-                     $city['SettlementTypeDescription'],
-                     $city['SettlementTypeDescriptionRu'],
-                     $city['SpecialCashCheck'],
-                     $city['Postomat'],
-                     $city['AreaDescription'],
-                     $city['AreaDescriptionRu'],
-                 ];*/
-
-                $responseWarehouses = $this->api->getWarehouses($city['Ref']);
-                if ($responseWarehouses['success']) {
-                    foreach ($responseWarehouses['data'] as $warehouses) {
-
-                        $dataWarehouse = [
-                            'SiteKey' => $warehouses['SiteKey'],
-                            'Description' => $warehouses['Description'],
-                            'DescriptionRu' => $warehouses['DescriptionRu'],
-                            'ShortAddress' => $warehouses['ShortAddress'],
-                            'ShortAddressRu' => $warehouses['ShortAddressRu'],
-                            'Phone' => $warehouses['Phone'],
-                            'TypeOfWarehouse' => $warehouses['TypeOfWarehouse'],
-                            'Ref' => $warehouses['Ref'],
-                            'Number' => $warehouses['Number'],
-                            'CityRef' => $warehouses['CityRef'],
-                            'CityDescription' => $warehouses['CityDescription'],
-                            'CityDescriptionRu' => $warehouses['CityDescriptionRu'],
-                            'SettlementRef' => $warehouses['SettlementRef'],
-                            'SettlementDescription' => $warehouses['SettlementDescription'],
-                            'SettlementAreaDescription' => $warehouses['SettlementAreaDescription'],
-                            'SettlementRegionsDescription' => $warehouses['SettlementRegionsDescription'],
-                            'SettlementTypeDescription' => $warehouses['SettlementTypeDescription'],
-                            'Longitude' => $warehouses['Longitude'],
-                            'Latitude' => $warehouses['Latitude'],
-                            'PostFinance' => $warehouses['PostFinance'],
-                            'BicycleParking' => $warehouses['BicycleParking'],
-                            'PaymentAccess' => $warehouses['PaymentAccess'],
-                            'POSTerminal' => $warehouses['POSTerminal'],
-                            'InternationalShipping' => $warehouses['InternationalShipping'],
-                            'SelfServiceWorkplacesCount' => $warehouses['SelfServiceWorkplacesCount'],
-                            'TotalMaxWeightAllowed' => $warehouses['TotalMaxWeightAllowed'],
-                            'PlaceMaxWeightAllowed' => $warehouses['PlaceMaxWeightAllowed'],
-                            'Reception' => json_encode($warehouses['Reception']),
-                            'Delivery' => json_encode($warehouses['Delivery']),
-                            'Schedule' => json_encode($warehouses['Schedule']),
-                            'DistrictCode' => $warehouses['DistrictCode'],
-                            'WarehouseStatus' => $warehouses['WarehouseStatus'],
-                            'WarehouseStatusDate' => $warehouses['WarehouseStatusDate'],
-                            'CategoryOfWarehouse' => $warehouses['CategoryOfWarehouse'],
-                            'Direct' => $warehouses['Direct'],
-                        ];
-                        Yii::$app->db->createCommand()->insert(Warehouses::tableName(), $dataWarehouse)->execute();
-                    }
-                }
-
-
-                $data = [
-                    'description' => $city['Description'],
-                    'description_ru' => $city['DescriptionRu'],
-                    'ref' => $city['Ref'],
-                    'delivery1' => $city['Delivery1'],
-                    'delivery2' => $city['Delivery2'],
-                    'delivery3' => $city['Delivery3'],
-                    'delivery4' => $city['Delivery4'],
-                    'delivery5' => $city['Delivery5'],
-                    'delivery6' => $city['Delivery6'],
-                    'delivery7' => $city['Delivery7'],
-                    'area' => $city['Area'],
-                    'settlementType' => $city['SettlementType'],
-                    'isBranch' => $city['IsBranch'],
-                    'preventEntryNewStreetsUser' => $city['PreventEntryNewStreetsUser'],
-                    'conglomerates' => $city['Conglomerates'],
-                    'cityID' => $city['CityID'],
-                    'settlementTypeDescription' => $city['SettlementTypeDescription'],
-                    'settlementTypeDescriptionRu' => $city['SettlementTypeDescriptionRu'],
-                    'specialCashCheck' => $city['SpecialCashCheck'],
-                    'postomat' => $city['Postomat'],
-                    'areaDescription' => $city['AreaDescription'],
-                    'areaDescriptionRu' => $city['AreaDescriptionRu'],
-                ];
-                Yii::$app->db->createCommand()->insert(Cities::tableName(), $data)->execute();
-
-            }
-
-            /*Yii::$app->db->createCommand()->batchInsert(Cities::tableName(), [
-                'description',
-                'description_ru',
-                'ref',
-                'delivery1',
-                'delivery2',
-                'delivery3',
-                'delivery4',
-                'delivery5',
-                'delivery6',
-                'delivery7',
-                'area',
-                'settlementType',
-                'isBranch',
-                'preventEntryNewStreetsUser',
-                'conglomerates',
-                'cityID',
-                'settlementTypeDescription',
-                'settlementTypeDescriptionRu',
-                'specialCashCheck',
-                'postomat',
-                'areaDescription',
-                'areaDescriptionRu'
-            ], $s)->execute();*/
-        }
-    }
-
-    public function actionWarehouses()
-    {
-
-        $response = $this->api->getWarehouses();
-
-
-        if ($response['success']) {
-            $s = [];
-            foreach ($response['data'] as $data) {
-                print_r($data);
-                die;
-                $s[] = [
+            $data = [];
+            foreach ($cities['data'] as $k => $city) {
+                $data[] = [
                     $city['Description'],
                     $city['DescriptionRu'],
                     $city['Ref'],
@@ -193,30 +58,139 @@ class NovaposhtaController extends ConsoleController
                 ];
             }
 
+
             Yii::$app->db->createCommand()->batchInsert(Cities::tableName(), [
-                'description',
-                'description_ru',
-                'ref',
-                'delivery1',
-                'delivery2',
-                'delivery3',
-                'delivery4',
-                'delivery5',
-                'delivery6',
-                'delivery7',
-                'area',
-                'settlementType',
-                'isBranch',
-                'preventEntryNewStreetsUser',
-                'conglomerates',
-                'cityID',
-                'settlementTypeDescription',
-                'settlementTypeDescriptionRu',
-                'specialCashCheck',
-                'postomat',
-                'areaDescription',
-                'areaDescriptionRu'
-            ], $s)->execute();
+                'Description',
+                'DescriptionRu',
+                'Ref',
+                'Delivery1',
+                'Delivery2',
+                'Delivery3',
+                'Delivery4',
+                'Delivery5',
+                'Delivery6',
+                'Delivery7',
+                'Area',
+                'SettlementType',
+                'IsBranch',
+                'PreventEntryNewStreetsUser',
+                'Conglomerates',
+                'CityID',
+                'SettlementTypeDescriptionRu',
+                'SettlementTypeDescription',
+                'SpecialCashCheck',
+                'Postomat',
+                'AreaDescription',
+                'AreaDescriptionRu',
+            ], $data)->execute();
+        }
+    }
+
+    public function actionWarehouses()
+    {
+
+
+        Yii::$app->db->createCommand()->truncateTable(Warehouses::tableName())->execute();
+
+        $result = $this->api
+            ->model('Address')
+            ->method('getWarehouses')
+            ->execute();
+
+        $list = [];
+        foreach ($result['data'] as $d) {
+            $list[] = array_values($d);
+        }
+        Yii::$app->db->createCommand()->batchInsert(Warehouses::tableName(), [
+            'SiteKey',
+            'Description',
+            'DescriptionRu',
+            'ShortAddress',
+            'ShortAddressRu',
+            'Phone',
+            'TypeOfWarehouse',
+            'Ref',
+            'Number',
+            'CityRef',
+            'CityDescription',
+            'CityDescriptionRu',
+            'SettlementRef',
+            'SettlementDescription',
+            'SettlementAreaDescription',
+            'SettlementRegionsDescription',
+            'SettlementTypeDescription',
+            'Longitude',
+            'Latitude',
+            'PostFinance',
+            'BicycleParking',
+            'PaymentAccess',
+            'POSTerminal',
+            'InternationalShipping',
+            'SelfServiceWorkplacesCount',
+            'TotalMaxWeightAllowed',
+            'PlaceMaxWeightAllowed',
+            'Reception',
+            'Delivery',
+            'Schedule',
+            'DistrictCode',
+            'WarehouseStatus',
+            'WarehouseStatusDate',
+            'CategoryOfWarehouse',
+            'Direct',
+        ], $list)->execute();
+    }
+
+
+    public function actionArea()
+    {
+
+
+        Yii::$app->db->createCommand()->truncateTable(Area::tableName())->execute();
+
+        $result = $this->api
+            ->model('Address')
+            ->method('getAreas')
+            ->execute();
+
+
+        if ($result['success']) {
+            $list = [];
+            foreach ($result['data'] as $d) {
+                $list[] = array_values($d);
+            }
+            Yii::$app->db->createCommand()->batchInsert(Area::tableName(), [
+                'Ref',
+                'AreasCenter',
+                'DescriptionRu',
+                'Description',
+            ], $list)->execute();
+        }
+    }
+
+
+    public function actionReference()
+    {
+
+
+        Yii::$app->db->createCommand()->truncateTable(CargoTypes::tableName())->execute();
+
+        $result = $this->api
+            //->model('Address')
+            ->method('getAreas')
+            ->execute();
+
+print_r($result);die;
+        if ($result['success']) {
+            $list = [];
+            foreach ($result['data'] as $d) {
+                $list[] = array_values($d);
+            }
+            Yii::$app->db->createCommand()->batchInsert(CargoTypes::tableName(), [
+                'Ref',
+                'AreasCenter',
+                'DescriptionRu',
+                'Description',
+            ], $list)->execute();
         }
     }
 

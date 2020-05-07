@@ -27,18 +27,18 @@ class m170908_125124_novaposhta_warehouses extends Migration
 
         $this->createTable(Warehouses::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
+            'Ref' => $this->string(36)->null(),
             'SiteKey' => $this->string(255)->null(),
-            'Description' => $this->string(255)->null(),
-            'DescriptionRu' => $this->string(255)->null(),
+            'Description' => $this->string(99)->null(),
+            'DescriptionRu' => $this->string(99)->null(),
             'ShortAddress' => $this->string(255)->null(),
             'ShortAddressRu' => $this->string(255)->null(),
             'Phone' => $this->phone(),
-            'TypeOfWarehouse' => $this->string(255)->null(),
-            'Ref' => $this->string(255)->null(),
-            'Number' => $this->tinyInteger(1),
-            'CityRef' => $this->string(255)->null(),
-            'CityDescription' => $this->string(255)->null(),
-            'CityDescriptionRu' => $this->string(255)->null(),
+            'TypeOfWarehouse' => $this->string(36)->null(),
+            'Number' => $this->integer(),
+            'CityRef' => $this->string(36)->null(),
+            'CityDescription' => $this->string(50)->null(),
+            'CityDescriptionRu' => $this->string(50)->null(),
             'SettlementRef' => $this->string(255)->null(),
             'SettlementDescription' => $this->string(255)->null(),
             'SettlementAreaDescription' => $this->string(255)->null(),
@@ -53,7 +53,7 @@ class m170908_125124_novaposhta_warehouses extends Migration
             'InternationalShipping' => $this->tinyInteger(1)->defaultValue(0),
             'SelfServiceWorkplacesCount' => $this->tinyInteger(1)->defaultValue(0),
             'TotalMaxWeightAllowed' => $this->integer(11)->defaultValue(0),
-            'PlaceMaxWeightAllowed' => $this->tinyInteger(1)->defaultValue(0),
+            'PlaceMaxWeightAllowed' => $this->integer(11)->defaultValue(0),
             'Reception' => $this->text()->null(),
             'Delivery' => $this->text()->null(),
             'Schedule' => $this->text()->null(),
@@ -62,14 +62,12 @@ class m170908_125124_novaposhta_warehouses extends Migration
             'WarehouseStatusDate' => $this->string(255)->null(),
             'CategoryOfWarehouse' => $this->string(255)->null(),
             'Direct' => $this->string(255)->null(),
-            'created_at' => $this->integer(11)->null(),
-            'updated_at' => $this->integer(11)->null()
         ], $tableOptions);
 
 
-        $this->createIndex('CityRef', Counterparties::tableName(), 'CityRef');
-        $this->createIndex('Ref', Counterparties::tableName(), 'Ref');
-        $this->createIndex('SettlementRef', Counterparties::tableName(), 'SettlementRef');
+        $this->createIndex('CityRef', Warehouses::tableName(), 'CityRef');
+        $this->createIndex('Ref', Warehouses::tableName(), 'Ref');
+        $this->createIndex('SettlementRef', Warehouses::tableName(), 'SettlementRef');
     }
 
     public function down()
