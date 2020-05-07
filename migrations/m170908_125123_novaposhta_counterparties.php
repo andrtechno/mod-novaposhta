@@ -38,7 +38,7 @@ class m170908_125123_novaposhta_counterparties extends Migration
         ], $tableOptions);
 
 
-       // $this->createIndex('city_id', Counterparties::tableName(), 'city_id');
+        $this->createIndex('ref', Counterparties::tableName(), 'ref');
 
     }
 

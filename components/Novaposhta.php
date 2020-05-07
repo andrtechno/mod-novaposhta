@@ -444,7 +444,7 @@ class Novaposhta extends Component
             array(
                 'success' => empty($error),
                 'data' => array($data),
-                'errors' => (array)$error,
+                'errors' => [],
                 'warnings' => array(),
                 'info' => array(),
             )
@@ -522,7 +522,7 @@ class Novaposhta extends Component
             array(
                 'success' => empty($error),
                 'data' => $data,
-                'errors' => (array)$error,
+                'errors' => [],
                 'warnings' => array(),
                 'info' => array(),
             )
@@ -595,7 +595,7 @@ class Novaposhta extends Component
             array(
                 'success' => empty($error),
                 'data' => array($data),
-                'errors' => (array)$error,
+                'errors' => array(),
                 'warnings' => array(),
                 'info' => array(),
             )
@@ -887,7 +887,7 @@ class Novaposhta extends Component
         }
 
         // Set defaults
-        if (!$counterparty['CounterpartyType']) {
+        if (!isset($counterparty['CounterpartyType'])) {
             $counterparty['CounterpartyType'] = 'PrivatePerson';
         }
     }
@@ -954,11 +954,11 @@ class Novaposhta extends Component
             $senderWarehouse = $this->getWarehouse($sender['CitySender'], $sender['Warehouse']);
             $sender['SenderAddress'] = $senderWarehouse['data'][0]['Ref'];
         }
-        if (!$sender['Sender']) {
+        if (!isset($sender['Sender'])) {
             $sender['CounterpartyProperty'] = 'Sender';
             $fullName = trim($sender['LastName'] . ' ' . $sender['FirstName'] . ' ' . $sender['MiddleName']);
             // Set full name to Description if is not set
-            if (!$sender['Description']) {
+            if (!isset($sender['Description'])) {
                 $sender['Description'] = $fullName;
             }
             // Check for existing sender
@@ -976,16 +976,16 @@ class Novaposhta extends Component
         // Prepare recipient data
         $recipient['CounterpartyProperty'] = 'Recipient';
         $recipient['RecipientsPhone'] = $recipient['Phone'];
-        if (!$recipient['CityRecipient']) {
+        if (!isset($recipient['CityRecipient'])) {
             $recipientCity = $this->getCity($recipient['City'], $recipient['Region']);
             $recipient['CityRecipient'] = $recipientCity['data'][0]['Ref'];
         }
         $recipient['CityRef'] = $recipient['CityRecipient'];
-        if (!$recipient['RecipientAddress']) {
+        if (!isset($recipient['RecipientAddress'])) {
             $recipientWarehouse = $this->getWarehouse($recipient['CityRecipient'], $recipient['Warehouse']);
             $recipient['RecipientAddress'] = $recipientWarehouse['data'][0]['Ref'];
         }
-        if (!$recipient['Recipient']) {
+        if (!isset($recipient['Recipient'])) {
             $recipientCounterparty = $this->model('Counterparty')->save($recipient);
             $recipient['Recipient'] = $recipientCounterparty['data'][0]['Ref'];
             $recipient['ContactRecipient'] = $recipientCounterparty['data'][0]['ContactPerson']['data'][0]['Ref'];

@@ -21,9 +21,9 @@ class Cities extends ActiveRecord
     const route = '/admin/novaposhta/default';
     const MODULE_ID = 'novaposhta';
 
-    public static function find2()
+    public static function find()
     {
-        return new NewsQuery(get_called_class());
+        return new CitiesQuery(get_called_class());
     }
 
     public function getGridColumns()

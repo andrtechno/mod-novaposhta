@@ -1,6 +1,6 @@
 <?php
 
-namespace panix\mod\news\models;
+namespace panix\mod\novaposhta\models\search;
 
 use Yii;
 use yii\base\Model;
@@ -9,9 +9,9 @@ use panix\mod\news\models\News;
 use panix\mod\news\models\NewsTranslate;
 
 /**
- * NewsSearch represents the model behind the search form about `panix\mod\news\models\News`.
+ * CounterpartiesSearch represents the model behind the search form about `panix\mod\novaposhta\models\Counterparties`.
  */
-class NewsSearch extends News
+class CounterpartiesSearch extends Counterparties
 {
 
     /**
@@ -43,7 +43,7 @@ class NewsSearch extends News
      */
     public function search($params)
     {
-        $query = News::find()->translate();
+        $query = Counterparties::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,14 +58,9 @@ class NewsSearch extends News
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-        ]);
-
-        $query->andFilterWhere(['like', 'translate.name', $this->name]);
+        $query->andFilterWhere(['id' => $this->id]);
+        $query->andFilterWhere(['like', 'name', $this->name]);
         $query->andFilterWhere(['like', 'DATE(created_at)', $this->created_at]);
-        $query->andFilterWhere(['like', 'DATE(created_at)', $this->created_at]);
-        $query->andFilterWhere(['like', 'views', $this->views]);
 
         return $dataProvider;
     }

@@ -71,27 +71,11 @@ class ExpressInvoiceController extends AdminController
             'url' => ['index']
         ];
         $this->breadcrumbs[] = $this->pageName;
-        $result = [];
-        $result['success'] = false;
         $isNew = $model->isNewRecord;
-        //$model->setScenario("admin");
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
-            //if (Yii::$app->request->isAjax) {
-            //    Yii::$app->response->format = Response::FORMAT_JSON;
-            //    return ActiveForm::validate($model);
-            //}
-
             if ($model->validate()) {
                 $model->save();
-                $json['success']=false;
-                if (Yii::$app->request->isAjax && Yii::$app->request->post('ajax')) {
-                    Yii::$app->response->format = Response::FORMAT_JSON;
-                    $json['success']=true;
-                    $json['message']='Saved.';
-                    return $json;
-                }
-
                 return $this->redirectPage($isNew, $post);
             } else {
                 // print_r($model->getErrors());
@@ -101,5 +85,9 @@ class ExpressInvoiceController extends AdminController
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+    public function actionView(){
+        $api = Yii::$app->novaposhta;
+        return $this->render('view',['api'=>$api]);
     }
 }

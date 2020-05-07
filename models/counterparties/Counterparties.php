@@ -2,7 +2,8 @@
 
 namespace panix\mod\novaposhta\models\counterparties;
 
-use panix\mod\sitemap\behaviors\SitemapBehavior;
+
+use panix\mod\novaposhta\models\query\CounterpartiesQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
@@ -21,9 +22,9 @@ class Counterparties extends ActiveRecord
     const route = '/admin/novaposhta/default';
     const MODULE_ID = 'novaposhta';
 
-    public static function find2()
+    public static function find()
     {
-        return new NewsQuery(get_called_class());
+        return new CounterpartiesQuery(get_called_class());
     }
 
 
@@ -42,24 +43,27 @@ class Counterparties extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'short_description', 'slug'], 'required'],
-            [['name', 'slug'], 'string', 'max' => 255],
-            [['full_description'], 'string'],
-            [['name', 'slug'], 'trim'],
-            ['slug', '\panix\engine\validators\UrlValidator', 'attributeCompare' => 'name'],
-            ['slug', 'match',
-                'pattern' => '/^([a-z0-9-])+$/i',
-                'message' => Yii::t('app/default', 'PATTERN_URL')
-            ],
+            [['first_name', 'last_name', 'middle_name','phone','email','type','property'], 'required'],
+            [['first_name', 'last_name', 'middle_name','phone'], 'string', 'max' => 255],
+            [['email'], 'email'],
+            [['first_name', 'last_name', 'middle_name'], 'trim'],
             [['updated_at', 'created_at'], 'safe'],
 
 
-            [['short_description', 'image'], 'default'],
+           // [['short_description', 'image'], 'default'],
         ];
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
 
 
+
+        parent::afterSave($insert, $changedAttributes);
+
+
+
+    }
 
 
 }

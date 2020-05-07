@@ -1,8 +1,8 @@
 <?php
-use yii\helpers\Html;
+use panix\engine\Html;
 use panix\engine\bootstrap\ActiveForm;
-
-
+use panix\engine\CMS;
+CMS::dump($api->getTypesOfCounterparties());
 $form = ActiveForm::begin();
 ?>
 <div class="card">
@@ -16,8 +16,8 @@ $form = ActiveForm::begin();
         <?= $form->field($model, 'middle_name')->textInput(['maxlength' => 255]) ?>
         <?= $form->field($model, 'phone')->widget(\panix\ext\telinput\PhoneInput::class); ?>
         <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
-        <?= $form->field($model, 'type')->textInput(['maxlength' => 255]) ?>
-        <?= $form->field($model, 'property')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'type')->dropDownList($typesList) ?>
+        <?= $form->field($model, 'property')->textInput(['value'=>'Recipient']) ?>
 
     </div>
     <div class="card-footer text-center">

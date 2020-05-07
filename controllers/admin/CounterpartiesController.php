@@ -2,6 +2,7 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
+use Mpdf\Tag\P;
 use panix\mod\novaposhta\models\counterparties\Counterparties;
 use Yii;
 use panix\mod\pages\models\Pages;
@@ -56,7 +57,7 @@ class CounterpartiesController extends AdminController
 
     public function actionUpdate($id = false)
     {
-        Counterparties::findModel($id);
+        $model = Counterparties::findModel($id);
         $api = Yii::$app->novaposhta;
         $this->pageName = Yii::t('novaposhta/default', 'CREATE_BTN');
         $this->buttons = [
@@ -75,6 +76,17 @@ class CounterpartiesController extends AdminController
         $result = [];
         $isNew = $model->isNewRecord;
         $post = Yii::$app->request->post();
+
+
+        $types = $api->getTypesOfCounterparties();
+
+        $typesList = [];
+        if ($types['success']) {
+            foreach ($types['data'] as $data) {
+                $typesList[$data['Ref']] = $data['Description'];
+            }
+        }
+
         if ($model->load($post)) {
             if ($model->validate()) {
                 $model->save();
@@ -88,6 +100,7 @@ class CounterpartiesController extends AdminController
         return $this->render('update', [
             'api' => $api,
             'model' => $model,
+            'typesList' => $typesList
         ]);
     }
 }
