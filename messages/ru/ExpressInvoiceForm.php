@@ -10,7 +10,7 @@ return [
     'WEIGHT' => 'Вес груза',
     'VOLUMEGENERAL' => 'Объем груза в куб.м.',
 
-
+    'DATETIME' => 'Дата отправления',
     'RECIPIENT_FIRSTNAME' => 'Имя',
     'RECIPIENT_MIDDLENAME' => 'Отчество',
     'RECIPIENT_LASTNAME' => 'Фамилия',

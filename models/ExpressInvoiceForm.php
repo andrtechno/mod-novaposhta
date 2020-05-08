@@ -3,6 +3,7 @@
 namespace panix\mod\novaposhta\models;
 
 use panix\engine\base\Model;
+use panix\mod\cart\models\Order;
 use Yii;
 
 /**
@@ -44,6 +45,18 @@ class ExpressInvoiceForm extends Model
     public $recipient_Region;
     public $recipient_Email;
     public $recipient_Warehouse;
+
+    public function init()
+    {
+        if (Yii::$app->request->get('order_id')) {
+            $order = Order::findModel(Yii::$app->request->get('order_id'));
+            if($order->user_phone)
+                $this->recipient_Phone = $order->user_phone;
+            if($order->user_address)
+                $this->recipient_Warehouse = $order->user_address;
+        }
+        parent::init();
+    }
 
     public function rules()
     {
