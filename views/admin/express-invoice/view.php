@@ -33,7 +33,7 @@ $result = $api->newInternetDocument(
         // 'City' => 'Белгород-Днестровский',
         // Область отправления
         // 'Region' => 'Одесская',
-        'CitySender' => $sender['City'],
+        'CitySender' => $city['data'][0]['Ref'],
         // Отделение отправления по ID (в данном случае - в первом попавшемся)
         'SenderAddress' => $senderWarehouses['data'][0]['Ref'],
         // Отделение отправления по адресу
@@ -50,7 +50,7 @@ $result = $api->newInternetDocument(
         'Email'=>'andrew.panix@gmail.com',
         'Warehouse' => 'Отделение №3: ул. Калачевская, 13 (Старая Дарница)',
     ],
-    array(
+    [
         // Дата отправления
         'DateTime' => date('d.m.Y'),
         // Тип доставки, дополнительно - getServiceTypes()
@@ -72,17 +72,17 @@ $result = $api->newInternetDocument(
         // Объем груза в куб.м.
         'VolumeGeneral' => '0.5',
         // Обратная доставка
-        'BackwardDeliveryData' => array(
-            array(
+        'BackwardDeliveryData' => [
+            [
                 // Кто оплачивает обратную доставку
                 'PayerType' => 'Recipient',
                 // Тип доставки
                 'CargoType' => 'Money',
                 // Значение обратной доставки
                 'RedeliveryString' => 4552,
-            )
-        )
-    )
+            ]
+        ]
+    ]
 );
 
 CMS::dump($result);

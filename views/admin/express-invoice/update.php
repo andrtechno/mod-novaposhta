@@ -10,36 +10,36 @@ $form = ActiveForm::begin();
         <h5><?= Html::encode($this->context->pageName) ?></h5>
     </div>
     <div class="card-body">
+<div class="row">
+    <div class="col-sm-6">
+        <?= $form->field($model, 'PayerType')->dropDownList(['Recipient' => 'Recipient','Sender' => 'Sender']) ?>
+    </div>
+    <div class="col-sm-6">
 
+        <?= $form->field($model, 'PaymentMethod')->dropDownList($model->paymentFormsList()) ?>
+        <?= $form->field($model, 'ServiceType')->dropDownList($model->serviceTypesList()) ?>
+        <?= $form->field($model, 'Cost'); ?>
+        <?= $form->field($model, 'SeatsAmount'); ?>
+        <?= $form->field($model, 'Description')->textarea(); ?>
+        <?= $form->field($model, 'CargoType')->dropDownList($model->cargoTypes()); ?>
+        <?= $form->field($model, 'Weight'); ?>
+        <?= $form->field($model, 'VolumeGeneral'); ?>
+    </div>
+    <div class="col-sm-6">
+        das
+    </div>
+    <div class="col-sm-6">
+        das
+    </div>
+</div>
         <?php
 
-        $tabs = [];
-
-
-        $tabs[] = [
-            'label' => $model::t('TAB_MAIN'),
-            'content' => $this->render('_main', ['form' => $form, 'model' => $model]),
-            'active' => true,
-            'options' => ['class' => 'flex-sm-fill text-center nav-item'],
-        ];
-
-
-        $tabs[] = [
-            'label' => Yii::t('seo/default', 'TAB_SEO'),
-            'content' => $this->render('@seo/views/admin/default/_module_seo', ['model' => $model]),
-            'options' => ['class' => 'flex-sm-fill text-center nav-item'],
-        ];
-
-
-        echo \panix\engine\bootstrap\Tabs::widget([
-            //'encodeLabels'=>true,
-            'options' => [
-                'class' => 'nav-pills flex-column flex-sm-row nav-tabs-static'
-            ],
-            'items' => $tabs,
-        ]);
+        //$s = $api->getPaymentForms();
+       // \panix\engine\CMS::dump($s);
 
         ?>
+
+
 
     </div>
     <div class="card-footer text-center">

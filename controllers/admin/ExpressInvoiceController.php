@@ -2,6 +2,8 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
+use panix\mod\novaposhta\models\ExpressInvoice;
+use panix\mod\novaposhta\models\ExpressInvoiceForm;
 use Yii;
 use panix\mod\pages\models\Pages;
 use panix\mod\pages\models\PagesSearch;
@@ -52,11 +54,19 @@ class ExpressInvoiceController extends AdminController
             'api' => $api,
         ]);
     }
-
+    public function actionCreate()
+    {
+        $api = Yii::$app->novaposhta;
+        $model = new ExpressInvoiceForm();
+        return $this->render('create', [
+            'model' => $model,
+            'api'=>$api
+        ]);
+    }
     public function actionUpdate($id = false)
     {
-
-        $model = Pages::findModel($id);
+        $api = Yii::$app->novaposhta;
+        $model = ExpressInvoice::findModel($id);
         $this->pageName = Yii::t('novaposhta/default', 'CREATE_BTN');
         $this->buttons = [
             [
@@ -84,6 +94,7 @@ class ExpressInvoiceController extends AdminController
 
         return $this->render('update', [
             'model' => $model,
+            'api'=>$api
         ]);
     }
     public function actionView(){

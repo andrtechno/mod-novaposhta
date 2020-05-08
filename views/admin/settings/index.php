@@ -7,7 +7,7 @@ use yii\helpers\ArrayHelper;
 use panix\engine\CMS;
 use yii\httpclient\Client;
 
-
+/*
 $doc = new \simplehtmldom\HtmlWeb();
 $html= $doc->load('https://ramosu.com.ua/makiyazh/');
 foreach($html->find('.product-thumb .h4-replace a') as $element) {
@@ -23,7 +23,7 @@ foreach($html->find('.product-thumb .h4-replace a') as $element) {
 
 }
 
-die;
+die;*/
 
 ?>
 
