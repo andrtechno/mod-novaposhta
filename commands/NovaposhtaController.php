@@ -6,6 +6,11 @@ use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\Area;
 use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\Cities;
+use panix\mod\novaposhta\models\Packs;
+use panix\mod\novaposhta\models\Pallets;
+use panix\mod\novaposhta\models\TiresWheels;
+use panix\mod\novaposhta\models\TypesCounterparties;
+use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
 use panix\mod\novaposhta\models\Warehouses;
 use Yii;
 use panix\engine\console\controllers\ConsoleController;
@@ -173,23 +178,131 @@ class NovaposhtaController extends ConsoleController
 
 
         Yii::$app->db->createCommand()->truncateTable(CargoTypes::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Packs::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Pallets::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(TypesOfPayersForRedelivery::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(TiresWheels::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(TypesCounterparties::tableName())->execute();
 
-        $result = $this->api
-            //->model('Address')
-            ->method('getAreas')
-            ->execute();
-
-print_r($result);die;
-        if ($result['success']) {
-            $list = [];
-            foreach ($result['data'] as $d) {
-                $list[] = array_values($d);
+        $cargoTypes = $this->api->getCargoTypes();
+        if ($cargoTypes['success']) {
+            $cargoTypesList = [];
+            foreach ($cargoTypes['data'] as $cargoType) {
+                $cargoTypesList[] = array_values($cargoType);
             }
             Yii::$app->db->createCommand()->batchInsert(CargoTypes::tableName(), [
-                'Ref',
-                'AreasCenter',
-                'DescriptionRu',
                 'Description',
+                'Ref',
+            ], $cargoTypesList)->execute();
+        }
+
+
+        //$typesOfPayers = $this->api->getTypesOfPayers();
+        //print_r($typesOfPayers);
+
+
+        $pallets = $this->api->getPalletsList();
+        if ($pallets['success']) {
+            $palletsList = [];
+            foreach ($pallets['data'] as $pallet) {
+                $palletsList[] = array_values($pallet);
+            }
+            Yii::$app->db->createCommand()->batchInsert(Pallets::tableName(), [
+                'Ref',
+                'Description',
+                'DescriptionRu',
+                'Weight'
+            ], $palletsList)->execute();
+        }
+
+
+        //$backwardDeliveryCargoTypes = $this->api->getBackwardDeliveryCargoTypes();
+        //print_r($backwardDeliveryCargoTypes);
+
+
+        $packs = $this->api
+            ->model('Common')
+            ->method('getPackList')
+            ->execute();
+
+
+
+        if ($packs['success']) {
+            $packsList = [];
+            foreach ($packs['data'] as $pack) {
+
+                $packsList[] = [
+                    $pack['Ref'],
+                    $pack['Description'],
+                    $pack['DescriptionRu'],
+                    $pack['Length'],
+                    $pack['Width'],
+                    $pack['Height'],
+                    $pack['VolumetricWeight'],
+                    $pack['TypeOfPacking']
+                ];
+            }
+            Yii::$app->db->createCommand()->batchInsert(Packs::tableName(), [
+                'Ref',
+                'Description',
+                'DescriptionRu',
+                'Length',
+                'Width',
+                'Height',
+                'VolumetricWeight',
+                'TypeOfPacking'
+            ], $packsList)->execute();
+        }
+
+        $typesOfPayersForRedelivery = $this->api->getTypesOfPayersForRedelivery();
+        if ($typesOfPayersForRedelivery['success']) {
+            $typesOfPayersForRedeliveryList = [];
+            foreach ($typesOfPayersForRedelivery['data'] as $redelivery) {
+                $typesOfPayersForRedeliveryList[] = [
+                    $redelivery['Description'],
+                    $redelivery['Ref']
+                ];
+            }
+            Yii::$app->db->createCommand()->batchInsert(TypesOfPayersForRedelivery::tableName(), [
+                'Description',
+                'Ref',
+            ], $typesOfPayersForRedeliveryList)->execute();
+        }
+
+        $tiresWheels = $this->api->getTiresWheelsList();
+        if ($tiresWheels['success']) {
+            $tiresWheelsList = [];
+            foreach ($tiresWheels['data'] as $tiresWheel) {
+                $tiresWheelsList[] = [
+                    $tiresWheel['Ref'],
+                    $tiresWheel['Description'],
+                    $tiresWheel['DescriptionRu'],
+                    $tiresWheel['Weight'],
+                    $tiresWheel['DescriptionType'],
+                ];
+            }
+            Yii::$app->db->createCommand()->batchInsert(TiresWheels::tableName(), [
+                'Ref',
+                'Description',
+                'DescriptionRu',
+                'Weight',
+                'DescriptionType',
+            ], $tiresWheelsList)->execute();
+        }
+
+
+        $typesCounterparties = $this->api->getTypesOfCounterparties();
+        if ($typesCounterparties['success']) {
+            $list = [];
+            foreach ($typesCounterparties['data'] as $typeCounterparties) {
+                $list[] = [
+                    $typeCounterparties['Description'],
+                    $typeCounterparties['Ref']
+                ];
+            }
+            Yii::$app->db->createCommand()->batchInsert(TypesCounterparties::tableName(), [
+                'Description',
+                'Ref',
             ], $list)->execute();
         }
     }

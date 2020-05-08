@@ -625,7 +625,7 @@ class Novaposhta extends Component
             'getTraysList',
             'getTypesOfAlternativePayers',
             'getTypesOfPayers',
-            'getTypesOfPayersForRedelivery',
+            'getTypesOfPayersForRedelivery'
         );
         // Call method of Common model
         if (in_array($method, $common_model_method)) {
