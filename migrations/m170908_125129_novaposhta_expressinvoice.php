@@ -24,6 +24,7 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
 
         $this->createTable(ExpressInvoice::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
+            'order_id' => $this->integer()->unsigned()->null(),
             'Ref' => $this->string(36)->null(),
             'PayerType' => $this->string(36)->null(),
             'PaymentMethod' => $this->string(36)->null(),
@@ -48,6 +49,7 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
         ], $tableOptions);
 
         $this->createIndex('Ref', ExpressInvoice::tableName(), 'Ref');
+        $this->createIndex('order_id', ExpressInvoice::tableName(), 'order_id');
 
     }
 

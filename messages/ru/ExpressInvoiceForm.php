@@ -19,4 +19,11 @@ return [
     'RECIPIENT_REGION' => 'Регион',
     'RECIPIENT_EMAIL' => 'Почта',
     'RECIPIENT_WAREHOUSE' => 'Адрес',
+
+
+    'CITYSENDER' => 'Имя',
+    'SENDERADDRESS' => 'Адрес',
+    'CONTACTSENDER' => 'контакт',
+    'SENDERSPHONE' => 'Телефон',
+
 ];

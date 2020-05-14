@@ -3,10 +3,26 @@ return [
     'PAYERTYPE' => 'Кто оплачивает за доставку',
     'PAYMENTMETHOD' => 'Тип оплаты',
     'SERVICETYPE' => 'Тип доставки',
-    'COST' => 'Стоимость груза в грн',
+    'COST' => 'Стоимость груза',
     'SEATSAMOUNT' => 'Кол-во мест',
     'DESCRIPTION' => 'Описание груза',
     'CARGOTYPE' => 'Тип доставки',
     'WEIGHT' => 'Вес груза',
-    'VOLUMEGENERAL' => 'Объем груза в куб.м.'
+    'VOLUMEGENERAL' => 'Объем груза в куб.м.',
+
+    'DATETIME' => 'Дата отправления',
+    'RECIPIENT_FIRSTNAME' => 'Имя',
+    'RECIPIENT_MIDDLENAME' => 'Отчество',
+    'RECIPIENT_LASTNAME' => 'Фамилия',
+    'RECIPIENT_PHONE' => 'Телефон',
+    'RECIPIENT_CITY' => 'Город',
+    'RECIPIENT_REGION' => 'Регион',
+    'RECIPIENT_EMAIL' => 'Почта',
+    'RECIPIENT_WAREHOUSE' => 'Адрес',
+
+
+    'CITYSENDER' => 'Город',
+    'SENDERADDRESS' => 'Адрес',
+    'CONTACTSENDER' => 'Контактное лицо',
+    'SENDERSPHONE' => 'Телефон',
 ];

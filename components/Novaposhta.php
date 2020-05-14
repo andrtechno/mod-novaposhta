@@ -4,6 +4,8 @@ namespace panix\mod\novaposhta\components;
 
 use yii\base\Component;
 use Yii;
+use yii\helpers\ArrayHelper;
+use yii\httpclient\Client;
 
 /**
  * Nova Poshta API Class.
@@ -95,11 +97,7 @@ class Novaposhta extends Component
         $key = Yii::$app->settings->get('novaposhta', 'api_key');
         $this->throwErrors = false;
         parent::init();
-        $this
-            ->setKey($key)
-            ->setLanguage('ru')
-            ->setConnectionType('curl')
-            ->model('Common');
+        $this->setKey($key)->setLanguage('ru')->setConnectionType('curl')->model('Common');
     }
 
     /**
@@ -357,7 +355,9 @@ class Novaposhta extends Component
      */
     public function documentsTracking($track)
     {
-        $params = array('Documents' => array(array('DocumentNumber' => $track)));
+        $params = [
+            'Documents' => [['DocumentNumber' => $track]]
+        ];
 
         return $this->request('TrackingDocument', 'getStatusDocuments', $params);
     }
@@ -388,11 +388,12 @@ class Novaposhta extends Component
      *
      * @return mixed
      */
-    public function getWarehouses($cityRef, $page = 0)
+    public function getWarehouses($cityRef, $page = 0, $limit=100)
     {
         return $this->request('Address', 'getWarehouses', array(
             'CityRef' => $cityRef,
             'Page' => $page,
+            'Limit'=>$limit
         ));
     }
 
@@ -714,7 +715,7 @@ class Novaposhta extends Component
      */
     public function cloneLoyaltyCounterpartySender($cityRef)
     {
-        return $this->request('Counterparty', 'cloneLoyaltyCounterpartySender', array('CityRef' => $cityRef));
+        return $this->request('Counterparty', 'cloneLoyaltyCounterpartySender', ['CityRef' => $cityRef]);
     }
 
     /**
@@ -726,7 +727,7 @@ class Novaposhta extends Component
      */
     public function getCounterpartyContactPersons($ref)
     {
-        return $this->request('Counterparty', 'getCounterpartyContactPersons', array('Ref' => $ref));
+        return $this->request('Counterparty', 'getCounterpartyContactPersons', ['Ref' => $ref]);
     }
 
     /**
@@ -739,7 +740,7 @@ class Novaposhta extends Component
      */
     public function getCounterpartyAddresses($ref, $page = 0)
     {
-        return $this->request('Counterparty', 'getCounterpartyAddresses', array('Ref' => $ref, 'Page' => $page));
+        return $this->request('Counterparty', 'getCounterpartyAddresses', ['Ref' => $ref, 'Page' => $page]);
     }
 
     /**
@@ -751,7 +752,7 @@ class Novaposhta extends Component
      */
     public function getCounterpartyOptions($ref)
     {
-        return $this->request('Counterparty', 'getCounterpartyOptions', array('Ref' => $ref));
+        return $this->request('Counterparty', 'getCounterpartyOptions', ['Ref' => $ref]);
     }
 
     /**
@@ -764,7 +765,7 @@ class Novaposhta extends Component
      */
     public function getCounterpartyByEDRPOU($edrpou, $cityRef)
     {
-        return $this->request('Counterparty', 'getCounterpartyByEDRPOU', array('EDRPOU' => $edrpou, 'cityRef' => $cityRef));
+        return $this->request('Counterparty', 'getCounterpartyByEDRPOU', ['EDRPOU' => $edrpou, 'cityRef' => $cityRef]);
     }
 
     /**
@@ -778,12 +779,13 @@ class Novaposhta extends Component
      *
      * @return mixed
      */
-    public function getDocumentPrice($citySender, $cityRecipient, $serviceType, $weight, $cost)
+    public function getDocumentPrice($citySender, $cityRecipient, $serviceType, $weight, $cost, $cargoType)
     {
         return $this->request('InternetDocument', 'getDocumentPrice', array(
             'CitySender' => $citySender,
             'CityRecipient' => $cityRecipient,
             'ServiceType' => $serviceType,
+            'CargoType'=>$cargoType,
             'Weight' => $weight,
             'Cost' => $cost,
         ));
@@ -841,9 +843,9 @@ class Novaposhta extends Component
      */
     public function getDocument($ref)
     {
-        return $this->request('InternetDocument', 'getDocument', array(
+        return $this->request('InternetDocument', 'getDocument', [
             'Ref' => $ref,
-        ));
+        ]);
     }
 
     /**
@@ -1010,6 +1012,7 @@ class Novaposhta extends Component
         $data = 'https://my.novaposhta.ua/orders/' . $method . '/orders[]/' . implode(',', $documentRefs)
             . '/type/' . str_replace('_link', '', $type)
             . '/apiKey/' . $this->key;
+
         // Return data in same format like NovaPoshta API
         return $this->prepare(
             array(
@@ -1034,11 +1037,11 @@ class Novaposhta extends Component
     {
         $documentRefs = (array)$documentRefs;
         // If needs link
-        if ('html_link' == $type or 'pdf_link' == $type) {
+        if ('html_link' == $type || 'pdf_link' == $type) {
             return $this->printGetLink('printDocument', $documentRefs, $type);
         }
         // If needs data
-        return $this->request('InternetDocument', 'printDocument', array('DocumentRefs' => $documentRefs, 'Type' => $type));
+        return $this->request('InternetDocument', 'printDocument', ['DocumentRefs' => $documentRefs, 'Type' => $type]);
     }
 
     /**
@@ -1057,7 +1060,7 @@ class Novaposhta extends Component
             return $this->printGetLink('printMarkings', $documentRefs, $type);
         }
         // If needs data
-        return $this->request('InternetDocument', 'printMarkings', array('DocumentRefs' => $documentRefs, 'Type' => $type));
+        return $this->request('InternetDocument', 'printMarkings', ['DocumentRefs' => $documentRefs, 'Type' => $type]);
     }
 
     public function request2($model, $method, $params = [])

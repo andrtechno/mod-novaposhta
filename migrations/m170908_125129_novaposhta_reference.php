@@ -10,8 +10,10 @@ namespace panix\mod\novaposhta\migrations;
  */
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\CargoTypes;
+use panix\mod\novaposhta\models\Errors;
 use panix\mod\novaposhta\models\Packs;
 use panix\mod\novaposhta\models\Pallets;
+use panix\mod\novaposhta\models\ServiceTypes;
 use panix\mod\novaposhta\models\TiresWheels;
 use panix\mod\novaposhta\models\TypesCounterparties;
 use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
@@ -92,6 +94,18 @@ class m170908_125129_novaposhta_reference extends Migration
         ], $tableOptions);
 
         $this->createIndex('Ref', TypesCounterparties::tableName(), 'Ref');
+
+
+
+        $this->createTable(ServiceTypes::tableName(), [
+            'id' => $this->primaryKey()->unsigned(),
+            'Ref' => $this->string(36)->null(),
+            'Description' => $this->string(36)->null(),
+        ], $tableOptions);
+
+        $this->createIndex('Ref', ServiceTypes::tableName(), 'Ref');
+
+
     }
 
     public function down()
@@ -102,6 +116,8 @@ class m170908_125129_novaposhta_reference extends Migration
         $this->dropTable(TypesOfPayersForRedelivery::tableName());
         $this->dropTable(TiresWheels::tableName());
         $this->dropTable(TypesCounterparties::tableName());
+        $this->dropTable(ServiceTypes::tableName());
+
     }
 
 }

@@ -35,12 +35,25 @@ die;*/
     $form = ActiveForm::begin();
     ?>
     <div class="card-body">
-        <?= $form->field($model, 'api_key'); ?>
 
 
-        sender
+        <?php
+        echo panix\engine\bootstrap\Tabs::widget([
+            'items' => [
+                [
+                    'label' => 'Общие',
+                    'content' => $this->render('_main', ['form' => $form, 'model' => $model]),
+                    'active' => true,
+                ],
+                [
+                    'label' => 'Отправление',
+                    'content' => $this->render('_sender', ['form' => $form, 'model' => $model]),
+                    'headerOptions' => [],
+                ],
 
-
+            ],
+        ]);
+        ?>
     </div>
     <div class="card-footer text-center">
         <?= $model->submitButton(); ?>

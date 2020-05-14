@@ -2,7 +2,7 @@
 
 namespace panix\mod\novaposhta\models;
 
-use panix\mod\sitemap\behaviors\SitemapBehavior;
+use panix\mod\novaposhta\models\query\CitiesQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
@@ -96,89 +96,42 @@ class Cities extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'short_description', 'slug'], 'required'],
-            [['name', 'slug'], 'string', 'max' => 255],
-            [['full_description'], 'string'],
-            [['name', 'slug'], 'trim'],
-            ['slug', '\panix\engine\validators\UrlValidator', 'attributeCompare' => 'name'],
-            ['slug', 'match',
-                'pattern' => '/^([a-z0-9-])+$/i',
-                'message' => Yii::t('app/default', 'PATTERN_URL')
-            ],
+            [['Description', 'DescriptionRu'], 'required'],
+            [['DescriptionRu'], 'string', 'max' => 255],
+            [['DescriptionRu'], 'string'],
+            [['DescriptionRu'], 'trim'],
+
             [['updated_at', 'created_at'], 'safe'],
 
 
-            [['short_description', 'image'], 'default'],
+            [['DescriptionRu', 'Description'], 'default'],
         ];
     }
 
-    public function getUrl()
-    {
-        return ['/news/default/view', 'slug' => $this->slug];
-    }
 
-    public function displayDescription($attribute='full_description')
+    public static function getList($wheres = [])
     {
-        if (Yii::$app->user->can('admin')) {
-            \panix\ext\tinymce\TinyMceInline::widget();
+        $result = [];
+        $query = self::find();
+        if ($wheres) {
+            $query->where($wheres);
         }
-        return (Yii::$app->user->can('admin')) ? $this->isText('full_description') : $this->pageBreak('full_description');
-    }
-
-    public function getUser()
-    {
-        return $this->hasOne(Yii::$app->user->identityClass, ['id' => 'user_id']);
-    }
-
-    public function behaviors()
-    {
-        $b = [];
-        if (Yii::$app->getModule('seo'))
-            $b['seo'] = [
-                'class' => '\panix\mod\seo\components\SeoBehavior',
-                'url' => $this->getUrl()
-            ];
-
-        if (Yii::$app->getModule('sitemap')) {
-            $b['sitemap'] = [
-                'class' => SitemapBehavior::class,
-                //'batchSize' => 100,
-                'scope' => function ($model) {
-                    /** @var \yii\db\ActiveQuery $model */
-                    $model->select(['slug', 'updated_at']);
-                    $model->where(['switch' => 1]);
-                },
-                'dataClosure' => function ($model) {
-                    /** @var self $model */
-                    return [
-                        'loc' => $model->getUrl(),
-                        'lastmod' => $model->updated_at,
-                        'changefreq' => SitemapBehavior::CHANGEFREQ_DAILY,
-                        'priority' => 0.1
-                    ];
+        $list = $query->asArray()->all();
+        if ($list) {
+            foreach ($list as $item) {
+                $result[$item['Ref']] = $item['DescriptionRu'];
+            }
+        } else {
+            $list = Yii::$app->novaposhta->getCities();
+            if ($list['success']) {
+                foreach ($list['data'] as $item) {
+                    $result[$item['Ref']] = $item['DescriptionRu'];
                 }
-            ];
-        }
-        if (Yii::$app->hasModule('comments')) {
-            $b['commentBehavior'] = [
-                'class' => 'panix\mod\comments\components\CommentBehavior',
-                'owner_title' => 'name',
-
-            ];
+            }
         }
 
 
-        $b['uploadFile'] = [
-            'class' => 'panix\engine\behaviors\UploadFileBehavior',
-            'files' => [
-                'image' => '@uploads/news',
-            ],
-            'options' => [
-                'watermark' => false
-            ]
-        ];
-
-        return \yii\helpers\ArrayHelper::merge($b, parent::behaviors());
+        return $result;
     }
 
 }

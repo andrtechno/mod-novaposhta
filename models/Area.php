@@ -2,6 +2,7 @@
 
 namespace panix\mod\novaposhta\models;
 
+use panix\mod\novaposhta\models\query\CitiesQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
@@ -22,7 +23,7 @@ class Area extends ActiveRecord
 
     public static function find()
     {
-        return new WarehousesQuery(get_called_class());
+        return new CitiesQuery(get_called_class());
     }
 
 
@@ -37,7 +38,7 @@ class Area extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules2()
     {
         return [
             [['name', 'short_description', 'slug'], 'required'],
@@ -54,6 +55,26 @@ class Area extends ActiveRecord
 
             [['short_description', 'image'], 'default'],
         ];
+    }
+
+    public static function getList(){
+        $result = [];
+        $list = self::find()->asArray()->all();
+        if($list){
+            foreach ($list as $item) {
+                $result[$item['Ref']] = $item['DescriptionRu'];
+            }
+        }else{
+            $list = Yii::$app->novaposhta->getArea();
+            if ($list['success']) {
+                foreach ($list['data'] as $item) {
+                    $result[$item['Ref']] = $item['DescriptionRu'];
+                }
+            }
+        }
+
+
+        return $result;
     }
 
 }

@@ -8,6 +8,7 @@ use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\Packs;
 use panix\mod\novaposhta\models\Pallets;
+use panix\mod\novaposhta\models\ServiceTypes;
 use panix\mod\novaposhta\models\TiresWheels;
 use panix\mod\novaposhta\models\TypesCounterparties;
 use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
@@ -30,7 +31,7 @@ class NovaposhtaController extends ConsoleController
 
     public function actionCities()
     {
-        Yii::$app->db->createCommand()->truncateTable(Cities::tableName())->execute();
+        Cities::getDb()->createCommand()->truncateTable(Cities::tableName())->execute();
         $cities = $this->api->getCities();
 
 
@@ -64,7 +65,7 @@ class NovaposhtaController extends ConsoleController
             }
 
 
-            Yii::$app->db->createCommand()->batchInsert(Cities::tableName(), [
+            Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), [
                 'Description',
                 'DescriptionRu',
                 'Ref',
@@ -95,7 +96,7 @@ class NovaposhtaController extends ConsoleController
     {
 
 
-        Yii::$app->db->createCommand()->truncateTable(Warehouses::tableName())->execute();
+        Warehouses::getDb()->createCommand()->truncateTable(Warehouses::tableName())->execute();
 
         $result = $this->api
             ->model('Address')
@@ -104,9 +105,45 @@ class NovaposhtaController extends ConsoleController
 
         $list = [];
         foreach ($result['data'] as $d) {
-            $list[] = array_values($d);
+            $list[] = [
+                $d['SiteKey'],
+                $d['Description'],
+                $d['DescriptionRu'],
+                $d['ShortAddress'],
+                $d['ShortAddressRu'],
+                $d['Phone'],
+                $d['TypeOfWarehouse'],
+                $d['Ref'],
+                $d['Number'],
+                $d['CityRef'],
+                $d['CityDescription'],
+                $d['CityDescriptionRu'],
+                $d['SettlementRef'],
+                $d['SettlementDescription'],
+                $d['SettlementAreaDescription'],
+                $d['SettlementRegionsDescription'],
+                $d['SettlementTypeDescription'],
+                $d['Longitude'],
+                $d['Latitude'],
+                $d['PostFinance'],
+                $d['BicycleParking'],
+                $d['PaymentAccess'],
+                $d['POSTerminal'],
+                $d['InternationalShipping'],
+                $d['SelfServiceWorkplacesCount'],
+                $d['TotalMaxWeightAllowed'],
+                $d['PlaceMaxWeightAllowed'],
+                (is_array($d['Reception'])) ? json_encode($d['Reception']) : $d['Reception'],
+                (is_array($d['Delivery'])) ? json_encode($d['Delivery']) : $d['Delivery'],
+                (is_array($d['Schedule'])) ? json_encode($d['Schedule']) : $d['Schedule'],
+                $d['DistrictCode'],
+                $d['WarehouseStatus'],
+                $d['WarehouseStatusDate'],
+                $d['CategoryOfWarehouse'],
+                $d['Direct'],
+            ];
         }
-        Yii::$app->db->createCommand()->batchInsert(Warehouses::tableName(), [
+        Warehouses::getDb()->createCommand()->batchInsert(Warehouses::tableName(), [
             'SiteKey',
             'Description',
             'DescriptionRu',
@@ -150,7 +187,7 @@ class NovaposhtaController extends ConsoleController
     {
 
 
-        Yii::$app->db->createCommand()->truncateTable(Area::tableName())->execute();
+        Area::getDb()->createCommand()->truncateTable(Area::tableName())->execute();
 
         $result = $this->api
             ->model('Address')
@@ -163,7 +200,7 @@ class NovaposhtaController extends ConsoleController
             foreach ($result['data'] as $d) {
                 $list[] = array_values($d);
             }
-            Yii::$app->db->createCommand()->batchInsert(Area::tableName(), [
+            Area::getDb()->createCommand()->batchInsert(Area::tableName(), [
                 'Ref',
                 'AreasCenter',
                 'DescriptionRu',
@@ -177,12 +214,14 @@ class NovaposhtaController extends ConsoleController
     {
 
 
-        Yii::$app->db->createCommand()->truncateTable(CargoTypes::tableName())->execute();
-        Yii::$app->db->createCommand()->truncateTable(Packs::tableName())->execute();
-        Yii::$app->db->createCommand()->truncateTable(Pallets::tableName())->execute();
-        Yii::$app->db->createCommand()->truncateTable(TypesOfPayersForRedelivery::tableName())->execute();
-        Yii::$app->db->createCommand()->truncateTable(TiresWheels::tableName())->execute();
-        Yii::$app->db->createCommand()->truncateTable(TypesCounterparties::tableName())->execute();
+        CargoTypes::getDb()->createCommand()->truncateTable(CargoTypes::tableName())->execute();
+        Packs::getDb()->createCommand()->truncateTable(Packs::tableName())->execute();
+        Pallets::getDb()->createCommand()->truncateTable(Pallets::tableName())->execute();
+        TypesOfPayersForRedelivery::getDb()->createCommand()->truncateTable(TypesOfPayersForRedelivery::tableName())->execute();
+        TiresWheels::getDb()->createCommand()->truncateTable(TiresWheels::tableName())->execute();
+        TypesCounterparties::getDb()->createCommand()->truncateTable(TypesCounterparties::tableName())->execute();
+        ServiceTypes::getDb()->createCommand()->truncateTable(ServiceTypes::tableName())->execute();
+
 
         $cargoTypes = $this->api->getCargoTypes();
         if ($cargoTypes['success']) {
@@ -190,7 +229,7 @@ class NovaposhtaController extends ConsoleController
             foreach ($cargoTypes['data'] as $cargoType) {
                 $cargoTypesList[] = array_values($cargoType);
             }
-            Yii::$app->db->createCommand()->batchInsert(CargoTypes::tableName(), [
+            CargoTypes::getDb()->createCommand()->batchInsert(CargoTypes::tableName(), [
                 'Description',
                 'Ref',
             ], $cargoTypesList)->execute();
@@ -207,7 +246,7 @@ class NovaposhtaController extends ConsoleController
             foreach ($pallets['data'] as $pallet) {
                 $palletsList[] = array_values($pallet);
             }
-            Yii::$app->db->createCommand()->batchInsert(Pallets::tableName(), [
+            Pallets::getDb()->createCommand()->batchInsert(Pallets::tableName(), [
                 'Ref',
                 'Description',
                 'DescriptionRu',
@@ -226,7 +265,6 @@ class NovaposhtaController extends ConsoleController
             ->execute();
 
 
-
         if ($packs['success']) {
             $packsList = [];
             foreach ($packs['data'] as $pack) {
@@ -242,7 +280,7 @@ class NovaposhtaController extends ConsoleController
                     $pack['TypeOfPacking']
                 ];
             }
-            Yii::$app->db->createCommand()->batchInsert(Packs::tableName(), [
+            Packs::getDb()->createCommand()->batchInsert(Packs::tableName(), [
                 'Ref',
                 'Description',
                 'DescriptionRu',
@@ -263,7 +301,7 @@ class NovaposhtaController extends ConsoleController
                     $redelivery['Ref']
                 ];
             }
-            Yii::$app->db->createCommand()->batchInsert(TypesOfPayersForRedelivery::tableName(), [
+            TypesOfPayersForRedelivery::getDb()->createCommand()->batchInsert(TypesOfPayersForRedelivery::tableName(), [
                 'Description',
                 'Ref',
             ], $typesOfPayersForRedeliveryList)->execute();
@@ -281,7 +319,7 @@ class NovaposhtaController extends ConsoleController
                     $tiresWheel['DescriptionType'],
                 ];
             }
-            Yii::$app->db->createCommand()->batchInsert(TiresWheels::tableName(), [
+            TiresWheels::getDb()->createCommand()->batchInsert(TiresWheels::tableName(), [
                 'Ref',
                 'Description',
                 'DescriptionRu',
@@ -300,11 +338,28 @@ class NovaposhtaController extends ConsoleController
                     $typeCounterparties['Ref']
                 ];
             }
-            Yii::$app->db->createCommand()->batchInsert(TypesCounterparties::tableName(), [
+            TypesCounterparties::getDb()->createCommand()->batchInsert(TypesCounterparties::tableName(), [
                 'Description',
                 'Ref',
             ], $list)->execute();
         }
+
+
+        $serviceTypes = $this->api->getServiceTypes();
+        if ($serviceTypes['success']) {
+            $list = [];
+            foreach ($serviceTypes['data'] as $serviceType) {
+                $list[] = [
+                    $serviceType['Description'],
+                    $serviceType['Ref']
+                ];
+            }
+            ServiceTypes::getDb()->createCommand()->batchInsert(ServiceTypes::tableName(), [
+                'Description',
+                'Ref',
+            ], $list)->execute();
+        }
+
     }
 
 }
