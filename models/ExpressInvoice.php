@@ -22,7 +22,8 @@ class ExpressInvoice extends ActiveRecord
     const route = '/admin/novaposhta/default';
     const MODULE_ID = 'novaposhta';
     public $order;
-
+    public $products;
+    public $inValidProduct;
     public $recipient_FirstName;
     public $recipient_MiddleName;
     public $recipient_LastName;
@@ -30,6 +31,7 @@ class ExpressInvoice extends ActiveRecord
     public $recipient_City;
     public $recipient_Region;
     public $recipient_Email;
+
     //public $recipient_Warehouse;
 
     public static function find()
@@ -54,6 +56,8 @@ class ExpressInvoice extends ActiveRecord
             $this->ServiceType = $config->serviceType;
             $this->CitySender = $config->sender_city;
             $this->SenderAddress = $config->sender_warehouse;
+            $this->SendersPhone = $config->sender_phone;
+            $this->SeatsAmount = $config->seatsAmount;
         }
 
         $this->DateTime = date('d.m.Y');
@@ -62,7 +66,7 @@ class ExpressInvoice extends ActiveRecord
             $contact = Yii::$app->novaposhta->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
             //\panix\engine\CMS::dump($contact);
             if ($contact['success']) {
-                $this->SendersPhone = $contact['data'][0]['Phones'];
+                //  $this->SendersPhone = $contact['data'][0]['Phones'];
                 $this->Sender = $senderData['data'][0]['Ref'];
             }
         }
@@ -73,15 +77,31 @@ class ExpressInvoice extends ActiveRecord
             if ($this->order->user_address)
                 $this->RecipientAddress = $this->order->user_address;
 
+            foreach ($this->order->products as $product) {
+                $original = $product->originalProduct;
+                if (!$original->width || !$original->height || !$original->length) {
+                    $this->products['volumeGeneral'][] = $product;
+                } else {
+                    $this->VolumeGeneral += $original->width + $original->height + $original->length;
+                }
+                if (!$original->weight) {
+                    $this->products['weight'][] = $product;
+                } else {
+                    $this->Weight += $original->weight;
+                }
+            }
 
             $this->Cost = $this->order->total_price;
             $this->recipient_FirstName = $this->order->user_name;
             $this->recipient_Email = $this->order->user_email;
             $this->CargoType = 'Cargo';
             if ($this->order->products) {
+                $list = [];
                 foreach ($this->order->products as $product) {
-                    $this->Description .= $product->name . ', ' . $product->quantity . ' шт.';
+                    $list[] = $product->name . ', ' . $product->quantity . ' шт.';
                 }
+                $this->Description = implode(', ', $list);
+
             }
         }
 
@@ -111,10 +131,10 @@ class ExpressInvoice extends ActiveRecord
                 'SenderAddress',
                 'ContactSender',
                 'SendersPhone',
-               // 'CityRecipient',
-               // 'Recipient',
+                // 'CityRecipient',
+                // 'Recipient',
                 'RecipientAddress',
-               // 'ContactRecipient',
+                // 'ContactRecipient',
                 'RecipientsPhone'
             ], 'required'],
 
@@ -122,13 +142,13 @@ class ExpressInvoice extends ActiveRecord
             //получаель
             [[
                 'recipient_FirstName',
-               // 'recipient_MiddleName',
+                // 'recipient_MiddleName',
                 'recipient_LastName',
                 //'recipient_Phone',
                 'recipient_City',
                 //'recipient_Region',
                 'recipient_Email',
-               // 'recipient_Warehouse'
+                // 'recipient_Warehouse'
             ], 'required'],
 
 
@@ -207,12 +227,12 @@ class ExpressInvoice extends ActiveRecord
 
 
                 'FirstName' => $this->recipient_FirstName,
-                'MiddleName' => ($this->recipient_MiddleName)?$this->recipient_MiddleName:'',
+                'MiddleName' => ($this->recipient_MiddleName) ? $this->recipient_MiddleName : '',
                 'LastName' => $this->recipient_LastName,
                 'Phone' => $this->RecipientsPhone,
                 'City' => $this->recipient_City,
-                'Region' => ($this->recipient_Region)?$this->recipient_Region:'',
-                'Email' => $this->recipient_Email,
+                'Region' => ($this->recipient_Region) ? $this->recipient_Region : '',
+                'Email' => ($this->recipient_Email) ? $this->recipient_Email : '',
                 'Warehouse' => $this->RecipientAddress,
             ],
             [

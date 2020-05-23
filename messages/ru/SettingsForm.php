@@ -6,5 +6,6 @@ return [
     'SENDER_PHONE' => 'Телефон',
     'SENDER_CITY' => 'Город',
     'SENDER_WAREHOUSE' => 'Адрес',
-    'SENDER_AREA' => 'Область'
+    'SENDER_AREA' => 'Область',
+    'SEATSAMOUNT' => 'Кол-во мест',
 ];

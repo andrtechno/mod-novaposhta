@@ -25,6 +25,7 @@ class SettingsForm extends SettingsModel
     public $sender_area;
     public $sender_city;
     public $sender_warehouse;
+    public $seatsAmount;
 
     public function init()
     {
@@ -37,7 +38,7 @@ class SettingsForm extends SettingsModel
     {
         return [
             [['api_key'], 'required'],
-            [['contact','serviceType','sender','sender_phone','sender_area','sender_city','sender_warehouse'], 'string'],
+            [['contact', 'serviceType', 'sender', 'sender_phone', 'sender_area', 'sender_city', 'sender_warehouse','seatsAmount'], 'string'],
             // ['comments', 'boolean'],
         ];
     }
@@ -47,9 +48,9 @@ class SettingsForm extends SettingsModel
         return [
             'api_key' => '',
             'contact' => '',
-            'sender'=>'',
-            'sender_phone'=>'',
-            'sender_warehouse'
+            'sender' => '',
+            'sender_phone' => '',
+            'sender_warehouse' => '',
         ];
     }
 
@@ -77,7 +78,6 @@ class SettingsForm extends SettingsModel
         }
         return $result;
     }
-
 
 
 }

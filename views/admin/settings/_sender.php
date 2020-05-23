@@ -8,6 +8,8 @@ use panix\mod\novaposhta\models\Area;
 use panix\mod\novaposhta\models\ServiceTypes;
 use panix\mod\novaposhta\models\Warehouses;
 use panix\ext\bootstrapselect\BootstrapSelect;
+use panix\ext\telinput\PhoneInput;
+
 /**
  * @var $form \panix\engine\bootstrap\ActiveForm
  * @var $this \yii\web\View
@@ -32,7 +34,8 @@ if ($contacts['success']) {
     return $data['Description'] . ', ' . CMS::phone_format($data['Phones']);
 }));
 ?>
-<?= $form->field($model, 'sender_phone')->textInput(['value' => $contacts['data'][0]['Phones']]); ?>
+<?= $form->field($model, 'sender_phone')->widget(PhoneInput::class,['value' => $contacts['data'][0]['Phones']]); ?>
+<?php // $form->field($model, 'sender_phone')->textInput(['value' => $contacts['data'][0]['Phones']]); ?>
 <?= $form->field($model, 'sender_area')->dropDownList(Area::getList()); ?>
 <?= $form->field($model, 'sender_city')->widget(BootstrapSelect::class, [
     'items' => Cities::getList(['IsBranch' => 1]),
@@ -44,7 +47,7 @@ if ($contacts['success']) {
     'items' => [],
     'jsOptions' => ['liveSearch' => true]
 ]); ?>
-
+<?= $form->field($model, 'seatsAmount') ?>
 
 <?php
 

@@ -14,11 +14,11 @@ return [
     'RECIPIENT_FIRSTNAME' => 'Имя',
     'RECIPIENT_MIDDLENAME' => 'Отчество',
     'RECIPIENT_LASTNAME' => 'Фамилия',
-    'RECIPIENT_PHONE' => 'Телефон',
+    'RECIPIENTSPHONE' => 'Телефон',
     'RECIPIENT_CITY' => 'Город',
     'RECIPIENT_REGION' => 'Регион',
     'RECIPIENT_EMAIL' => 'Почта',
-    'RECIPIENT_WAREHOUSE' => 'Адрес',
+    'RECIPIENTADDRESS' => 'Адрес',
 
 
     'CITYSENDER' => 'Город',

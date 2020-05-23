@@ -3,6 +3,7 @@
 namespace panix\mod\novaposhta\controllers\admin;
 
 use panix\engine\CMS;
+use panix\engine\Html;
 use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\ExpressInvoice;
 use panix\mod\novaposhta\models\ExpressInvoiceForm;
@@ -73,6 +74,18 @@ class ExpressInvoiceController extends AdminController
         $api = Yii::$app->novaposhta;
         $model = new ExpressInvoice();
 
+
+        $this->pageName = html_entity_decode(Yii::t('novaposhta/default', 'CREATE_EXPRESS_WAYBILL'));
+        $this->breadcrumbs[] = [
+            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+            'url' => ['index']
+        ];
+        $this->breadcrumbs[] = [
+            'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
+            'url' => ['express-invoice']
+        ];
+        $this->breadcrumbs[] = $this->pageName;
+
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             if ($model->validate()) {
@@ -96,6 +109,7 @@ class ExpressInvoiceController extends AdminController
             //'order'=>$order
         ]);
     }
+
     public function actionCreateOld()
     {
 
@@ -191,7 +205,7 @@ class ExpressInvoiceController extends AdminController
                     'ContactRecipient' => $model->ContactRecipient,
                     'RecipientsPhone' => $model->RecipientsPhone,
                 ]);
-                if($response['success']){
+                if ($response['success']) {
                     CMS::dump($response);
                     die('ok');
                 }
