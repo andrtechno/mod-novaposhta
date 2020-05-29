@@ -147,11 +147,11 @@ class ExpressInvoice extends ActiveRecord
                 //'recipient_Phone',
                 'recipient_City',
                 //'recipient_Region',
-                'recipient_Email',
+                //'recipient_Email',
                 // 'recipient_Warehouse'
             ], 'required'],
 
-
+            [['recipient_Email'], 'email'],
             //[['ref'], 'string', 'max' => 32],
             //[['ref'], 'string'],
             //[['ref'], 'trim'],

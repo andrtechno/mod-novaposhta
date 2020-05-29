@@ -7,15 +7,11 @@ use yii\helpers\ArrayHelper;
 use panix\ext\bootstrapselect\BootstrapSelect;
 
 $form = ActiveForm::begin([
-    'layout' => 'horizontal',
     'fieldConfig' => [
         'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
         'horizontalCssClasses' => [
-            'label' => 'col-form-label',
-            'offset' => 'offset-sm-4 offset-lg-2',
+            'offset' => 'offset-sm-4 offset-lg-3 offset-xl-4',
             'wrapper' => 'col-sm-8 col-md-8 col-lg-9 col-xl-8',
-            'error' => '',
-            'hint' => '',
         ],
     ]
 ]);
@@ -95,11 +91,6 @@ if ($contacts['success']) {
                             '{call}' => Html::a(Html::icon('phone') . ' Позвонить &mdash; <strong>' . CMS::phoneOperator($model->RecipientsPhone) . '</strong>', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light'])
                         ]
                     ])->widget(PhoneInput::class); ?>
-
-
-
-
-                    <?= Html::a(Html::icon('phone') . ' Позвонить', 'tel:' . $model->RecipientsPhone, ['class' => 'ml-lg-3 mt-lg-0 mt-2 d-lg-inline-block d-block text-center text-lg-center']); ?>
                     <?= $form->field($model, 'recipient_City'); ?>
                     <?= $form->field($model, 'recipient_Region'); ?>
                     <?= $form->field($model, 'recipient_Email'); ?>
