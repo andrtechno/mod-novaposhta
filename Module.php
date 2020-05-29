@@ -48,36 +48,43 @@ class Module extends WebModule implements BootstrapInterface
                         'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
                         'url' => '#',
                         'icon' => $this->icon,
+                        'visible' => Yii::$app->user->can('/novaposhta/admin/default/index') || Yii::$app->user->can('/novaposhta/admin/default/*'),
                         'items' => [
                             [
                                 'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
                                 'url' => ['/admin/novaposhta'],
                                 'icon' => $this->icon,
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/default/index') || Yii::$app->user->can('/novaposhta/admin/default/*'),
                             ],
                             [
                                 'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
                                 'url' => ['/admin/novaposhta/express-invoice'],
                                 'icon' => $this->icon,
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/express-invoice/index') || Yii::$app->user->can('/novaposhta/admin/express-invoice/*'),
                             ],
                             [
                                 'label' => Yii::t('novaposhta/default', 'counterparties'),
                                 'url' => ['/admin/novaposhta/counterparties'],
                                 'icon' => $this->icon,
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/counterparties/index') || Yii::$app->user->can('/novaposhta/admin/counterparties/*'),
                             ],
                             [
                                 'label' => Yii::t('novaposhta/default', 'service-types'),
                                 'url' => ['/admin/novaposhta/service-types'],
                                 'icon' => $this->icon,
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/service-types/index') || Yii::$app->user->can('/novaposhta/admin/service-types/*'),
                             ],
                             [
                                 'label' => Yii::t('novaposhta/default', 'WAREHOUSES'),
                                 'url' => ['/admin/novaposhta/warehouses'],
                                 'icon' => $this->icon,
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/warehouses/index') || Yii::$app->user->can('/novaposhta/admin/warehouses/*'),
                             ],
                             [
                                 'label' => Yii::t('app/default', 'SETTINGS'),
                                 'url' => ['/admin/novaposhta/settings'],
                                 'icon' => 'settings',
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/settings/index') || Yii::$app->user->can('/novaposhta/admin/settings/*'),
                             ]
                         ]
                     ],
