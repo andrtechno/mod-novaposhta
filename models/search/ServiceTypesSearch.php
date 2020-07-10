@@ -42,7 +42,7 @@ class ServiceTypesSearch extends ServiceTypes
      */
     public function search($params)
     {
-        $query = static::find();
+        $query = ServiceTypes::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

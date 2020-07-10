@@ -4,6 +4,8 @@ return [
     'MODULE_DESC' => 'Новая почта',
     'CREATE_BTN' => 'Создать страницу',
     'EXPRESS_WAYBILL' => 'Экспресс-накладная',
+    'SERVICES_TYPES'=>'Виды услуг',
+    'COUNTERPARTIES'=>'Контрагент',
     'CREATE_EXPRESS_WAYBILL' => 'Создать &laquo;Экспресс-накладную&raquo;',
     'CREATE_EXPRESS_WAYBILL_CART' => 'Создать &laquo;ЭН&raquo; для &laquo;Новой почты&raquo;',
     'WAREHOUSES' => 'Склады',

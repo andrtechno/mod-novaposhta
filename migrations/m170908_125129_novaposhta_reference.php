@@ -30,40 +30,37 @@ class m170908_125129_novaposhta_reference extends Migration
         }
 
         $this->createTable(Packs::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
-            'Description' => $this->string(36)->null(),
-            'DescriptionRu' => $this->string(36)->null(),
-            'Length' => $this->string(36)->null(),
-            'Width' => $this->string(36)->null(),
-            'Height' => $this->string(36)->null(),
-            'VolumetricWeight' => $this->string(36)->null(),
+            'Description' => $this->string(255)->null(),
+            'DescriptionRu' => $this->string(255)->null(),
+            'Length' => $this->decimal(10,1)->null(),
+            'Width' => $this->decimal(10,1)->null(),
+            'Height' => $this->decimal(10,1)->null(),
+            'VolumetricWeight' => $this->decimal(10,2)->null(),
             'TypeOfPacking' => $this->string(36)->null(),
         ], $tableOptions);
-
-        $this->createIndex('Ref', Packs::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', Packs::tableName(), 'Ref');
+        //$this->createIndex('Ref', Packs::tableName(), 'Ref');
 
         $this->createTable(Pallets::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
-            'Description' => $this->string(36)->null(),
-            'DescriptionRu' => $this->string(36)->null(),
-            'Weight' => $this->string(36)->null(),
+            'Description' => $this->string(255)->null(),
+            'DescriptionRu' => $this->string(255)->null(),
+            'Weight' => $this->decimal(10,2)->null(),
         ], $tableOptions);
 
 
-        $this->createIndex('Ref', Pallets::tableName(), 'Ref');
-
+        //$this->createIndex('Ref', Pallets::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', Pallets::tableName(), 'Ref');
 
 
         $this->createTable(CargoTypes::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
             'Description' => $this->string(36)->null(),
         ], $tableOptions);
 
-        $this->createIndex('Ref', CargoTypes::tableName(), 'Ref');
-
+        //$this->createIndex('Ref', CargoTypes::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', CargoTypes::tableName(), 'Ref');
 
         $this->createTable(TypesOfPayersForRedelivery::tableName(), [
             'id' => $this->primaryKey()->unsigned(),

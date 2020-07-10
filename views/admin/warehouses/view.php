@@ -3,83 +3,71 @@
 use panix\engine\CMS;
 use panix\engine\Html;
 
+/**
+ * @var \yii\web\View $this
+ */
 
+
+if ($model->Latitude && $model->Longitude) {
+    \panix\mod\novaposhta\LeafletAsset::register($this);
+    $this->registerJs("
+    var coords = [" . $model->Latitude . ", " . $model->Longitude . "];
+var map = L.map('leaflet-map', {
+    center: coords,
+    zoom: 13
+});
+
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+
+var markerIcon = L.icon({
+    iconUrl: 'http://pixelion.com.ua/uploads/YWIYuQTR9H.png',
+    iconSize: [38, 95],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+    //shadowUrl: 'my-icon-shadow.png',
+    //shadowSize: [68, 95],
+    //shadowAnchor: [22, 94]
+});
+
+L.marker(coords,{
+icon:markerIcon
+}).addTo(map).bindPopup('".$this->context->pageName."');//.openPopup();
+    
+", \yii\web\View::POS_END);
+}
 ?>
-<?php
-//DateTime
-//echo CMS::date(strtotime($result['DateTime']));
 
 
-?>
-
-
-<div class="card">
-    <div class="card-header">
-        <h5><?= $this->context->pageName; ?> <span class="float-right">Статус: <span class="h6 badge badge-secondary"><?= $result['StateName']; ?></span></span></h5>
-    </div>
-    <div class="card-body p-3">
-        <div class="row">
-            <div class="col-sm-6">
-                <h4>Отправитель: <small class="text-muted"><?= $result['Sender']; ?></small></h4>
-                <div><i class="icon-user-outline"></i> <?= $result['ContactSender']; ?>, <?= Html::tel($result['SendersPhone']); ?></div>
-                <div><i class="icon-location"></i> Адрес: <?= $result['SenderAddress']; ?></div>
-
-            </div>
-            <div class="col-sm-6">
-                <h4>Получатель: <small class="text-muted"><?= $result['Recipient']; ?></small></h4>
-                <div><i class="icon-user-outline"></i> <?= $result['ContactRecipient']; ?> <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['RecipientsPhone']), 'tel:' . $result['RecipientsPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?></div>
-                <div><i class="icon-location"></i> Адрес: <?= $result['CityRecipient']; ?>, <?= $result['RecipientAddress']; ?></div>
-            </div>
-            <div class="col-sm-6">
-                <h4>Обратная доставка</h4>
-                <?php
-                if(isset($result['BackwardDeliveryData'])){
-                    $data= $result['BackwardDeliveryData'][0];
-
-                    echo $data['CargoType'];
-                    echo $data['PayerType'];
-                    echo $data['RedeliveryString'];
-                    // CMS::dump($result['BackwardDeliveryData'][0]);
-                }
-                ?>
-
-
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h5><?= $this->context->pageName; ?> <span class="float-right">Статус: <span
+                            class="h6 badge badge-secondary">asd</span></span></h5>
         </div>
-
-
-        <div class="row">
-            <div class="col-sm-6">
-                <h4>Информация об отправки:</h4>
-                <div>CargoType: <?= $result['CargoType']; ?></div>
-                <div>Цена: <?= $result['Cost']; ?></div>
-                <div>Вес: <?= $result['Weight']; ?>кг.</div>
-                <div>ServiceType: <?= $result['ServiceType']; ?></div>
-                <div>PaymentMethod: <?= $result['PaymentMethod']; ?></div>
-                <div>PayerType: <?= $result['PayerType']; ?></div>
-                <div>Объем куб.м.: <?= $result['VolumeGeneral']; ?></div>
-                <div>Дата: <?= $result['DateTime']; ?></div>
+        <div class="card-body p-3">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div>
+                        Телефон  <?= $model->Phone; ?>
+                    </div>
+                    <div>
+                        CategoryOfWarehouse  <?= $model->CategoryOfWarehouse; ?>
+                    </div>
+                    <?= $model->CityDescription; ?>
+                    <?= $model->ShortAddress; ?>
+                    <div>
+                    <?= $model->PostFinance; ?>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div id="leaflet-map" style="width: 100%;height:400px"></div>
+                </div>
             </div>
-
 
         </div>
     </div>
-</div>
 
 <?php
-CMS::dump($result);
-
-$deliveryDate = $api->getDocumentDeliveryDate($result['CitySenderRef'],$result['CityRecipientRef'],$result['ServiceTypeRef'],$result['DateTime']);
-
-//CMS::dump($deliveryDate);
-
-
-
-$documentPrice = $api->getDocumentPrice($result['CitySenderRef'],$result['CityRecipientRef'],$result['ServiceTypeRef'],$result['Weight'],$result['Cost'], $result['CargoTypeRef']);
-//CMS::dump($documentPrice);
-
-
-
-
-$tracking = $api->documentsTracking($result['Ref']);
-//CMS::dump($tracking);

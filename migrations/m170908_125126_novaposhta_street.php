@@ -26,7 +26,6 @@ class m170908_125126_novaposhta_street extends Migration
 
 
         $this->createTable(Street::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
             'Description' => $this->string(100)->null(),
             'StreetsTypeRef' => $this->string(36)->null(),
@@ -34,8 +33,8 @@ class m170908_125126_novaposhta_street extends Migration
 
         ], $tableOptions);
 
-
-        $this->createIndex('Ref', Street::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', Street::tableName(), 'Ref');
+        //$this->createIndex('Ref', Street::tableName(), 'Ref');
         $this->createIndex('StreetsTypeRef', Street::tableName(), 'StreetsTypeRef');
 
     }

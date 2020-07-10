@@ -32,8 +32,12 @@ class WarehousesController extends AdminController
     }
 
 
-    public function actionView(){
+    public function actionView($id)
+    {
+        $model = Warehouses::findOne($id);
+        $this->pageName = ($model->DescriptionRu) ? $model->DescriptionRu : $model->Description;
+
         $api = Yii::$app->novaposhta;
-        return $this->render('view',['api'=>$api]);
+        return $this->render('view', ['model' => $model, 'api' => $api]);
     }
 }

@@ -36,18 +36,12 @@ class CounterpartiesController extends AdminController
     public function actionIndex()
     {
         $api = Yii::$app->novaposhta;
-        $this->pageName = Yii::t('novaposhta/default', 'MODULE_NAME');
-        $this->buttons = [
-            [
-                'icon' => 'add',
-                'label' => Yii::t('novaposhta/default', 'CREATE_BTN'),
-                'url' => ['create'],
-                'options' => ['class' => 'btn btn-success']
-            ]
+        $this->pageName = Yii::t('novaposhta/default', 'COUNTERPARTIES');
+        $this->breadcrumbs[] = [
+            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+            'url' => ['index']
         ];
-        $this->breadcrumbs = [
-            $this->pageName
-        ];
+        $this->breadcrumbs[] = $this->pageName;
 
         return $this->render('index', [
 

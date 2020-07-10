@@ -63,13 +63,13 @@ class Module extends WebModule implements BootstrapInterface
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/express-invoice/index') || Yii::$app->user->can('/novaposhta/admin/express-invoice/*'),
                             ],
                             [
-                                'label' => Yii::t('novaposhta/default', 'counterparties'),
+                                'label' => Yii::t('novaposhta/default', 'COUNTERPARTIES'),
                                 'url' => ['/admin/novaposhta/counterparties'],
                                 'icon' => $this->icon,
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/counterparties/index') || Yii::$app->user->can('/novaposhta/admin/counterparties/*'),
                             ],
                             [
-                                'label' => Yii::t('novaposhta/default', 'service-types'),
+                                'label' => Yii::t('novaposhta/default', 'SERVICES_TYPES'),
                                 'url' => ['/admin/novaposhta/service-types'],
                                 'icon' => $this->icon,
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/service-types/index') || Yii::$app->user->can('/novaposhta/admin/service-types/*'),
@@ -93,7 +93,10 @@ class Module extends WebModule implements BootstrapInterface
             ],
         ];
     }
-
+    public function getAdminSidebar()
+    {
+        return $this->adminMenu['modules']['items'][0]['items'];
+    }
 
     public function getInfo()
     {

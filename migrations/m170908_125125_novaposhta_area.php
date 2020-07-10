@@ -26,16 +26,15 @@ class m170908_125125_novaposhta_area extends Migration
 
 
         $this->createTable(Area::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
-            'Ref' => $this->string(255)->null(),
+            'Ref' => $this->string(36)->null(),
             'AreasCenter' => $this->string(255)->null(),
             'DescriptionRu' => $this->string(255)->null(),
             'Description' => $this->string(255)->null(),
 
         ], $tableOptions);
 
-
-        $this->createIndex('Ref', Area::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', Area::tableName(), 'Ref');
+        //$this->createIndex('Ref', Area::tableName(), 'Ref');
 
     }
 

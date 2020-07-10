@@ -266,6 +266,7 @@ class NovaposhtaController extends ConsoleController
 
 
         if ($packs['success']) {
+           // print_r($packs);die;
             $packsList = [];
             foreach ($packs['data'] as $pack) {
 

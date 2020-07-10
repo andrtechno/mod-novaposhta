@@ -10,13 +10,17 @@ Pjax::begin([
 echo GridView::widget([
     'tableOptions' => ['class' => 'table table-striped'],
     'dataProvider' => $dataProvider,
-    'filterModel' => $searchModel,
     'layoutOptions' => ['title' => $this->context->pageName],
     'enableColumns'=>false,
     'columns'=>[
-        'Description',
-        'Ref',
-
+        [
+            'attribute' => 'Description',
+            'format' => 'raw',
+            'contentOptions' => ['class' => 'text-left'],
+            'value'=>function($model){
+                return $model->Description.' <code>['.$model->Ref.']</code>';
+            }
+        ],
     ]
 ]);
 

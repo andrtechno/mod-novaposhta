@@ -15,7 +15,7 @@ use Yii;
 class m170908_125124_novaposhta_warehouses extends Migration
 {
 
-    public function up()
+    public function safeUp()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
@@ -26,7 +26,6 @@ class m170908_125124_novaposhta_warehouses extends Migration
 
 
         $this->createTable(Warehouses::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
             'SiteKey' => $this->string(255)->null(),
             'Description' => $this->string(99)->null(),
@@ -65,14 +64,33 @@ class m170908_125124_novaposhta_warehouses extends Migration
         ], $tableOptions);
 
 
+        $this->addPrimaryKey('Ref', Warehouses::tableName(), 'Ref');
         $this->createIndex('CityRef', Warehouses::tableName(), 'CityRef');
-        $this->createIndex('Ref', Warehouses::tableName(), 'Ref');
+        //$this->createIndex('Ref', Warehouses::tableName(), 'Ref');
         $this->createIndex('SettlementRef', Warehouses::tableName(), 'SettlementRef');
+        $this->createIndex('TypeOfWarehouse', Warehouses::tableName(), 'TypeOfWarehouse');
+
+
+        /*$this->addForeignKey(
+            '{{%novaposhta__warehouses_CityRef_fk}}',
+            Warehouses::tableName(),
+            'CityRef',
+            Cities::tableName(),
+            'Ref'
+        );*/
+
+    }
+    public function safeDown()
+    {
+        try {
+            $this->dropTable(Warehouses::tableName());
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+
+        return __CLASS__." was reverted.\n";
     }
 
-    public function down()
-    {
-        $this->dropTable(Warehouses::tableName());
-    }
 
 }

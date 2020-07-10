@@ -39,7 +39,7 @@ class ServiceTypes extends ActiveRecord
     public function rules()
     {
         return [
-            [['Description','Ref'], 'required'],
+            [['Description', 'Ref'], 'required'],
             [['Description'], 'string', 'max' => 255],
             [['Description'], 'string'],
             [['Description'], 'trim'],
@@ -47,14 +47,16 @@ class ServiceTypes extends ActiveRecord
         ];
     }
 
-    public static function getList(){
+
+    public static function getList()
+    {
         $result = [];
         $list = self::find()->asArray()->all();
-        if($list){
+        if ($list) {
             foreach ($list as $item) {
                 $result[$item['Ref']] = $item['Description'];
             }
-        }else{
+        } else {
             $list = Yii::$app->novaposhta->getServiceTypes();
             if ($list['success']) {
                 foreach ($list['data'] as $item) {

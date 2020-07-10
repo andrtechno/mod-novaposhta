@@ -19,7 +19,7 @@ class WarehousesSearch extends Warehouses
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            //[['id'], 'integer'],
             [['Description'], 'safe'],
             [['Description'], 'string'],
         ];
@@ -57,7 +57,7 @@ class WarehousesSearch extends Warehouses
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['id' => $this->id]);
+        //$query->andFilterWhere(['id' => $this->id]);
         $query->andFilterWhere(['like', 'Description', $this->Description]);
 
 
