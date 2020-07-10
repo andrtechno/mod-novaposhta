@@ -6,6 +6,9 @@ use panix\engine\CMS;
 use yii\helpers\ArrayHelper;
 use panix\ext\bootstrapselect\BootstrapSelect;
 
+/**
+ * @var \yii\web\View $this
+ */
 $form = ActiveForm::begin([
     'fieldConfig' => [
         'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
@@ -17,7 +20,7 @@ $form = ActiveForm::begin([
 ]);
 
 $senderData = $api->getCounterparties('Sender', 1, '', '');
-CMS::dump($senderData['data']);
+//CMS::dump($senderData['data']);
 $contacts = $api->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
 $contactsList = [];
 if ($contacts['success']) {
@@ -30,28 +33,42 @@ if ($contacts['success']) {
 //$contact = $api->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
 //\panix\engine\CMS::dump($contact);
 //die;
+$this->registerCss('
+.bootstrap-select .dropdown-menu{
+    /*height:300px;*/
+}
+');
 
+$this->registerJs("
+
+function setTemplate(temp){
+    var message;
+    if(temp === 1){
+        $('#expressinvoice-weight').val('10');
+        $('#expressinvoice-volumegeneral').val('40');
+        message = 'Шаблон применен.';
+    } else if(temp === 2) {
+        $('#expressinvoice-weight').val('20');
+        $('#expressinvoice-volumegeneral').val('50');
+        message = 'Шаблон применен.';
+    } else if(temp === 3) {
+        $('#expressinvoice-weight').val('20');
+        $('#expressinvoice-volumegeneral').val('50');
+        message = 'Шаблон применен.';
+    }else{
+        $('#expressinvoice-weight').val('');
+        $('#expressinvoice-volumegeneral').val('');
+        message = 'Шаблон очищен.';
+    }
+    if(message)
+        common.notify(message,'success');
+
+    return false;
+}
+
+", \yii\web\View::POS_END);
 ?>
-<?php if (isset($model->products['weight'])) { ?>
-    <div class="alert alert-warning">Не указан <strong>Вес.</strong> Данный список товаров не учитываеться в общем
-        списке Веса.
-        <?php foreach ($model->products['weight'] as $product) { ?>
-            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-        <?php } ?>
-    </div>
-<?php } ?>
-<?php if (isset($model->products['volumeGeneral'])) { ?>
-    <div class="alert alert-warning">Не указан <strong>Обьем.</strong> Данный список товаров не учитываеться в общем
-        объеме.
-        <?php foreach ($model->products['volumeGeneral'] as $product) { ?>
-            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-        <?php } ?>
-    </div>
-<?php } ?>
+
     <div class="card">
         <div class="card-header">
             <h5><?= Html::encode($this->context->pageName) ?></h5>
@@ -66,13 +83,15 @@ if ($contacts['success']) {
                     ?>
                     <?= $form->field($model, 'CitySender')->widget(BootstrapSelect::class, [
                         'items' => \panix\mod\novaposhta\models\Cities::getList(['IsBranch' => 1]),
-                        'jsOptions' => ['liveSearch' => true]
+                        'jsOptions' => ['liveSearch' => true],
+                        'options'=>[ 'data-size'=>10]
                     ]); ?>
 
 
                     <?= $form->field($model, 'SenderAddress')->widget(BootstrapSelect::class, [
                         'items' => \panix\mod\novaposhta\models\Warehouses::getList(Yii::$app->settings->get('novaposhta', 'sender_city')),
-                        'jsOptions' => ['liveSearch' => true, 'size' => false]
+                        'jsOptions' => ['liveSearch' => true],
+                        'options'=>[ 'data-size'=>10]
                     ]); ?>
 
 
@@ -85,10 +104,17 @@ if ($contacts['success']) {
                     <?php echo $form->field($model, 'recipient_FirstName'); ?>
                     <?= $form->field($model, 'recipient_LastName'); ?>
                     <?= $form->field($model, 'recipient_MiddleName'); ?>
+                    <?php
+                    if ($model->RecipientsPhone) {
+                        $call = Html::a(Html::icon('phone') . ' Позвонить &mdash; <strong>' . CMS::phoneOperator($model->RecipientsPhone) . '</strong>', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light']);
+                    } else {
+                        $call = '';
+                    }
+                    ?>
                     <?= $form->field($model, 'RecipientsPhone', [
                         'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}{call}\n{error}{endWrapper}",
                         'parts' => [
-                            '{call}' => Html::a(Html::icon('phone') . ' Позвонить &mdash; <strong>' . CMS::phoneOperator($model->RecipientsPhone) . '</strong>', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light'])
+                            '{call}' => $call
                         ]
                     ])->widget(PhoneInput::class); ?>
                     <?= $form->field($model, 'recipient_City'); ?>
@@ -99,6 +125,14 @@ if ($contacts['success']) {
                 </div>
                 <div class="col-sm-6">
                     <h4 class="m-3 text-center">Параметры отправления</h4>
+
+
+                    <div class="text-center">
+                        <?= Html::a('очистить', '#clear', ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => 'setTemplate(0);']); ?>
+                        <?= Html::a('шаблон №1', '#temp1', ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => 'setTemplate(1);']); ?>
+                        <?= Html::a('шаблон №2', '#temp2', ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => 'setTemplate(2);']); ?>
+                        <?= Html::a('шаблон №3', '#temp3', ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => 'setTemplate(3);']); ?>
+                    </div>
                     <?= $form->field($model, 'ServiceType')->dropDownList(\panix\mod\novaposhta\models\ServiceTypes::getList()) ?>
 
                     <div class="form-group row required">
@@ -137,6 +171,21 @@ if ($contacts['success']) {
                                     <span class="input-group-text">кг.</span>
                                 </div>
                             </div>
+
+                            <?php if (isset($model->products['weight'])) { ?>
+                                <div class="row mt-3">
+                                    <div class="alert alert-warning">Не указан <strong>Вес.</strong> Данный список
+                                        товаров
+                                        не учитываеться в общем
+                                        списке Веса.
+                                        <?php foreach ($model->products['weight'] as $product) { ?>
+                                            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
+
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
+
                         </div>
                     </div>
                     <div class="form-group row required">
@@ -150,6 +199,21 @@ if ($contacts['success']) {
                                     <span class="input-group-text">м³</span>
                                 </div>
                             </div>
+
+
+                            <?php if (isset($model->products['volumeGeneral'])) { ?>
+                                <div class="row mt-3">
+                                    <div class="alert alert-warning">Не указан <strong>Обьем.</strong> Данный список
+                                        товаров не
+                                        учитываеться в общем
+                                        объеме.
+                                        <?php foreach ($model->products['volumeGeneral'] as $product) { ?>
+                                            <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
+
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
 

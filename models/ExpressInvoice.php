@@ -274,15 +274,12 @@ class ExpressInvoice extends ActiveRecord
         } else {
             return $result;
         }
-
-
         return parent::beforeSave($insert);
     }
 
     public function afterSave2($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-
 
     }
 }
