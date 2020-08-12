@@ -9,7 +9,7 @@ use panix\engine\Html;
 
 
 if ($model->Latitude && $model->Longitude) {
-    \panix\mod\novaposhta\LeafletAsset::register($this);
+    \panix\engine\assets\LeafletAsset::register($this);
     $this->registerJs("
     var coords = [" . $model->Latitude . ", " . $model->Longitude . "];
 var map = L.map('leaflet-map', {
