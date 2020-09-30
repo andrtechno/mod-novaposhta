@@ -29,11 +29,11 @@ class ExpressInvoiceController extends AdminController
                 'options' => ['class' => 'btn btn-success']
             ]
         ];
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['index']
         ];
-        $this->breadcrumbs[] = $this->pageName;
+        $this->view->params['breadcrumbs'][] = $this->pageName;
 
 
         $data = $api->getDocumentList();
@@ -76,15 +76,15 @@ class ExpressInvoiceController extends AdminController
 
 
         $this->pageName = html_entity_decode(Yii::t('novaposhta/default', 'CREATE_EXPRESS_WAYBILL'));
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['index']
         ];
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
             'url' => ['express-invoice']
         ];
-        $this->breadcrumbs[] = $this->pageName;
+        $this->view->params['breadcrumbs'][] = $this->pageName;
 
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
@@ -174,11 +174,11 @@ class ExpressInvoiceController extends AdminController
 
         $this->pageName = Yii::t('novaposhta/default', 'CREATE_BTN');
 
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['index']
         ];
-        $this->breadcrumbs[] = $this->pageName;
+        $this->view->params['breadcrumbs'][] = $this->pageName;
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             if ($model->validate()) {
@@ -245,11 +245,11 @@ class ExpressInvoiceController extends AdminController
 
             $result = $data['data'][0];
             $this->pageName = 'ТТН: ' . $result['IntDocNumber'];
-            $this->breadcrumbs[] = [
+            $this->view->params['breadcrumbs'][] = [
                 'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
                 'url' => ['index']
             ];
-            $this->breadcrumbs[] = $this->pageName;
+            $this->view->params['breadcrumbs'][] = $this->pageName;
 
 
         } else {

@@ -45,7 +45,7 @@ class DefaultController extends AdminController
                 'options' => ['class' => 'btn btn-success']
             ]
         ];
-        $this->breadcrumbs = [
+        $this->view->params['breadcrumbs'] = [
             $this->pageName
         ];
 
@@ -71,11 +71,11 @@ class DefaultController extends AdminController
                 'options' => ['class' => 'btn btn-success']
             ]
         ];
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['index']
         ];
-        $this->breadcrumbs[] = $this->pageName;
+        $this->view->params['breadcrumbs'][] = $this->pageName;
         $result = [];
         $result['success'] = false;
         $isNew = $model->isNewRecord;

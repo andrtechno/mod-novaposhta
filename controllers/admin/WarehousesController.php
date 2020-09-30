@@ -16,11 +16,11 @@ class WarehousesController extends AdminController
     {
         $api = Yii::$app->novaposhta;
         $this->pageName = Yii::t('novaposhta/default', 'WAREHOUSES');
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['index']
         ];
-        $this->breadcrumbs[] = $this->pageName;
+        $this->view->params['breadcrumbs'][] = $this->pageName;
 
         $searchModel = new WarehousesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());

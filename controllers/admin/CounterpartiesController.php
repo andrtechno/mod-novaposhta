@@ -37,11 +37,11 @@ class CounterpartiesController extends AdminController
     {
         $api = Yii::$app->novaposhta;
         $this->pageName = Yii::t('novaposhta/default', 'COUNTERPARTIES');
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['index']
         ];
-        $this->breadcrumbs[] = $this->pageName;
+        $this->view->params['breadcrumbs'][] = $this->pageName;
 
         return $this->render('index', [
 
@@ -62,11 +62,11 @@ class CounterpartiesController extends AdminController
                 'options' => ['class' => 'btn btn-success']
             ]
         ];
-        $this->breadcrumbs[] = [
+        $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['index']
         ];
-        $this->breadcrumbs[] = $this->pageName;
+        $this->view->params['breadcrumbs'][] = $this->pageName;
         $result = [];
         $isNew = $model->isNewRecord;
         $post = Yii::$app->request->post();
