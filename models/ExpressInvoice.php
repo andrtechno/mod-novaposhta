@@ -2,7 +2,9 @@
 
 namespace panix\mod\novaposhta\models;
 
+use panix\engine\CMS;
 use panix\mod\cart\models\Order;
+use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\query\CitiesQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
@@ -74,8 +76,14 @@ class ExpressInvoice extends ActiveRecord
             $this->order = Order::findModel(Yii::$app->request->get('order_id'));
             if ($this->order->user_phone)
                 $this->RecipientsPhone = $this->order->user_phone;
-            if ($this->order->user_address)
-                $this->RecipientAddress = $this->order->user_address;
+            if ($this->order->delivery_warehouse_ref) {
+                $this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
+            }
+
+            if ($this->order->delivery_city_ref) {
+                $this->CityRecipient = Cities::findOne(['Ref' => $this->order->delivery_city_ref])->DescriptionRu;
+            }
+
 
             foreach ($this->order->products as $product) {
                 $original = $product->originalProduct;
@@ -93,14 +101,19 @@ class ExpressInvoice extends ActiveRecord
 
             $this->Cost = $this->order->total_price;
             $this->recipient_FirstName = $this->order->user_name;
+            $this->recipient_LastName = $this->order->user_lastname;
             $this->recipient_Email = $this->order->user_email;
+            $this->recipient_City = Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
+
+
             $this->CargoType = 'Cargo';
             if ($this->order->products) {
                 $list = [];
                 foreach ($this->order->products as $product) {
                     $list[] = $product->name . ', ' . $product->quantity . ' шт.';
                 }
-                $this->Description = implode(', ', $list);
+                $this->Description = mb_strcut(implode(', ', $list), 0, 50);
+
 
             }
         }
@@ -114,7 +127,9 @@ class ExpressInvoice extends ActiveRecord
      */
     public function rules()
     {
-        return [
+        return [ //'pattern' => '/^[a-zA-Z0-9-_]\w*$/i',
+            [['recipient_FirstName', 'recipient_LastName'], 'match', 'pattern' => '/^([а-яА-Я]+)$/u', 'message' => '{attribute} должен содержать только буквы кириллицы.'],
+            // [['Description'], 'match', 'pattern' => '/^([а-яА-Я0-9\w+]+)$/u','message'=>'{attribute} должен содержать только буквы кириллицы.'],
             [[
                 'PayerType',
                 'PaymentMethod',
@@ -148,11 +163,11 @@ class ExpressInvoice extends ActiveRecord
                 'recipient_City',
                 //'recipient_Region',
                 //'recipient_Email',
-                // 'recipient_Warehouse'
+                'RecipientAddress'
             ], 'required'],
 
             [['recipient_Email'], 'email'],
-            //[['ref'], 'string', 'max' => 32],
+            [['Description'], 'string', 'max' => 50],
             //[['ref'], 'string'],
             //[['ref'], 'trim'],
         ];
@@ -171,6 +186,8 @@ class ExpressInvoice extends ActiveRecord
         return $result;
     }
 
+    protected $_invoice;
+
     public function cargoTypes()
     {
         $list = Yii::$app->novaposhta->getCargoTypes();
@@ -183,10 +200,12 @@ class ExpressInvoice extends ActiveRecord
         return $result;
     }
 
-    public function beforeSave($insert)
+
+    public function create()
     {
-
-
+        /**
+         * @var $api Novaposhta
+         */
         $api = Yii::$app->novaposhta;
         $senderInfo = $api->getCounterparties('Sender', 1, '', '');
         //  CMS::dump($senderInfo);
@@ -199,6 +218,10 @@ class ExpressInvoice extends ActiveRecord
         $senderWarehouses = $api->getWarehouses($city['data'][0]['Ref']);
 
 
+        $contact = $api->getCounterpartyContactPersons($senderInfo['data'][0]['Ref']);
+        $address = $api->getCounterpartyAddresses($senderInfo['data'][0]['Ref']);
+
+//CMS::dump($senderInfo);die;
         // print_r($this);die;
         $result = $api->newInternetDocument(
         // Данные отправителя
@@ -209,9 +232,9 @@ class ExpressInvoice extends ActiveRecord
                 'LastName' => $sender['LastName'],
                 // Вместо FirstName, MiddleName, LastName можно ввести зарегистрированные ФИО отправителя или название фирмы для юрлиц
                 // (можно получить, вызвав метод getCounterparties('Sender', 1, '', ''))
-                // 'Description' => $sender['Description'],
+                //'Description' => $sender['Description'],
                 // Необязательное поле, в случае отсутствия будет использоваться из данных контакта
-                'Phone' => '0682937379',
+                // 'Phone' => $contact['data'][0]['Phones'],
                 // Город отправления
                 // 'City' => 'Белгород-Днестровский',
                 // Область отправления
@@ -269,17 +292,33 @@ class ExpressInvoice extends ActiveRecord
                 ]
             ]
         );
+
+
         if ($result['success']) {
-            return $result['data'];
+            foreach ($result['warnings'] as $warning) {
+                Yii::$app->session->addFlash('warning', $warning);
+            }
+            $this->_invoice = $result['data'];
+
+            return $this->_invoice;
         } else {
-            return $result;
+            foreach ($result['errors'] as $error) {
+                Yii::$app->session->addFlash('error', $error);
+            }
+            return false;
         }
-        return parent::beforeSave($insert);
     }
 
-    public function afterSave2($insert, $changedAttributes)
+    public function beforeDelete()
     {
-        parent::afterSave($insert, $changedAttributes);
+        $delete = Yii::$app->novaposhta->model('InternetDocument')->delete(['DocumentRefs' => $this->Ref]);
+
+        if ($delete['success']) {
+            return parent::beforeDelete(); // TODO: Change the autogenerated stub
+        }
+        return false;
+
 
     }
+
 }

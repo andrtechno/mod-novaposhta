@@ -11,7 +11,17 @@ use panix\engine\Html;
 
 
 ?>
-
+    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <?= Yii::t('app/default', 'PRINT'); ?>
+    </button>
+    <div class="dropdown-menu">
+        <?= Html::a(Html::icon('print').' '.Yii::t('app/default', 'PRINT').' PDF','https://my.novaposhta.ua/orders/printDocument/orders[]/'.$result['Ref'].'/type/pdf/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']); ?>
+        <?= Html::a(Html::icon('print').' '.Yii::t('app/default', 'PRINT').' HTML','https://my.novaposhta.ua/orders/printDocument/orders[]/'.$result['Ref'].'/type/html/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']); ?>
+        <?= Html::a(Html::icon('print').' Маркировка 85x85 '.Yii::t('app/default', 'PRINT').' PDF','https://my.novaposhta.ua/orders/printMarking85x85/orders[]/'.$result['Ref'].'/type/pdf8/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']); ?>
+        <?= Html::a(Html::icon('print').' Маркировка 85x85' .Yii::t('app/default', 'PRINT').' HTML','https://my.novaposhta.ua/orders/printMarking85x85/orders[]/'.$result['Ref'].'/type/html/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']); ?>
+        <?= Html::a(Html::icon('print').' Маркировка 100x100 '.Yii::t('app/default', 'PRINT').' PDF (zebra)','https://my.novaposhta.ua/orders/printMarking100x100/orders[]/'.$result['Ref'].'/type/pdf/apiKey/'.Yii::$app->settings->get('novaposhta','api_key').'/zebra',['class'=>'dropdown-item','target'=>'_blank']); ?>
+        <?= Html::a(Html::icon('print').' Маркировка 100x100' .Yii::t('app/default', 'PRINT').' HTML (zebra)','https://my.novaposhta.ua/orders/printMarking100x100/orders[]/'.$result['Ref'].'/type/html/apiKey/'.Yii::$app->settings->get('novaposhta','api_key').'/zebra',['class'=>'dropdown-item','target'=>'_blank']); ?>
+    </div>
 
 <div class="card">
     <div class="card-header">
@@ -59,6 +69,7 @@ use panix\engine\Html;
                 <div>PayerType: <?= $result['PayerType']; ?></div>
                 <div>Объем куб.м.: <?= $result['VolumeGeneral']; ?></div>
                 <div>Дата: <?= $result['DateTime']; ?></div>
+                <div>Цена доствки: <?= $result['CostOnSite']; ?>грн.</div>
             </div>
 
 

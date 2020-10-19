@@ -28,7 +28,7 @@ $form = ActiveForm::begin();
                 <?= $form->field($model, 'recipient_City'); ?>
                 <?= $form->field($model, 'recipient_Region'); ?>
                 <?= $form->field($model, 'recipient_Email'); ?>
-                <?= $form->field($model, 'recipient_Warehouse'); ?>
+                <?= $form->field($model, 'RecipientAddress'); ?>
 
             </div>
             <div class="col-sm-6">
@@ -63,7 +63,7 @@ $form = ActiveForm::begin();
 
 
                 <?= $form->field($model, 'VolumeGeneral'); ?>
-                <?= $form->field($model, 'PayerType')->dropDownList(['Recipient' => 'Recipient', 'Sender' => 'Sender']) ?>
+                <?= $form->field($model, 'PayerType')->dropDownList(['Recipient' => Yii::t('novaposhta/default','RECIPIENT'), 'Sender' => Yii::t('novaposhta/default','SENDER')]) ?>
                 <?= $form->field($model, 'PaymentMethod')->dropDownList($model->paymentFormsList()) ?>
             </div>
             <div class="col-sm-6">

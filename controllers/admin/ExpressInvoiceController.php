@@ -16,6 +16,15 @@ use yii\data\ArrayDataProvider;
 class ExpressInvoiceController extends AdminController
 {
 
+    public function actions()
+    {
+        return [
+            'delete' => [
+                'class' => 'panix\engine\actions\DeleteAction',
+                'modelClass' => ExpressInvoice::class,
+            ],
+        ];
+    }
 
     public function actionIndex()
     {
@@ -89,17 +98,16 @@ class ExpressInvoiceController extends AdminController
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             if ($model->validate()) {
-
-                $result = $model->save();
-                if ($result) {
-                    return $this->redirect(['/admin/novaposhta/express-invoice']);
+                $doc = $model->create();
+                if ($doc) {
+                    $model->order_id = Yii::$app->request->get('order_id');
+                    $model->Ref = $doc[0]['Ref'];
+                    $result = $model->save();
+                    die;
+                    //return $this->redirect(['/admin/novaposhta/express-invoice']);
                 } else {
-                    CMS::dump($result);
-                    die('err');
+                    return $this->refresh();
                 }
-
-            } else {
-                print_r($model->getErrors());
             }
         }
 
@@ -110,6 +118,10 @@ class ExpressInvoiceController extends AdminController
         ]);
     }
 
+    public function test(){
+
+
+    }
     public function actionCreateOld()
     {
 
@@ -259,7 +271,7 @@ class ExpressInvoiceController extends AdminController
         return $this->render('view', ['api' => $api, 'result' => $result]);
     }
 
-    public function actionDelete($id)
+    public function actionDelete2($id)
     {
         /** @var Novaposhta $api */
         $api = Yii::$app->novaposhta;

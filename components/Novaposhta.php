@@ -2,6 +2,7 @@
 
 namespace panix\mod\novaposhta\components;
 
+use panix\engine\CMS;
 use yii\base\Component;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -366,18 +367,20 @@ class Novaposhta extends Component
      * Get cities of company NovaPoshta.
      *
      * @param int $page Num of page
-     * @param string $findByString Find city by russian or ukrainian word
-     * @param string $ref ID of city
+     * @param string $city Find city by russian or ukrainian word OR GUID
      *
      * @return mixed
      */
-    public function getCities($page = 0, $findByString = '', $ref = '')
+    public function getCities($page = 0, $city = '')
     {
-        return $this->request('Address', 'getCities', array(
-            'Page' => $page,
-            'FindByString' => $findByString,
-            'Ref' => $ref,
-        ));
+        $data = [];
+        $data['Page'] = $page;
+        if (CMS::isGuid($city)) {
+            $data['Ref'] = $city;
+        } else {
+            $data['FindByString'] = $city;
+        }
+        return $this->request('Address', 'getCities', $data);
     }
 
     /**
@@ -388,12 +391,12 @@ class Novaposhta extends Component
      *
      * @return mixed
      */
-    public function getWarehouses($cityRef, $page = 0, $limit=100)
+    public function getWarehouses($cityRef, $page = 0, $limit = 100)
     {
         return $this->request('Address', 'getWarehouses', array(
             'CityRef' => $cityRef,
             'Page' => $page,
-            'Limit'=>$limit
+            'Limit' => $limit
         ));
     }
 
@@ -423,11 +426,11 @@ class Novaposhta extends Component
     public function getWarehouse($cityRef, $description = '')
     {
         $warehouses = $this->getWarehouses($cityRef);
+        $error = array();
         $data = array();
         if (is_array($warehouses['data'])) {
-            if (1 === count($warehouses['data']) or !$description) {
-                $data = $warehouses['data'][0];
-            } elseif (count($warehouses['data']) > 1) {
+            $data = $warehouses['data'][0];
+            if (count($warehouses['data']) > 1 && $description) {
                 foreach ($warehouses['data'] as $warehouse) {
                     if (false !== mb_stripos($warehouse['Description'], $description)
                         or false !== mb_stripos($warehouse['DescriptionRu'], $description)
@@ -445,7 +448,7 @@ class Novaposhta extends Component
             array(
                 'success' => empty($error),
                 'data' => array($data),
-                'errors' => [],
+                'errors' => (array)$error,
                 'warnings' => array(),
                 'info' => array(),
             )
@@ -524,7 +527,7 @@ class Novaposhta extends Component
                 'success' => empty($error),
                 'data' => $data,
                 'errors' => [],
-                'warnings' => array(),
+                'warnings' => [],
                 'info' => array(),
             )
         );
@@ -576,27 +579,53 @@ class Novaposhta extends Component
      *
      * @param string $cityName City's name
      * @param string $areaName Region's name
+     * @param string $warehouseDescription Warehouse description to identiry needed city (if it more than 1 in the area)
      *
-     * @return array City's data
+     * @return array Cities's data Can be returned more than 1 city with the same name
      */
-    public function getCity($cityName, $areaName = '')
+    public function getCity($cityName, $areaName = '', $warehouseDescription = '')
     {
         // Get cities by name
         $cities = $this->getCities(0, $cityName);
-        if (is_array($cities['data'])) {
+
+        $data = array();
+        if (is_array($cities) && is_array($cities['data'])) {
             // If cities more then one, calculate current by area name
-            $data = (count($cities['data']) > 1)
-                ? $this->findCityByRegion($cities, $areaName)
-                : $cities['data'][0];
+
+
+            if (count($cities['data']) > 1) {
+                $data = $this->findCityByRegion($cities, $areaName);
+            } else {
+                //  $cities = $this->getCities(0, '', $cityName);
+
+                // CMS::dump($cities['data']);die;
+                $data = array($cities['data'][0]);
+            }
+            //$data = (count($cities['data']) > 1) ? $this->findCityByRegion($cities, $areaName) : array($cities['data'][0]);
+        }
+        // Try to identify city by one of warehouses descriptions
+        if (count($data) > 1 && $warehouseDescription) {
+            foreach ($data as $cityData) {
+                $warehouseData = $this->getWarehouse($cityData['Ref'], $warehouseDescription);
+                $warehouseDescriptions = array(
+                    $warehouseData['data'][0]['Description'],
+                    $warehouseData['data'][0]['DescriptionRu']
+                );
+                if (in_array($warehouseDescription, $warehouseDescriptions)) {
+                    $data = array($cityData);
+                    break;
+                }
+            }
         }
         // Error
-        (!$data) and $error = 'City was not found';
+        $error = array();
+        (!$data) and $error = array('City was not found');
         // Return data in same format like NovaPoshta API
         return $this->prepare(
             array(
                 'success' => empty($error),
-                'data' => array($data),
-                'errors' => array(),
+                'data' => $data,
+                'errors' => $error,
                 'warnings' => array(),
                 'info' => array(),
             )
@@ -785,7 +814,7 @@ class Novaposhta extends Component
             'CitySender' => $citySender,
             'CityRecipient' => $cityRecipient,
             'ServiceType' => $serviceType,
-            'CargoType'=>$cargoType,
+            'CargoType' => $cargoType,
             'Weight' => $weight,
             'Cost' => $cost,
         ));
@@ -868,6 +897,7 @@ class Novaposhta extends Component
      */
     protected function checkInternetDocumentRecipient(array &$counterparty)
     {
+        //CMS::dump($counterparty);die;
         // Check required fields
         if (!$counterparty['FirstName']) {
             throw new \Exception('FirstName is required filed for recipient');
@@ -881,15 +911,15 @@ class Novaposhta extends Component
         if (!$counterparty['Phone']) {
             throw new \Exception('Phone is required filed for recipient');
         }
-        if (!($counterparty['City'] or $counterparty['CityRef'])) {
+        if (!(isset($counterparty['City']) || isset($counterparty['CityRef']))) {
             throw new \Exception('City is required filed for recipient');
         }
-        if (!($counterparty['Region'] or $counterparty['CityRef'])) {
+        if (!(isset($counterparty['Region']) || isset($counterparty['CityRef']))) {
             throw new \Exception('Region is required filed for recipient');
         }
 
         // Set defaults
-        if (!isset($counterparty['CounterpartyType'])) {
+        if (empty($counterparty['CounterpartyType'])) {
             $counterparty['CounterpartyType'] = 'PrivatePerson';
         }
     }
@@ -910,13 +940,14 @@ class Novaposhta extends Component
         if (!$params['Cost']) {
             throw new \Exception('Cost is required filed for new Internet document');
         }
-        (!$params['DateTime']) and $params['DateTime'] = date('d.m.Y');
-        (!$params['ServiceType']) and $params['ServiceType'] = 'WarehouseWarehouse';
-        (!$params['PaymentMethod']) and $params['PaymentMethod'] = 'Cash';
-        (!$params['PayerType']) and $params['PayerType'] = 'Recipient';
-        (!$params['SeatsAmount']) and $params['SeatsAmount'] = '1';
-        (!$params['CargoType']) and $params['CargoType'] = 'Cargo';
-        (!$params['VolumeGeneral']) and $params['VolumeGeneral'] = '0.0004';
+        empty($params['DateTime']) and $params['DateTime'] = date('d.m.Y');
+        empty($params['ServiceType']) and $params['ServiceType'] = 'WarehouseWarehouse';
+        empty($params['PaymentMethod']) and $params['PaymentMethod'] = 'Cash';
+        empty($params['PayerType']) and $params['PayerType'] = 'Recipient';
+        empty($params['SeatsAmount']) and $params['SeatsAmount'] = '1';
+        empty($params['CargoType']) and $params['CargoType'] = 'Cargo';
+        empty($params['VolumeGeneral']) and $params['VolumeGeneral'] = '0.0004';
+        empty($params['VolumeWeight']) and $params['VolumeWeight'] = $params['Weight'];
     }
 
     /**
@@ -946,52 +977,61 @@ class Novaposhta extends Component
         // Check for required params and set defaults
         $this->checkInternetDocumentRecipient($recipient);
         $this->checkInternetDocumentParams($params);
-        if (!$sender['CitySender']) {
-            $senderCity = $this->getCity($sender['City'], $sender['Region']);
+        if (empty($sender['CitySender'])) {
+            $senderCity = $this->getCity($sender['City'], $sender['Region'], $sender['Warehouse']);
             $sender['CitySender'] = $senderCity['data'][0]['Ref'];
         }
         $sender['CityRef'] = $sender['CitySender'];
-//        var_dump($sender['CityRef']);die;
-        if (!$sender['SenderAddress'] and $sender['CitySender'] and $sender['Warehouse']) {
+        if (empty($sender['SenderAddress']) and $sender['CitySender'] and $sender['Warehouse']) {
             $senderWarehouse = $this->getWarehouse($sender['CitySender'], $sender['Warehouse']);
             $sender['SenderAddress'] = $senderWarehouse['data'][0]['Ref'];
         }
-        if (!isset($sender['Sender'])) {
+        if (empty($sender['Sender'])) {
             $sender['CounterpartyProperty'] = 'Sender';
             $fullName = trim($sender['LastName'] . ' ' . $sender['FirstName'] . ' ' . $sender['MiddleName']);
             // Set full name to Description if is not set
-            if (!isset($sender['Description'])) {
+            if (empty($sender['Description'])) {
                 $sender['Description'] = $fullName;
             }
             // Check for existing sender
             $senderCounterpartyExisting = $this->getCounterparties('Sender', 1, $fullName, $sender['CityRef']);
             // Copy user to the selected city if user doesn't exists there
-            if ($senderCounterpartyExisting['data'][0]['Ref']) {
+            if (isset($senderCounterpartyExisting['data'][0]['Ref'])) {
                 // Counterparty exists
                 $sender['Sender'] = $senderCounterpartyExisting['data'][0]['Ref'];
                 $contactSender = $this->getCounterpartyContactPersons($sender['Sender']);
                 $sender['ContactSender'] = $contactSender['data'][0]['Ref'];
-                $sender['SendersPhone'] = $sender['Phone'] ? $sender['Phone'] : $contactSender['data'][0]['Phones'];
+                $sender['SendersPhone'] = isset($sender['Phone']) ? $sender['Phone'] : $contactSender['data'][0]['Phones'];
             }
         }
 
         // Prepare recipient data
         $recipient['CounterpartyProperty'] = 'Recipient';
         $recipient['RecipientsPhone'] = $recipient['Phone'];
-        if (!isset($recipient['CityRecipient'])) {
-            $recipientCity = $this->getCity($recipient['City'], $recipient['Region']);
+        if (empty($recipient['CityRecipient'])) {
+            $recipientCity = $this->getCity($recipient['City'], $recipient['Region'], $recipient['Warehouse']);
+
             $recipient['CityRecipient'] = $recipientCity['data'][0]['Ref'];
         }
         $recipient['CityRef'] = $recipient['CityRecipient'];
-        if (!isset($recipient['RecipientAddress'])) {
+        if (empty($recipient['RecipientAddress'])) {
             $recipientWarehouse = $this->getWarehouse($recipient['CityRecipient'], $recipient['Warehouse']);
             $recipient['RecipientAddress'] = $recipientWarehouse['data'][0]['Ref'];
         }
-        if (!isset($recipient['Recipient'])) {
+        if (empty($recipient['Recipient'])) {
+
             $recipientCounterparty = $this->model('Counterparty')->save($recipient);
-            $recipient['Recipient'] = $recipientCounterparty['data'][0]['Ref'];
-            $recipient['ContactRecipient'] = $recipientCounterparty['data'][0]['ContactPerson']['data'][0]['Ref'];
+            if ($recipientCounterparty['success']) {
+
+                $recipient['Recipient'] = $recipientCounterparty['data'][0]['Ref'];
+                $recipient['ContactRecipient'] = $recipientCounterparty['data'][0]['ContactPerson']['data'][0]['Ref'];
+            } else {
+
+               // CMS::dump($recipientCounterparty);
+               // die;
+            }
         }
+       // CMS::dump($recipient);die;
         // Full params is merge of arrays $sender, $recipient, $params
         $paramsInternetDocument = array_merge($sender, $recipient, $params);
         // Creating new Internet Document

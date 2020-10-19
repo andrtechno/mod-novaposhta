@@ -23,9 +23,9 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
         }
 
         $this->createTable(ExpressInvoice::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
-            'order_id' => $this->integer()->unsigned()->null(),
+            //'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
+            'order_id' => $this->integer()->unsigned()->null(),
             'PayerType' => $this->string(36)->null(),
             'PaymentMethod' => $this->string(36)->null(),
             'DateTime' => $this->string(36)->null(),
@@ -34,7 +34,7 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
             'Weight' => $this->string(36)->null(),
             'ServiceType' => $this->string(36)->null(),
             'SeatsAmount' => $this->string(36)->null(),
-            'Description' => $this->string(36)->null(),
+            'Description' => $this->string(50)->null(),
             'Cost' => $this->string(36)->null(),
             'CitySender' => $this->string(36)->null(),
             'Sender' => $this->string(36)->null(),
@@ -48,7 +48,8 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
             'RecipientsPhone' => $this->string(36)->null(),
         ], $tableOptions);
 
-        $this->createIndex('Ref', ExpressInvoice::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', ExpressInvoice::tableName(), 'Ref');
+        //$this->createIndex('Ref', ExpressInvoice::tableName(), 'Ref');
         $this->createIndex('order_id', ExpressInvoice::tableName(), 'order_id');
 
     }

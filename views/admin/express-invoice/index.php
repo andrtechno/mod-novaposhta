@@ -64,6 +64,15 @@ GridView::widget([
   <div class="dropdown-menu">
   '.Html::a(Html::icon('print').' '.Yii::t('app/default', 'PRINT').' PDF','https://my.novaposhta.ua/orders/printDocument/orders[]/'.$model['Ref'].'/type/pdf/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']).'
   '.Html::a(Html::icon('print').' '.Yii::t('app/default', 'PRINT').' HTML','https://my.novaposhta.ua/orders/printDocument/orders[]/'.$model['Ref'].'/type/html/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']).'
+ 
+   '.Html::a(Html::icon('print').' Маркировка 85x85 '.Yii::t('app/default', 'PRINT').' PDF','https://my.novaposhta.ua/orders/printMarking85x85/orders[]/'.$model['Ref'].'/type/pdf8/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']).'
+  '.Html::a(Html::icon('print').' Маркировка 85x85 '.Yii::t('app/default', 'PRINT').' HTML','https://my.novaposhta.ua/orders/printMarking85x85/orders[]/'.$model['Ref'].'/type/html/apiKey/'.Yii::$app->settings->get('novaposhta','api_key'),['class'=>'dropdown-item','target'=>'_blank']).'
+ 
+  '.Html::a(Html::icon('print').' Маркировка 100x100 '.Yii::t('app/default', 'PRINT').' PDF (zebra)','https://my.novaposhta.ua/orders/printMarking100x100/orders[]/'.$model['Ref'].'/type/pdf/apiKey/'.Yii::$app->settings->get('novaposhta','api_key').'/zebra',['class'=>'dropdown-item','target'=>'_blank']).'
+  '.Html::a(Html::icon('print').' Маркировка 100x100 '.Yii::t('app/default', 'PRINT').' HTML (zebra)','https://my.novaposhta.ua/orders/printMarking100x100/orders[]/'.$model['Ref'].'/type/html/apiKey/'.Yii::$app->settings->get('novaposhta','api_key').'/zebra',['class'=>'dropdown-item','target'=>'_blank']).'
+ 
+  
+  
   </div>
 ';
 

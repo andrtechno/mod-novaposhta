@@ -59,8 +59,8 @@ class ExpressInvoiceForm extends Model
             $this->order = Order::findModel(Yii::$app->request->get('order_id'));
             if ($this->order->user_phone)
                 $this->recipient_Phone = $this->order->user_phone;
-            if ($this->order->user_address)
-                $this->order->recipient_Warehouse = $this->order->user_address;
+            if ($this->order->delivery_warehouse_ref)
+                $this->recipient_Warehouse = $this->order->delivery_warehouse_ref;
 
             $this->Cost = $this->order->total_price;
             $this->recipient_FirstName = $this->order->user_name;
