@@ -172,7 +172,7 @@ class NovaposhtaController extends ConsoleController
     public function actionReference()
     {
 
-      //  $response = $this->api->getCounterparties();
+
 
         //$typesOfPayers = $this->api->getTypesOfPayers();
         //print_r($typesOfPayers);
@@ -186,6 +186,24 @@ class NovaposhtaController extends ConsoleController
              ->model('Common')
              ->method('getPaymentForms')
              ->execute();*/
+
+        $statuses = $this->api
+            ->model('Common')
+            ->method('getDocumentStatuses')
+            ->execute();
+
+        $test = $this->api
+            ->model('Common')
+            ->method('getBackwardDeliveryCargoTypes')
+            ->execute();
+
+
+
+
+//print_r($test);die;
+
+
+
         $this->cargoTypes();
         $this->pallets();
         $this->ownershipForms();

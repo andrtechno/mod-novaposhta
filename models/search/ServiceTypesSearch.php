@@ -19,7 +19,7 @@ class ServiceTypesSearch extends ServiceTypes
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['Ref'], 'integer'],
             [['Description'], 'safe'],
         ];
     }
@@ -56,7 +56,7 @@ class ServiceTypesSearch extends ServiceTypes
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['id' => $this->id]);
+        $query->andFilterWhere(['Ref' => $this->Ref]);
         $query->andFilterWhere(['like', 'Description', $this->Description]);
 
 

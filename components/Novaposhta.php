@@ -352,16 +352,22 @@ class Novaposhta extends Component
     /**
      * Get tracking information by track number.
      *
-     * @param string $track Track number
-     *
+     * @param string|array $track Track number
+     * @param string $phone Track number
      * @return mixed
      */
-    public function documentsTracking($track)
+    public function documentsTracking($track, $phone = '')
     {
-        $params = [
-            'Documents' => [['DocumentNumber' => $track]]
-        ];
+        $docs = [];
+        if (!is_array($track)) {
+            $docs[] = ['DocumentNumber' => $track, 'Phone' => $phone];
+        } else {
+            foreach ($track as $item) {
+                $docs[] = ['DocumentNumber' => (string)$item, 'Phone' => $phone];
+            }
+        }
 
+        $params['Documents'] = $docs;
         return $this->request('TrackingDocument', 'getStatusDocuments', $params);
     }
 
@@ -733,6 +739,7 @@ class Novaposhta extends Component
         $page and $params['Page'] = $page;
         $findByString and $params['FindByString'] = $findByString;
         $cityRef and $params['City'] = $cityRef;
+
         return $this->request('Counterparty', 'getCounterparties', $params);
     }
 
@@ -1029,11 +1036,11 @@ class Novaposhta extends Component
                 $recipient['ContactRecipient'] = $recipientCounterparty['data'][0]['ContactPerson']['data'][0]['Ref'];
             } else {
 
-               // CMS::dump($recipientCounterparty);
-               // die;
+                // CMS::dump($recipientCounterparty);
+                // die;
             }
         }
-       // CMS::dump($recipient);die;
+        // CMS::dump($recipient);die;
         // Full params is merge of arrays $sender, $recipient, $params
         $paramsInternetDocument = array_merge($sender, $recipient, $params);
         // Creating new Internet Document
@@ -1046,14 +1053,13 @@ class Novaposhta extends Component
      * @param string $method Called method of NovaPoshta API
      * @param array|string $documentRefs Array of Documents IDs
      * @param string $type (html_link|pdf_link)
+     * @param boolean $zebra
      *
      * @return mixed
      */
-    protected function printGetLink($method, $documentRefs, $type)
+    public function printGetLink($method, $documentRefs, $type, $zebra = false)
     {
-        $data = 'https://my.novaposhta.ua/orders/' . $method . '/orders[]/' . implode(',', $documentRefs)
-            . '/type/' . str_replace('_link', '', $type)
-            . '/apiKey/' . $this->key;
+        $data = $this->printLink($method, $documentRefs, $type, $zebra);
 
         // Return data in same format like NovaPoshta API
         return $this->prepare(
@@ -1065,6 +1071,16 @@ class Novaposhta extends Component
                 'info' => array(),
             )
         );
+    }
+
+
+    public function printLink($method, $documentRefs, $type, $zebra = false)
+    {
+        return 'https://my.novaposhta.ua/orders/' . $method . '/orders[]/' . implode(',', $documentRefs)
+            . '/type/' . str_replace('_link', '', $type)
+            . '/apiKey/' . $this->key
+            . (($zebra) ? '/zebra' : '');
+
     }
 
     /**

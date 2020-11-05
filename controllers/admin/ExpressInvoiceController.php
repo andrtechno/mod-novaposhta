@@ -58,6 +58,7 @@ class ExpressInvoiceController extends AdminController
             foreach ($data['data'] as $data) {
                 // CMS::dump($data);die;
                // $RecipientAddress = Warehouses::find()->where(['Ref'=>$data['RecipientAddress']])->one();
+
                 $dataResult[] = [
                     'Ref' => $data['Ref'],
                     'ContactSender' => $data['ContactSender'],
@@ -65,6 +66,7 @@ class ExpressInvoiceController extends AdminController
                     'RecipientsPhone' => $data['RecipientsPhone'],
                     'StateName' => $data['StateName'],
                     'IntDocNumber' => $data['IntDocNumber'],
+                    'DateTime'=> $data['DateTime'],
                     'CostOnSite' => $data['CostOnSite'],
                     'Description' => $data['Description'],
                     'SenderAddress' => $data['SenderAddress'],
@@ -97,10 +99,10 @@ class ExpressInvoiceController extends AdminController
 
 
         $this->pageName = html_entity_decode(Yii::t('novaposhta/default', 'CREATE_EXPRESS_WAYBILL'));
-        // $this->view->params['breadcrumbs'][] = [
-        //    'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-        //     'url' => ['index']
-        // ];
+        $this->view->params['breadcrumbs'][] = [
+            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+            'url' => '#'
+        ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
             'url' => ['index']
@@ -116,14 +118,14 @@ class ExpressInvoiceController extends AdminController
                         $model->order_id = Yii::$app->request->get('order_id');
                         $order = Order::findOne($model->order_id);
                         if ($order) {
-                            $order->ttn = $doc['data'][0]['IntDocNumber'];
+                            $order->ttn = $doc[0]['IntDocNumber'];
                             $order->save(false);
                         }
                     }
                     $model->Ref = $doc[0]['Ref'];
                     $result = $model->save();
-                    die;
-                    //return $this->redirect(['/admin/novaposhta/express-invoice']);
+                   // die;
+                    return $this->redirect(['index']);
                 } else {
                     return $this->refresh();
                 }
@@ -260,7 +262,7 @@ class ExpressInvoiceController extends AdminController
         if ($data['success']) {
 
 
-            $this->buttons = [
+           /* $this->buttons = [
                 [
                     'icon' => 'print',
                     'label' => Yii::t('app/default', 'PRINT') . ' PDF',
@@ -273,13 +275,17 @@ class ExpressInvoiceController extends AdminController
                     'url' => 'https://my.novaposhta.ua/orders/printDocument/orders[]/' . $id . '/type/html/apiKey/' . Yii::$app->settings->get('novaposhta', 'api_key'),
                     'options' => ['class' => 'btn btn-outline-secondary', 'target' => '_blank']
                 ]
-            ];
+            ];*/
 
 
             $result = $data['data'][0];
             $this->pageName = 'ТТН: ' . $result['IntDocNumber'];
             $this->view->params['breadcrumbs'][] = [
                 'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+                'url' => '#'
+            ];
+            $this->view->params['breadcrumbs'][] = [
+                'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
                 'url' => ['index']
             ];
             $this->view->params['breadcrumbs'][] = $this->pageName;

@@ -2,7 +2,6 @@
 return [
     'MODULE_NAME' => 'Новая почта',
     'MODULE_DESC' => 'Новая почта',
-    'CREATE_BTN' => 'Создать страницу',
     'EXPRESS_WAYBILL' => 'Экспресс-накладная',
     'SERVICES_TYPES' => 'Виды услуг',
     'COUNTERPARTIES' => 'Контрагент',
@@ -26,4 +25,8 @@ return [
     'DESCRIPTION'=>'Описание',
     'RECIPIENT_CITY'=>'Город получателя',
     'PHONE'=>'Телефон',
+    'FIRST_NAME'=>'Имя',
+    'LAST_NAME'=>'Фамилия',
+    'MIDDLE_NAME'=>'Отчество',
+    'CREATE_COUNTERPARTY'=>'Создать контрагента'
 ];

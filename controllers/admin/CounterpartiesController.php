@@ -3,7 +3,11 @@
 namespace panix\mod\novaposhta\controllers\admin;
 
 use Mpdf\Tag\P;
+use panix\engine\CMS;
+use panix\engine\plugins\content\codehighlight\CodeShortcodes;
+use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\counterparties\Counterparties;
+use panix\mod\novaposhta\models\forms\CounterpartyForm;
 use Yii;
 use panix\mod\pages\models\Pages;
 use panix\mod\pages\models\PagesSearch;
@@ -42,14 +46,21 @@ class CounterpartiesController extends AdminController
             'url' => ['index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
-
+        $this->buttons = [
+            [
+                'icon' => 'add',
+                'label' => Yii::t('novaposhta/default', 'CREATE_COUNTERPARTY'),
+                'url' => ['create'],
+                'options' => ['class' => 'btn btn-success']
+            ]
+        ];
         return $this->render('index', [
 
             'api' => $api,
         ]);
     }
 
-    public function actionUpdate($id = false)
+    public function actionUpdate222($id = false)
     {
         $model = Counterparties::findModel($id);
         $api = Yii::$app->novaposhta;
@@ -95,6 +106,143 @@ class CounterpartiesController extends AdminController
             'api' => $api,
             'model' => $model,
             'typesList' => $typesList
+        ]);
+    }
+
+    /**
+     * @param string $id GUID
+     * @return string
+     */
+    public function actionView($id)
+    {
+
+        /** @var Novaposhta $api */
+        $api = Yii::$app->novaposhta;
+        $response = $api->getCounterpartyContactPersons($id);
+
+        $data = [];
+        if ($response['success']) {
+            $data = $response['data'];
+        }
+        $dataProvider = new \yii\data\ArrayDataProvider([
+            'allModels' => $data,
+            'pagination' => [
+                'pageSize' => 100,
+            ],
+            //  'sort' => $sort,
+        ]);
+        return $this->render('view', [
+            'api' => $api,
+            'dataProvider' => $dataProvider,
+            'counterpartyRef'=>$id
+        ]);
+    }
+    public function actionCreate()
+    {
+
+        $this->pageName = Yii::t('novaposhta/default', 'CREATE_COUNTERPARTY');
+        $this->view->params['breadcrumbs'][] = [
+            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+            'url' => '#'
+        ];
+        $this->view->params['breadcrumbs'][] = [
+            'label' => Yii::t('novaposhta/default', 'COUNTERPARTIES'),
+            'url' => ['index']
+        ];
+        $this->view->params['breadcrumbs'][] = $this->pageName;
+
+
+        /** @var Novaposhta $api */
+        $api = Yii::$app->novaposhta;
+        $model = new CounterpartyForm();
+        $post = Yii::$app->request->post();
+        if ($model->load($post)) {
+            if($model->validate()){
+                $result = $api->model('Counterparty')->save(array(
+                    'CounterpartyProperty' => $model->CounterpartyProperty,//'Recipient',
+                    'CityRef' => $model->CityRef,
+                    'CounterpartyType' => $model->CounterpartyType,
+                    'FirstName' => $model->FirstName,
+                    'MiddleName' => $model->MiddleName,
+                    'LastName' => $model->LastName,
+                    'Phone' => $model->Phone,
+                ));
+                if($result['success']){
+                    Yii::$app->session->setFlash('success','Success');
+                }else{
+
+                    if(in_array(20000100526,$result['errorCodes'])){ //FirstName
+                        $model->addError('FirstName','FirstName has invalid characters');
+                    }
+                    if(in_array(20000100532,$result['errorCodes'])){ //LastName
+                        $model->addError('LastName','LastName has invalid characters');
+                    }
+                    if(in_array(20000100552,$result['errorCodes'])){ //Phone
+                        $model->addError('Phone','Phone invalid format');
+                    }
+                    if(in_array(20000100516,$result['errorCodes'])){ //Phone
+                        $model->addError('CounterpartyType','CounterpartyType is not specified');
+                    }
+                    if(in_array(20000900772,$result['errorCodes'])){ //Phone
+                        $model->addError('CounterpartyProperty','CounterpartyProperty is invalid');
+                    }
+
+                    if(in_array(20000900760,$result['errorCodes'])){ //CompanyName
+                        $model->addError('CompanyName','CompanyName is invalid');
+                    }
+                    if(in_array(20000900766,$result['errorCodes'])){ //LastName
+                        $model->addError('LastName','LastName must be empty');
+                    }
+                    if(in_array(20000900756,$result['errorCodes'])){ //Phone
+                        $model->addError('Phone','Phone must be empty');
+                    }
+                    if(in_array(20000200235,$result['errorCodes'])){ //OwnershipForm
+                        $model->addError('OwnershipForm','OwnershipForm is not specified');
+                    }
+
+             //   CMS::dump($result);die;
+
+
+                }
+
+               // CMS::dump($result);die;
+            }
+        }
+        return $this->render('create', [
+            'api' => $api,
+            'model' => $model,
+        ]);
+    }
+    public function actionUpdate($id, $counterpartyRef)
+    {
+        /** @var Novaposhta $api */
+        $api = Yii::$app->novaposhta;
+        $response = $api->getCounterparties('Recipient',1,'Петр');
+        CMS::dump($response);die;
+
+        $result = $api->model('ContactPerson')->update(array(
+            'Ref' => $id,
+            'CounterpartyRef' => '273872de-9242-11e6-a54a-005056801333',
+            'FirstName' => 'Петр',
+            'MiddleName' => 'Сидорович',
+            'LastName' => 'Иванов',
+            'Phone' => '0501112266',
+        ));
+        CMS::dump($result);die;
+
+
+        $res = $api->model('ContactPerson')
+            ->params([
+                'CounterpartyRef' => $id,
+                'Phone' => '+380997979789',
+            ])
+            ->method('update')
+            ->execute();
+
+        return $this->render('update', [
+            'api' => $api,
+
+
         ]);
     }
 }

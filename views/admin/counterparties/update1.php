@@ -2,7 +2,7 @@
 use panix\engine\Html;
 use panix\engine\bootstrap\ActiveForm;
 use panix\engine\CMS;
-
+CMS::dump($api->getTypesOfCounterparties());
 $form = ActiveForm::begin();
 ?>
 <div class="card">
