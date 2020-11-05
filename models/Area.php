@@ -20,7 +20,7 @@ class Area extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_area}}';
+        return '{{%novaposhta__area}}';
     }
 
     public function getDescription()

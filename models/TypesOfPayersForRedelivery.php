@@ -16,7 +16,7 @@ class TypesOfPayersForRedelivery extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_types_payers_redelivery}}';
+        return '{{%novaposhta__types_payers_redelivery}}';
     }
 
 }

@@ -6,13 +6,13 @@ namespace panix\mod\novaposhta\migrations;
  * Generation migrate by PIXELION CMS
  * @author PIXELION CMS development team <dev@pixelion.com.ua>
  *
- * Class m170908_125123_novaposhta
+ * Class m170908_125123_novaposhta_cities
  */
 use Yii;
 use yii\db\Migration;
 use panix\mod\novaposhta\models\Cities;
 
-class m170908_125123_novaposhta extends Migration
+class m170908_125123_novaposhta_cities extends Migration
 {
 
     public function safeUp()
@@ -45,13 +45,9 @@ class m170908_125123_novaposhta extends Migration
             'Postomat' => $this->tinyInteger(1)->null(),
             'AreaDescription' => $this->string(255)->null(),
             'AreaDescriptionRu' => $this->string(255)->null(),
-            'created_at' => $this->integer(11)->null(),
-            'updated_at' => $this->integer(11)->null(),
         ], $tableOptions);
 
         $this->addPrimaryKey('Ref', Cities::tableName(), 'Ref');
-        //$this->createIndex('Ref', Cities::tableName(), 'Ref');
-
     }
 
     public function safeDown()

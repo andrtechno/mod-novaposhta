@@ -30,7 +30,7 @@ class ServiceTypes extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_service_types}}';
+        return '{{%novaposhta__service_types}}';
     }
 
     /**

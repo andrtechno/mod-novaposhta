@@ -24,21 +24,23 @@ class m170908_125123_novaposhta_counterparties extends Migration
 
 
         $this->createTable(Counterparties::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
-            'ref' => $this->string(255)->null(),
-            'first_name' => $this->string(255)->null(),
-            'last_name' => $this->string(255)->null(),
-            'middle_name' => $this->string(255)->null(),
-            'phone' => $this->phone(),
-            'email' => $this->string(255)->null(),
-            'type' => $this->string(255)->null(),
-            'property' => $this->string(255)->null(),
-            'created_at' => $this->integer(11)->null(),
-            'updated_at' => $this->integer(11)->null()
+            'Ref' => $this->string(36)->null(),
+            'Description' => $this->string(255)->null(),
+            'City' => $this->string(36)->null(),
+            'Counterparty' => $this->string(255)->null(),
+            'FirstName' => $this->string(255)->null(),
+            'LastName' => $this->string(255)->null(),
+            'MiddleName' => $this->string(255)->null(),
+            'CounterpartyFullName' => $this->string(255)->null(),
+            'OwnershipFormRef' => $this->string(36)->null(),
+            'OwnershipFormDescription' => $this->string(255)->null(),
+            'EDRPOU' => $this->string(255)->null(),
+            'CounterpartyType' => $this->string(255)->null(),
+            'CityDescription' => $this->string(255)->null(),
+
         ], $tableOptions);
 
-
-        $this->createIndex('ref', Counterparties::tableName(), 'ref');
+        $this->addPrimaryKey('Ref', Counterparties::tableName(), 'Ref');
 
     }
 

@@ -19,7 +19,7 @@ class OwnershipForms extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_ownership_forms}}';
+        return '{{%novaposhta__ownership_forms}}';
     }
 
     public function getDescription()

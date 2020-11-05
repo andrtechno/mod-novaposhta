@@ -16,7 +16,7 @@ class CargoTypes extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_cargo_types}}';
+        return '{{%novaposhta__cargo_types}}';
     }
 
 

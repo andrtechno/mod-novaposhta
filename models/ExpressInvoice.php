@@ -47,7 +47,7 @@ class ExpressInvoice extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_express_invoice}}';
+        return '{{%novaposhta__express_invoice}}';
     }
 
     public function init()

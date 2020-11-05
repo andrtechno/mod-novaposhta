@@ -22,6 +22,6 @@ class Packs extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_packs}}';
+        return '{{%novaposhta__packs}}';
     }
 }

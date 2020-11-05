@@ -19,6 +19,6 @@ class Pallets extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_pallets}}';
+        return '{{%novaposhta__pallets}}';
     }
 }

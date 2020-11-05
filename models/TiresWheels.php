@@ -21,7 +21,7 @@ class TiresWheels extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_tires_wheels}}';
+        return '{{%novaposhta__tires_wheels}}';
     }
 
     public function getDescription()

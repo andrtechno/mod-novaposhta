@@ -16,7 +16,7 @@ class TypesCounterparties extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_types_counterparties}}';
+        return '{{%novaposhta__types_counterparties}}';
     }
 
 }

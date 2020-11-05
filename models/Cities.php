@@ -37,7 +37,7 @@ class Cities extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_cities}}';
+        return '{{%novaposhta__cities}}';
     }
 
     /**

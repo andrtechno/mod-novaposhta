@@ -37,7 +37,7 @@ class Warehouses extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_warehouses}}';
+        return '{{%novaposhta__warehouses}}';
     }
 
     public function getDescription()

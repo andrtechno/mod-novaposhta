@@ -3,12 +3,12 @@
 namespace panix\mod\novaposhta\models\counterparties;
 
 
-use panix\mod\novaposhta\models\query\CounterpartiesQuery;
+use panix\mod\novaposhta\models\query\CommonQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
 /**
- * This is the model class for table "novaposhta".
+ * This is the model class for table "novaposhta__counterparties".
  *
  * @property integer $id
  * @property string $name
@@ -24,17 +24,15 @@ class Counterparties extends ActiveRecord
 
     public static function find()
     {
-        return new CounterpartiesQuery(get_called_class());
+        return new CommonQuery(get_called_class());
     }
-
-
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%novaposhta_counterparties}}';
+        return '{{%novaposhta__counterparties}}';
     }
 
     /**
@@ -52,17 +50,6 @@ class Counterparties extends ActiveRecord
 
            // [['short_description', 'image'], 'default'],
         ];
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-
-
-
-        parent::afterSave($insert, $changedAttributes);
-
-
-
     }
 
 

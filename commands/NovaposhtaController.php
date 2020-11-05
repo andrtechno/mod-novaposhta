@@ -172,6 +172,7 @@ class NovaposhtaController extends ConsoleController
     public function actionReference()
     {
 
+      //  $response = $this->api->getCounterparties();
 
         //$typesOfPayers = $this->api->getTypesOfPayers();
         //print_r($typesOfPayers);

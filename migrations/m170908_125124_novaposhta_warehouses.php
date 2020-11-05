@@ -9,6 +9,7 @@ namespace panix\mod\novaposhta\migrations;
  * Class m170908_125124_novaposhta_warehouses
  */
 use panix\engine\db\Migration;
+use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\Warehouses;
 use Yii;
 
@@ -70,6 +71,15 @@ class m170908_125124_novaposhta_warehouses extends Migration
         $this->createIndex('SettlementRef', Warehouses::tableName(), 'SettlementRef');
         $this->createIndex('TypeOfWarehouse', Warehouses::tableName(), 'TypeOfWarehouse');
 
+
+
+       /* $this->addForeignKey(
+            'np_warehouse_fk_CityRef',
+            Warehouses::tableName(),
+            'CityRef',
+            Cities::tableName(),
+            'Ref'
+        );*/
 
         /*$this->addForeignKey(
             '{{%novaposhta__warehouses_CityRef_fk}}',

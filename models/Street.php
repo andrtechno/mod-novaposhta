@@ -16,7 +16,7 @@ class Street extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_street}}';
+        return '{{%novaposhta__street}}';
     }
 
 }
