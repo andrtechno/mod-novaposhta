@@ -4,10 +4,14 @@ namespace panix\mod\novaposhta\controllers\admin;
 
 use panix\engine\CMS;
 use panix\engine\Html;
+use panix\mod\cart\models\Order;
+use panix\mod\cart\widgets\delivery\novaposhta\api\NovaPoshtaApi;
 use panix\mod\novaposhta\components\Novaposhta;
+use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\ExpressInvoice;
 use panix\mod\novaposhta\models\ExpressInvoiceForm;
 use panix\mod\novaposhta\models\ServiceTypes;
+use panix\mod\novaposhta\models\Warehouses;
 use Yii;
 use panix\engine\controllers\AdminController;
 use yii\data\ArrayDataProvider;
@@ -28,6 +32,7 @@ class ExpressInvoiceController extends AdminController
 
     public function actionIndex()
     {
+        /** @var Novaposhta $api */
         $api = Yii::$app->novaposhta;
         $this->pageName = Yii::t('novaposhta/default', 'EXPRESS_WAYBILL');
         $this->buttons = [
@@ -40,17 +45,19 @@ class ExpressInvoiceController extends AdminController
         ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => ['index']
+            'url' => '#'
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
 
-        $data = $api->getDocumentList();
+        $data = $api->getDocumentList(['GetFullList' => 1]);
+       // CMS::dump($data);die;
         $dataResult = [];
         $serviceTypes = ServiceTypes::getList();
         if ($data['success']) {
             foreach ($data['data'] as $data) {
                 // CMS::dump($data);die;
+               // $RecipientAddress = Warehouses::find()->where(['Ref'=>$data['RecipientAddress']])->one();
                 $dataResult[] = [
                     'Ref' => $data['Ref'],
                     'ContactSender' => $data['ContactSender'],
@@ -58,6 +65,11 @@ class ExpressInvoiceController extends AdminController
                     'RecipientsPhone' => $data['RecipientsPhone'],
                     'StateName' => $data['StateName'],
                     'IntDocNumber' => $data['IntDocNumber'],
+                    'CostOnSite' => $data['CostOnSite'],
+                    'Description' => $data['Description'],
+                    'SenderAddress' => $data['SenderAddress'],
+                    'CityRecipient' =>  Cities::findOne(['Ref'=>$data['CityRecipient']])->getDescription(),
+                    'RecipientAddress' => Warehouses::findOne(['Ref'=>$data['RecipientAddress']])->getDescription(),
                     'ServiceType' => $serviceTypes[$data['ServiceType']],
                 ];
             }
@@ -85,13 +97,13 @@ class ExpressInvoiceController extends AdminController
 
 
         $this->pageName = html_entity_decode(Yii::t('novaposhta/default', 'CREATE_EXPRESS_WAYBILL'));
-        $this->view->params['breadcrumbs'][] = [
-            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => ['index']
-        ];
+        // $this->view->params['breadcrumbs'][] = [
+        //    'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
+        //     'url' => ['index']
+        // ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
-            'url' => ['express-invoice']
+            'url' => ['index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
@@ -100,7 +112,14 @@ class ExpressInvoiceController extends AdminController
             if ($model->validate()) {
                 $doc = $model->create();
                 if ($doc) {
-                    $model->order_id = Yii::$app->request->get('order_id');
+                    if (Yii::$app->request->get('order_id')) {
+                        $model->order_id = Yii::$app->request->get('order_id');
+                        $order = Order::findOne($model->order_id);
+                        if ($order) {
+                            $order->ttn = $doc['data'][0]['IntDocNumber'];
+                            $order->save(false);
+                        }
+                    }
                     $model->Ref = $doc[0]['Ref'];
                     $result = $model->save();
                     die;
@@ -118,10 +137,12 @@ class ExpressInvoiceController extends AdminController
         ]);
     }
 
-    public function test(){
+    public function test()
+    {
 
 
     }
+
     public function actionCreateOld()
     {
 

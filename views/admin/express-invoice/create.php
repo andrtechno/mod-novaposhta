@@ -20,16 +20,6 @@ $form = ActiveForm::begin([
     ]
 ]);
 
-$senderData = $api->getCounterparties('Sender', 1, '', '');
-//CMS::dump($senderData['data']);
-$contacts = $api->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
-$contactsList = [];
-if ($contacts['success']) {
-    foreach ($contacts['data'] as $contact) {
-        $contactsList[$contact['Ref']] = $contact;
-    }
-}
-
 
 //$contact = $api->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
 //\panix\engine\CMS::dump($contact);
@@ -69,67 +59,49 @@ function setTemplate(temp){
 
 ", \yii\web\View::POS_END);
 ?>
-
-    <div class="card">
-        <div class="card-header">
-            <h5><?= Html::encode($this->context->pageName) ?></h5>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h4 class="m-3 text-center">Отправиль</h4>
-                    <?= $form->field($model, 'ContactSender')->dropDownList(ArrayHelper::map($contactsList, 'Ref', function ($data) {
-                        return $data['Description'] . ', ' . CMS::phone_format($data['Phones']);
-                    }));
-                    ?>
-                    <?= $form->field($model, 'CitySender')->widget(BootstrapSelect::class, [
-                        'items' => \panix\mod\novaposhta\models\Cities::getList(['IsBranch' => 1]),
-                        'jsOptions' => ['liveSearch' => true],
-                        'options' => ['data-size' => 10]
-                    ]); ?>
-
-
-                    <?= $form->field($model, 'SenderAddress')->widget(BootstrapSelect::class, [
-                        'items' => \panix\mod\novaposhta\models\Warehouses::getList(Yii::$app->settings->get('novaposhta', 'sender_city')),
-                        'jsOptions' => ['liveSearch' => true],
-                        'options' => ['data-size' => 10]
-                    ]); ?>
-
-
-
-                    <?= $form->field($model, 'SendersPhone')->widget(PhoneInput::class); ?>
-
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><?= Html::encode($this->context->pageName) ?></h5>
                 </div>
-                <div class="col-sm-6">
-                    <h4 class="m-3 text-center">Получатель</h4>
-                    <?php echo $form->field($model, 'recipient_FirstName'); ?>
-                    <?= $form->field($model, 'recipient_LastName'); ?>
-                    <?= $form->field($model, 'recipient_MiddleName'); ?>
+                <div class="card-body">
                     <?php
-                    if ($model->RecipientsPhone) {
-                        $call = Html::a(Html::icon('phone') . ' Позвонить &mdash; <strong>' . CMS::phoneOperator($model->RecipientsPhone) . '</strong>', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light']);
-                    } else {
-                        $call = '';
-                    }
+                    $tabs[] = [
+                        'label' => $model::t('Получатель'),
+                        'content' => $this->render('tabs/_recipient', ['form' => $form, 'model' => $model]),
+                        'headerOptions' => [],
+                        'options' => ['class' => 'flex-sm-fill text-center nav-item'],
+                    ];
+                    $tabs[] = [
+                        'label' => $model::t('Отправиль'),
+                        'content' => $this->render('tabs/_sender', ['form' => $form, 'model' => $model, 'api' => $api]),
+                        'headerOptions' => [],
+                        'options' => ['class' => 'flex-sm-fill text-center nav-item'],
+                    ];
+
+
+                    echo \panix\engine\bootstrap\Tabs::widget([
+                        //'encodeLabels'=>true,
+                        'options' => [
+                            'class' => 'nav-pills flex-column flex-sm-row nav-tabs-static'
+                        ],
+                        'items' => $tabs,
+                    ]);
                     ?>
-                    <?= $form->field($model, 'RecipientsPhone', [
-                        'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}{call}\n{error}{endWrapper}",
-                        'parts' => [
-                            '{call}' => $call
-                        ]
-                    ])->widget(PhoneInput::class); ?>
-                    <?= $form->field($model, 'recipient_City'); ?>
-
-                    <?= $form->field($model, 'recipient_Region'); ?>
-                    <?= $form->field($model, 'recipient_Email'); ?>
-                    <?= $form->field($model, 'RecipientAddress'); ?>
-
                 </div>
-                <div class="col-sm-6">
-                    <h4 class="m-3 text-center">Параметры отправления</h4>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Параметры отправления</h5>
+                </div>
+                <div class="card-body" style="background-color: #f6f6f6;">
 
 
-                    <div class="text-center">
+
+                    <div class="text-center mt-3">
                         <?= Html::a('очистить', '#clear', ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => 'setTemplate(0);']); ?>
                         <?= Html::a('шаблон №1', '#temp1', ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => 'setTemplate(1);']); ?>
                         <?= Html::a('шаблон №2', '#temp2', ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => 'setTemplate(2);']); ?>
@@ -215,28 +187,16 @@ function setTemplate(temp){
                     </div>
 
 
-
-
                     <?= $form->field($model, 'PayerType')->dropDownList(['Recipient' => Yii::t('novaposhta/default', 'RECIPIENT'), 'Sender' => Yii::t('novaposhta/default', 'SENDER')]) ?>
                     <?= $form->field($model, 'PaymentMethod')->dropDownList($model->paymentFormsList()) ?>
                 </div>
-                <div class="col-sm-6">
-                    <h4 class="m-2">Обратная доставка</h4>
+                <div class="card-footer text-center">
+                    <?= Html::submitButton('Создать ЭН', ['class' => 'btn btn-success']); ?>
                 </div>
             </div>
-            <?php
-
-            //$s = $api->getPaymentForms();
-            // \panix\engine\CMS::dump($s);
-
-            ?>
-
-
-        </div>
-        <div class="card-footer text-center">
-            <?= Html::submitButton('Создать ЭН', ['class' => 'btn btn-success']); ?>
         </div>
     </div>
+
 <?php ActiveForm::end(); ?>
 
 <?php

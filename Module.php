@@ -51,12 +51,6 @@ class Module extends WebModule implements BootstrapInterface
                         'visible' => Yii::$app->user->can('/novaposhta/admin/default/index') || Yii::$app->user->can('/novaposhta/admin/default/*'),
                         'items' => [
                             [
-                                'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-                                'url' => ['/admin/novaposhta'],
-                                'icon' => $this->icon,
-                                'visible' => Yii::$app->user->can('/novaposhta/admin/default/index') || Yii::$app->user->can('/novaposhta/admin/default/*'),
-                            ],
-                            [
                                 'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
                                 'url' => ['/admin/novaposhta/express-invoice'],
                                 'icon' => $this->icon,

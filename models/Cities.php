@@ -108,6 +108,10 @@ class Cities extends ActiveRecord
         ];
     }
 
+    public function getDescription()
+    {
+        return (Yii::$app->language == 'ru') ? $this->DescriptionRu : $this->Description;
+    }
 
     public static function getList($wheres = [])
     {

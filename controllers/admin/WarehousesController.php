@@ -18,7 +18,7 @@ class WarehousesController extends AdminController
         $this->pageName = Yii::t('novaposhta/default', 'WAREHOUSES');
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => ['index']
+            'url' => '#'
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 

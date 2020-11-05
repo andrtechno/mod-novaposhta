@@ -21,4 +21,8 @@ return [
     "Sunday" => "Вс",
     'RECIPIENT' => 'Получатель',
     'SENDER' => 'Отправитель',
+    'DELIVERY_COST'=>'Цена доставки',
+    'DESCRIPTION'=>'Описание',
+    'RECIPIENT_CITY'=>'Город получателя',
+    'PHONE'=>'Телефон',
 ];

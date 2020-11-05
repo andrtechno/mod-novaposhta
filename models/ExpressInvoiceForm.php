@@ -36,12 +36,11 @@ class ExpressInvoiceForm extends Model
     public $Recipient;
     public $RecipientAddress;
     public $ContactRecipient;
-    public $RecipientsPhone;
 
     public $recipient_FirstName;
     public $recipient_MiddleName;
     public $recipient_LastName;
-    public $recipient_Phone;
+    public $RecipientsPhone;
     public $recipient_City;
     public $recipient_Region;
     public $recipient_Email;
