@@ -5,12 +5,12 @@ namespace panix\mod\novaposhta\models;
 use panix\engine\CMS;
 use panix\mod\cart\models\Order;
 use panix\mod\novaposhta\components\Novaposhta;
-use panix\mod\novaposhta\models\query\CitiesQuery;
+use panix\mod\novaposhta\models\query\CommonQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
 /**
- * This is the model class for table "novaposhta".
+ * This is the model class for table "novaposhta_express_invoice".
  *
  * @property integer $id
  * @property string $name
@@ -38,7 +38,7 @@ class ExpressInvoice extends ActiveRecord
 
     public static function find()
     {
-        return new CitiesQuery(get_called_class());
+        return new CommonQuery(get_called_class());
     }
 
 

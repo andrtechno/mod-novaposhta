@@ -2,18 +2,23 @@
 
 namespace panix\mod\novaposhta\models;
 
-use panix\mod\novaposhta\models\query\CitiesQuery;
+use panix\mod\novaposhta\models\query\CommonQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
 /**
- * This is the model class for table "novaposhta".
+ * This is the model class for table "novaposhta_cities".
  *
- * @property integer $id
- * @property string $name
- * @property string $text
+ * @property integer $Ref
+ * @property string $Description
+ * @property string $DescriptionRu
+ * @property string $AreaDescription
+ * @property string $AreaDescriptionRu
+ * @property string $SettlementTypeDescription
+ * @property string $SettlementTypeDescriptionRu
  * @property integer $created_at
  * @property integer $updated_at
+ * @property Warehouses[] $warehouses
  */
 class Cities extends ActiveRecord
 {
@@ -23,64 +28,9 @@ class Cities extends ActiveRecord
 
     public static function find()
     {
-        return new CitiesQuery(get_called_class());
+        return new CommonQuery(get_called_class());
     }
 
-    public function getGridColumns()
-    {
-        return [
-            'id' => [
-                'attribute' => 'id',
-                'contentOptions' => ['class' => 'text-center'],
-            ],
-            [
-                'attribute' => 'name',
-                'contentOptions' => ['class' => 'text-left'],
-            ],
-            [
-                'attribute' => 'views',
-                'contentOptions' => ['class' => 'text-center'],
-            ],
-            [
-                'attribute' => 'created_at',
-                'format' => 'raw',
-                'filter' => \yii\jui\DatePicker::widget([
-                    'model' => new NewsSearch(),
-                    'attribute' => 'created_at',
-                    'dateFormat' => 'yyyy-MM-dd',
-                    'options' => ['class' => 'form-control']
-                ]),
-                'contentOptions' => ['class' => 'text-center'],
-                'value' => function ($model) {
-                    return Yii::$app->formatter->asDatetime($model->created_at, 'php:d D Y H:i:s');
-                }
-            ],
-            [
-                'attribute' => 'updated_at',
-                'format' => 'raw',
-                'filter' => \yii\jui\DatePicker::widget([
-                    'model' => new NewsSearch(),
-                    'attribute' => 'updated_at',
-                    'dateFormat' => 'yyyy-MM-dd',
-                    'options' => ['class' => 'form-control']
-                ]),
-                'contentOptions' => ['class' => 'text-center'],
-                'value' => function ($model) {
-                    return Yii::$app->formatter->asDatetime($model->updated_at, 'php:d D Y H:i:s');
-                }
-            ],
-            'DEFAULT_CONTROL' => [
-                'class' => 'panix\engine\grid\columns\ActionColumn',
-            ],
-            'DEFAULT_COLUMNS' => [
-                ['class' => 'panix\engine\grid\columns\CheckboxColumn'],
-                [
-                    'class' => \panix\engine\grid\sortable\Column::class,
-                    'url' => ['/admin/news/default/sortable']
-                ],
-            ],
-        ];
-    }
 
     /**
      * @inheritdoc
@@ -100,10 +50,7 @@ class Cities extends ActiveRecord
             [['DescriptionRu'], 'string', 'max' => 255],
             [['DescriptionRu'], 'string'],
             [['DescriptionRu'], 'trim'],
-
             [['updated_at', 'created_at'], 'safe'],
-
-
             [['DescriptionRu', 'Description'], 'default'],
         ];
     }
@@ -111,6 +58,21 @@ class Cities extends ActiveRecord
     public function getDescription()
     {
         return (Yii::$app->language == 'ru') ? $this->DescriptionRu : $this->Description;
+    }
+
+    public function getAreaDescription()
+    {
+        return (Yii::$app->language == 'ru') ? $this->AreaDescriptionRu : $this->AreaDescription;
+    }
+
+    public function getSettlementTypeDescription()
+    {
+        return (Yii::$app->language == 'ru') ? $this->SettlementTypeDescriptionRu : $this->SettlementTypeDescription;
+    }
+
+    public function getWarehouses()
+    {
+        return $this->hasMany(Warehouses::class, ['CityRef' => 'Ref']);
     }
 
     public static function getList($wheres = [])

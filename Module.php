@@ -69,6 +69,12 @@ class Module extends WebModule implements BootstrapInterface
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/service-types/index') || Yii::$app->user->can('/novaposhta/admin/service-types/*'),
                             ],
                             [
+                                'label' => Yii::t('novaposhta/default', 'CITIES'),
+                                'url' => ['/admin/novaposhta/cities'],
+                                'icon' => $this->icon,
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/cities/index') || Yii::$app->user->can('/novaposhta/admin/cities/*'),
+                            ],
+                            [
                                 'label' => Yii::t('novaposhta/default', 'WAREHOUSES'),
                                 'url' => ['/admin/novaposhta/warehouses'],
                                 'icon' => $this->icon,

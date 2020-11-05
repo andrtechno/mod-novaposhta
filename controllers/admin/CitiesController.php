@@ -2,27 +2,27 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
-use panix\mod\novaposhta\models\search\WarehousesSearch;
-use panix\mod\novaposhta\models\Warehouses;
+use panix\mod\novaposhta\models\search\CitiesSearch;
+use panix\mod\novaposhta\models\Cities;
 use Yii;
 use panix\engine\controllers\AdminController;
 
 
-class WarehousesController extends AdminController
+class CitiesController extends AdminController
 {
 
 
     public function actionIndex()
     {
         $api = Yii::$app->novaposhta;
-        $this->pageName = Yii::t('novaposhta/default', 'WAREHOUSES');
+        $this->pageName = Yii::t('novaposhta/default', 'CITIES');
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => '#'
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
-        $searchModel = new WarehousesSearch();
+        $searchModel = new CitiesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         return $this->render('index', [
@@ -34,14 +34,14 @@ class WarehousesController extends AdminController
 
     public function actionView($id)
     {
-        $model = Warehouses::findOne($id);
-        $this->pageName = ($model->DescriptionRu) ? $model->DescriptionRu : $model->Description;
+        $model = Cities::findOne($id);
+        $this->pageName = $model->getDescription();
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => '#'
         ];
         $this->view->params['breadcrumbs'][] = [
-            'label' => Yii::t('novaposhta/default', 'WAREHOUSES'),
+            'label' => Yii::t('novaposhta/default', 'CITIES'),
             'url' => ['index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;

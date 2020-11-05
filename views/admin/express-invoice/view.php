@@ -61,15 +61,62 @@ use panix\engine\Html;
         <div class="row">
             <div class="col-sm-6">
                 <h4>Информация об отправки:</h4>
-                <div>CargoType: <?= $result['CargoType']; ?></div>
-                <div>Цена: <?= $result['Cost']; ?></div>
-                <div>Вес: <?= $result['Weight']; ?>кг.</div>
-                <div>ServiceType: <?= $result['ServiceType']; ?></div>
-                <div>PaymentMethod: <?= $result['PaymentMethod']; ?></div>
-                <div>PayerType: <?= $result['PayerType']; ?></div>
-                <div>Объем куб.м.: <?= $result['VolumeGeneral']; ?></div>
-                <div>Дата: <?= $result['DateTime']; ?></div>
-                <div>Цена доствки: <?= $result['CostOnSite']; ?>грн.</div>
+
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Вес</th>
+                        <td><strong><?= $result['Weight']; ?></strong> кг.</td>
+                    </tr>
+                    <tr>
+                        <th>Цена</th>
+                        <td><strong><?= $result['Cost']; ?></strong> грн.</td>
+                    </tr>
+                    <tr>
+                        <th>Цена доствки</th>
+                        <td><strong><?= $result['CostOnSite']; ?></strong> грн.</td>
+                    </tr>
+                    <tr>
+                        <th>Дата создания</th>
+                        <td><?= CMS::date(strtotime($result['DateTime']),true,'UTC'); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Объем куб.м.</th>
+                        <td><?= $result['VolumeGeneral']; ?></td>
+                    </tr>
+
+                    <tr>
+                        <th>Тип груза</th>
+                        <td><?= $result['CargoType']; ?> <?php
+
+                            $s = \panix\mod\novaposhta\models\CargoTypes::findOne($result['CargoTypeRef']);
+                           echo $s->Description;
+                            ?></td>
+                    </tr>
+                    <tr>
+                        <th>ServiceType.</th>
+                        <td><?= $result['ServiceType']; ?> ServiceTypeRef</td>
+                    </tr>
+                    <tr>
+                        <th>Способ оплаты</th>
+                        <td><?= $result['PaymentMethod']; ?> PaymentMethodRef</td>
+                    </tr>
+                    <tr>
+                        <th>PayerType.</th>
+                        <td><?= $result['PayerType']; ?> PayerTypeRef</td>
+                    </tr>
+                    <tr>
+                        <th>Кол. мест</th>
+                        <td><?= $result['SeatsAmount']; ?></td>
+                    </tr>
+                </table>
+
+
+
+
+
+
+
+
             </div>
 
 

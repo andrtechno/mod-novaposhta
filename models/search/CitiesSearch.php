@@ -2,16 +2,15 @@
 
 namespace panix\mod\novaposhta\models\search;
 
-use panix\engine\CMS;
-use panix\mod\novaposhta\models\Warehouses;
+use panix\mod\novaposhta\models\Cities;
 use Yii;
 use yii\base\Model;
 use panix\engine\data\ActiveDataProvider;
 
 /**
- * WarehousesSearch represents the model behind the search form about `panix\mod\novaposhta\models\Warehouses`.
+ * CitiesSearch represents the model behind the search form about `panix\mod\novaposhta\models\Warehouses`.
  */
-class WarehousesSearch extends Warehouses
+class CitiesSearch extends Cities
 {
 
     /**
@@ -20,7 +19,7 @@ class WarehousesSearch extends Warehouses
     public function rules()
     {
         return [
-            [['Ref','CityRef'], 'string'],
+            //[['id'], 'integer'],
             [['Description'], 'safe'],
             [['Description'], 'string'],
         ];
@@ -44,11 +43,10 @@ class WarehousesSearch extends Warehouses
      */
     public function search($params)
     {
-        $query = Warehouses::find()->orderBy(['Number'=>SORT_ASC]);
+        $query = Cities::find()->orderBy(['Description'=>SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination'=>['pageSize'=>100]
         ]);
 
         $this->load($params);
@@ -60,8 +58,16 @@ class WarehousesSearch extends Warehouses
         }
 
         $query->andFilterWhere(['Ref' => $this->Ref]);
-        $query->andFilterWhere(['CityRef' => $this->CityRef]);
-        $query->andFilterWhere(['like', 'Description', $this->Description]);
+
+        if(Yii::$app->language == 'ru'){
+            $query->andFilterWhere(['like', 'DescriptionRu', $this->Description]);
+            $query->andFilterWhere(['like', 'AreaDescriptionRu', $this->AreaDescriptionRu]);
+            $query->andFilterWhere(['like', 'SettlementTypeDescriptionRu', $this->SettlementTypeDescriptionRu]);
+        }else{
+            $query->andFilterWhere(['like', 'Description', $this->Description]);
+            $query->andFilterWhere(['like', 'AreaDescription', $this->AreaDescription]);
+            $query->andFilterWhere(['like', 'SettlementTypeDescription', $this->SettlementTypeDescription]);
+        }
 
 
         return $dataProvider;

@@ -72,13 +72,13 @@ GridView::widget([
                     return Html::a(Html::icon('eye'), ['view', 'id' => $model['Ref']], [
                         'title' => Yii::t('app/default', 'View'),
 
-                        'class' => 'btn btn-sm btn-outline-secondary']);
+                        'class' => 'd-flex align-items-center btn btn-sm btn-outline-secondary']);
                 },
                 'delete' => function ($url, $model, $key) {
                     return Html::a(Html::icon('delete'), ['delete', 'id' => $model['Ref']], [
                         'title' => Yii::t('app/default', 'DELETE'),
 
-                        'class' => 'btn btn-sm btn-outline-danger']);
+                        'class' => 'd-flex align-items-center btn btn-sm btn-outline-danger']);
                 },
                 'print' => function ($url, $model, $key) {
 

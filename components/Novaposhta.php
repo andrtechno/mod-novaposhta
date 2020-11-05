@@ -152,7 +152,7 @@ class Novaposhta extends Component
      *
      * @param string $language
      *
-     * @return NovaPoshtaApi2
+     * @return $this
      */
     public function setLanguage($language)
     {
@@ -175,7 +175,7 @@ class Novaposhta extends Component
      *
      * @param string $format Format of returned data by methods (json, xml, array)
      *
-     * @return NovaPoshtaApi2
+     * @return $this
      */
     public function setFormat($format)
     {
@@ -220,7 +220,9 @@ class Novaposhta extends Component
     /**
      * Converts array to xml.
      *
-     * @param array
+     * @param array $array
+     * @param bool $xml
+     * @return mixed
      */
     private function array2xml(array $array, $xml = false)
     {
@@ -426,8 +428,8 @@ class Novaposhta extends Component
     public function getWarehouse($cityRef, $description = '')
     {
         $warehouses = $this->getWarehouses($cityRef);
-        $error = array();
-        $data = array();
+        $error = [];
+        $data = [];
         if (is_array($warehouses['data'])) {
             $data = $warehouses['data'][0];
             if (count($warehouses['data']) > 1 && $description) {

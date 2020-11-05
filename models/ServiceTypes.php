@@ -2,12 +2,12 @@
 
 namespace panix\mod\novaposhta\models;
 
-use panix\mod\novaposhta\models\query\CitiesQuery;
+use panix\mod\novaposhta\models\query\CommonQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
 /**
- * This is the model class for table "ServiceTypes".
+ * This is the model class for table "novaposhta_service_types".
  *
  * @property integer $id
  * @property string $Ref
@@ -21,7 +21,7 @@ class ServiceTypes extends ActiveRecord
 
     public static function find()
     {
-        return new CitiesQuery(get_called_class());
+        return new CommonQuery(get_called_class());
     }
 
 

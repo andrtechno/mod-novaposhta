@@ -5,18 +5,20 @@ namespace panix\mod\novaposhta\models;
 
 use Yii;
 use panix\engine\db\ActiveRecord;
-use panix\mod\novaposhta\models\query\CitiesQuery;
+use panix\mod\novaposhta\models\query\CommonQuery;
 
 /**
  * This is the model class for table "novaposhta".
  *
- * @property integer $id
+ * @property string $Ref Guid
+ * @property string $CityRef Guid
  * @property string $Description
  * @property string $DescriptionRu
  * @property string $ShortAddressRu
  * @property string $ShortAddress
  * @property string $CityDescriptionRu
  * @property string $CityDescription
+ * @property string $BicycleParking
  */
 class Warehouses extends ActiveRecord
 {
@@ -26,7 +28,7 @@ class Warehouses extends ActiveRecord
 
     public static function find()
     {
-        return new CitiesQuery(get_called_class());
+        return new CommonQuery(get_called_class());
     }
 
 

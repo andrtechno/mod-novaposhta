@@ -9,6 +9,7 @@ return [
     'CREATE_EXPRESS_WAYBILL' => 'Создать &laquo;Экспресс-накладную&raquo;',
     'CREATE_EXPRESS_WAYBILL_CART' => 'Создать &laquo;ЭН&raquo; для &laquo;Новой почты&raquo;',
     'WAREHOUSES' => 'Склады',
+    'CITIES' => 'Города',
     'RECEPTION' => 'Прием',
     'SCHEDULE' => 'График работы',
     'DELIVERY' => 'Доставка',

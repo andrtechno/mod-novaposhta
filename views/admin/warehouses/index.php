@@ -5,105 +5,20 @@ use panix\engine\grid\GridView;
 use panix\engine\widgets\Pjax;
 use panix\engine\CMS;
 
+/**
+ * @var \yii\web\View $this
+ * @var \panix\mod\novaposhta\models\Warehouses $model
+ */
+
 Pjax::begin([
     'dataProvider' => $dataProvider,
 ]);
 ?>
-<?=
-GridView::widget([
-    'tableOptions' => ['class' => 'table table-striped'],
+<?php
+echo $this->render('_grid', [
     'dataProvider' => $dataProvider,
-    'filterModel' => $searchModel,
-
-    'layoutOptions' => ['title' => $this->context->pageName],
-    'columns' => [
-        [
-            'attribute' => 'Description',
-            'header' => Yii::t('novaposhta/default', 'Description'),
-            'format' => 'raw',
-            'contentOptions' => ['class' => 'text-left'],
-            'value' => function ($model) {
-                return $model->description . '<br/>' . Html::tag('span', $model->SettlementAreaDescription, ['class' => 'badge badge-success']);
-            }
-        ],
-        [
-            'attribute' => 'cityDescription',
-            'header' => Yii::t('novaposhta/default', 'CityDescription'),
-            'format' => 'raw',
-            'contentOptions' => ['class' => 'text-left'],
-        ],
-        [
-            'attribute' => 'Reception',
-            'header' => Yii::t('novaposhta/default', 'RECEPTION'),
-            'format' => 'raw',
-            'contentOptions' => ['class' => 'text-left'],
-            'value' => function ($model) {
-                $result = '';
-                foreach ($model->getReceptionList() as $day => $value) {
-                    if ($value == '-') {
-                        $result .= '<strong>' . $day . ':</strong> &mdash;<br>';
-                    } else {
-                        list($from, $to) = explode('-', $value);
-                        $result .= '<strong>' . $day . ':</strong> с ' . $from . ' по ' . $to . '<br>';
-                    }
-
-                }
-                return $result;
-            }
-        ],
-        [
-            'attribute' => 'Schedule',
-            'header' => Yii::t('novaposhta/default', 'SCHEDULE'),
-            'format' => 'raw',
-            'contentOptions' => ['class' => 'text-left'],
-            'value' => function ($model) {
-                $result = '';
-                foreach ($model->getScheduleList() as $day => $value) {
-                    if ($value == '-') {
-                        $result .= '<strong>' . $day . ':</strong> <span class="text-danger">выходной</span><br>';
-                    } else {
-                        list($from, $to) = explode('-', $value);
-                        $result .= '<strong>' . $day . ':</strong> с ' . $from . ' по ' . $to . '<br>';
-                    }
-
-                }
-                return $result;
-            }
-        ],
-        [
-            'attribute' => 'Delivery',
-            'header' => Yii::t('novaposhta/default', 'DELIVERY'),
-            'format' => 'raw',
-            'contentOptions' => ['class' => 'text-left'],
-            'value' => function ($model) {
-                $result = '';
-                foreach ($model->getDeliveryList() as $day => $value) {
-                    if ($value == '-') {
-                        $result .= '<strong>' . $day . ':</strong> &mdash;<br>';
-                    } else {
-                        list($from, $to) = explode('-', $value);
-                        $result .= '<strong>' . $day . ':</strong> с ' . $from . ' по ' . $to . '<br>';
-                    }
-
-                }
-                return $result;
-            }
-        ],
-
-        [
-            'class' => 'panix\engine\grid\columns\ActionColumn',
-            'template' => '{view}',
-            'header' => Yii::t('app/default', 'OPTIONS'),
-            'buttons' => [
-                'view' => function ($url, $model, $key) {
-                    return Html::a(Html::icon('eye'), ['view', 'id' => $model['Ref']], [
-                        'title' => Yii::t('app/default', 'View'),
-
-                        'class' => 'btn btn-sm btn-outline-secondary']);
-                },
-            ]
-        ]
-    ]
+    'searchModel' => $searchModel,
+    'title' => $this->context->pageName
 ]);
 ?>
 <?php Pjax::end(); ?>

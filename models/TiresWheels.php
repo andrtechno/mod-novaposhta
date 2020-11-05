@@ -2,7 +2,7 @@
 
 namespace panix\mod\novaposhta\models;
 
-use panix\mod\sitemap\behaviors\SitemapBehavior;
+use panix\mod\novaposhta\models\query\CommonQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;
 
@@ -23,7 +23,7 @@ class TiresWheels extends ActiveRecord
 
     public static function find()
     {
-        return new CitiesQuery(get_called_class());
+        return new CommonQuery(get_called_class());
     }
 
 
@@ -55,75 +55,6 @@ class TiresWheels extends ActiveRecord
 
             [['short_description', 'image'], 'default'],
         ];
-    }
-
-    public function getUrl()
-    {
-        return ['/news/default/view', 'slug' => $this->slug];
-    }
-
-    public function displayDescription($attribute='full_description')
-    {
-        if (Yii::$app->user->can('admin')) {
-            \panix\ext\tinymce\TinyMceInline::widget();
-        }
-        return (Yii::$app->user->can('admin')) ? $this->isText('full_description') : $this->pageBreak('full_description');
-    }
-
-    public function getUser()
-    {
-        return $this->hasOne(Yii::$app->user->identityClass, ['id' => 'user_id']);
-    }
-
-    public function behaviors()
-    {
-        $b = [];
-        if (Yii::$app->getModule('seo'))
-            $b['seo'] = [
-                'class' => '\panix\mod\seo\components\SeoBehavior',
-                'url' => $this->getUrl()
-            ];
-
-        if (Yii::$app->getModule('sitemap')) {
-            $b['sitemap'] = [
-                'class' => SitemapBehavior::class,
-                //'batchSize' => 100,
-                'scope' => function ($model) {
-                    /** @var \yii\db\ActiveQuery $model */
-                    $model->select(['slug', 'updated_at']);
-                    $model->where(['switch' => 1]);
-                },
-                'dataClosure' => function ($model) {
-                    /** @var self $model */
-                    return [
-                        'loc' => $model->getUrl(),
-                        'lastmod' => $model->updated_at,
-                        'changefreq' => SitemapBehavior::CHANGEFREQ_DAILY,
-                        'priority' => 0.1
-                    ];
-                }
-            ];
-        }
-        if (Yii::$app->hasModule('comments')) {
-            $b['commentBehavior'] = [
-                'class' => 'panix\mod\comments\components\CommentBehavior',
-                'owner_title' => 'name',
-
-            ];
-        }
-
-
-        $b['uploadFile'] = [
-            'class' => 'panix\engine\behaviors\UploadFileBehavior',
-            'files' => [
-                'image' => '@uploads/news',
-            ],
-            'options' => [
-                'watermark' => false
-            ]
-        ];
-
-        return \yii\helpers\ArrayHelper::merge($b, parent::behaviors());
     }
 
 }
