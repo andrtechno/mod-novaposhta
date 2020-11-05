@@ -48,6 +48,7 @@ class CounterpartyForm extends Model
             [['MiddleName', 'Email'], 'string'],
             [['FirstName', 'LastName', 'Phone', 'CounterpartyType', 'CounterpartyProperty', 'MiddleName', 'Email','OwnershipForm','EDRPOU','CityRef'], 'string', 'max' => 36],
             ['Email', 'email'],
+            ['Phone', 'panix\ext\telinput\PhoneInputValidator'],
         ];
     }
 
