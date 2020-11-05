@@ -2,28 +2,14 @@
 
 namespace panix\mod\novaposhta\models;
 
-
-use Yii;
-use panix\engine\db\ActiveRecord;
-use panix\mod\novaposhta\models\query\CommonQuery;
-
 /**
  * This is the model class for table "novaposhta_cargo_types".
  *
  * @property string $Ref Guid
  * @property string $Description
  */
-class CargoTypes extends ActiveRecord
+class CargoTypes extends CommonActiveRecord
 {
-
-    const route = '/admin/novaposhta/default';
-    const MODULE_ID = 'novaposhta';
-
-    public static function find()
-    {
-        return new CommonQuery(get_called_class());
-    }
-
 
     /**
      * @inheritdoc
@@ -33,15 +19,5 @@ class CargoTypes extends ActiveRecord
         return '{{%novaposhta_cargo_types}}';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['Ref'], 'required'],
-            [['Description'], 'string', 'max' => 255],
-        ];
-    }
 
 }

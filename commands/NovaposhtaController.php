@@ -6,6 +6,7 @@ use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\Area;
 use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\Cities;
+use panix\mod\novaposhta\models\OwnershipForms;
 use panix\mod\novaposhta\models\Packs;
 use panix\mod\novaposhta\models\Pallets;
 use panix\mod\novaposhta\models\ServiceTypes;
@@ -15,6 +16,7 @@ use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
 use panix\mod\novaposhta\models\Warehouses;
 use Yii;
 use panix\engine\console\controllers\ConsoleController;
+use yii\helpers\Console;
 
 class NovaposhtaController extends ConsoleController
 {
@@ -38,57 +40,9 @@ class NovaposhtaController extends ConsoleController
         if ($cities['success']) {
             $data = [];
             foreach ($cities['data'] as $k => $city) {
-                $data[] = [
-                    $city['Description'],
-                    $city['DescriptionRu'],
-                    $city['Ref'],
-                    $city['Delivery1'],
-                    $city['Delivery2'],
-                    $city['Delivery3'],
-                    $city['Delivery4'],
-                    $city['Delivery5'],
-                    $city['Delivery6'],
-                    $city['Delivery7'],
-                    $city['Area'],
-                    $city['SettlementType'],
-                    $city['IsBranch'],
-                    $city['PreventEntryNewStreetsUser'],
-                    $city['Conglomerates'],
-                    $city['CityID'],
-                    $city['SettlementTypeDescription'],
-                    $city['SettlementTypeDescriptionRu'],
-                    $city['SpecialCashCheck'],
-                    $city['Postomat'],
-                    $city['AreaDescription'],
-                    $city['AreaDescriptionRu'],
-                ];
+                $data[] = array_values($city);
             }
-
-
-            Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), [
-                'Description',
-                'DescriptionRu',
-                'Ref',
-                'Delivery1',
-                'Delivery2',
-                'Delivery3',
-                'Delivery4',
-                'Delivery5',
-                'Delivery6',
-                'Delivery7',
-                'Area',
-                'SettlementType',
-                'IsBranch',
-                'PreventEntryNewStreetsUser',
-                'Conglomerates',
-                'CityID',
-                'SettlementTypeDescriptionRu',
-                'SettlementTypeDescription',
-                'SpecialCashCheck',
-                'Postomat',
-                'AreaDescription',
-                'AreaDescriptionRu',
-            ], $data)->execute();
+            Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), array_keys($cities['data'][0]), $data)->execute();
         }
     }
 
@@ -104,7 +58,10 @@ class NovaposhtaController extends ConsoleController
             ->execute();
 
         $list = [];
+        $total = count($result['data']);
+        $i = 0;
         foreach ($result['data'] as $d) {
+            $i++;
             $list[] = [
                 $d['SiteKey'],
                 $d['Description'],
@@ -196,16 +153,18 @@ class NovaposhtaController extends ConsoleController
 
 
         if ($result['success']) {
+            $total = count($result['data']);
+            $i = 0;
+            Console::startProgress($i, $total);
             $list = [];
-            foreach ($result['data'] as $d) {
+
+            foreach ($result['data'] as $key => $d) {
+                $i++;
                 $list[] = array_values($d);
+                Console::updateProgress($i, $total);
             }
-            Area::getDb()->createCommand()->batchInsert(Area::tableName(), [
-                'Ref',
-                'AreasCenter',
-                'DescriptionRu',
-                'Description',
-            ], $list)->execute();
+            Area::getDb()->createCommand()->batchInsert(Area::tableName(), array_keys($result['data'][0]), $list)->execute();
+            Console::endProgress(false);
         }
     }
 
@@ -214,153 +173,138 @@ class NovaposhtaController extends ConsoleController
     {
 
 
-        CargoTypes::getDb()->createCommand()->truncateTable(CargoTypes::tableName())->execute();
-        Packs::getDb()->createCommand()->truncateTable(Packs::tableName())->execute();
-        Pallets::getDb()->createCommand()->truncateTable(Pallets::tableName())->execute();
-        TypesOfPayersForRedelivery::getDb()->createCommand()->truncateTable(TypesOfPayersForRedelivery::tableName())->execute();
-        TiresWheels::getDb()->createCommand()->truncateTable(TiresWheels::tableName())->execute();
-        TypesCounterparties::getDb()->createCommand()->truncateTable(TypesCounterparties::tableName())->execute();
-        ServiceTypes::getDb()->createCommand()->truncateTable(ServiceTypes::tableName())->execute();
-
-
-        $cargoTypes = $this->api->getCargoTypes();
-        if ($cargoTypes['success']) {
-            $cargoTypesList = [];
-            foreach ($cargoTypes['data'] as $cargoType) {
-                $cargoTypesList[] = array_values($cargoType);
-            }
-            CargoTypes::getDb()->createCommand()->batchInsert(CargoTypes::tableName(), [
-                'Description',
-                'Ref',
-            ], $cargoTypesList)->execute();
-        }
-
-
         //$typesOfPayers = $this->api->getTypesOfPayers();
         //print_r($typesOfPayers);
-
-
-        $pallets = $this->api->getPalletsList();
-        if ($pallets['success']) {
-            $palletsList = [];
-            foreach ($pallets['data'] as $pallet) {
-                $palletsList[] = array_values($pallet);
-            }
-            Pallets::getDb()->createCommand()->batchInsert(Pallets::tableName(), [
-                'Ref',
-                'Description',
-                'DescriptionRu',
-                'Weight'
-            ], $palletsList)->execute();
-        }
 
 
         //$backwardDeliveryCargoTypes = $this->api->getBackwardDeliveryCargoTypes();
         //print_r($backwardDeliveryCargoTypes);
 
 
-        $packs = $this->api
+        /* $Payment = $this->api
+             ->model('Common')
+             ->method('getPaymentForms')
+             ->execute();*/
+        $this->cargoTypes();
+        $this->pallets();
+        $this->ownershipForms();
+        $this->packs();
+        $this->typesOfPayersForRedelivery();
+        $this->tiresWheelsList();
+        $this->typesOfCounterparties();
+        $this->serviceTypes();
+
+    }
+
+    private function cargoTypes()
+    {
+        CargoTypes::getDb()->createCommand()->truncateTable(CargoTypes::tableName())->execute();
+        $response = $this->api->getCargoTypes();
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            CargoTypes::getDb()->createCommand()->batchInsert(CargoTypes::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
+
+    private function pallets()
+    {
+        Pallets::getDb()->createCommand()->truncateTable(Pallets::tableName())->execute();
+        $response = $this->api->getPalletsList();
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            Pallets::getDb()->createCommand()->batchInsert(Pallets::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
+
+    private function typesOfPayersForRedelivery()
+    {
+        TypesOfPayersForRedelivery::getDb()->createCommand()->truncateTable(TypesOfPayersForRedelivery::tableName())->execute();
+        $response = $this->api->getTypesOfPayersForRedelivery();
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            TypesOfPayersForRedelivery::getDb()->createCommand()->batchInsert(TypesOfPayersForRedelivery::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
+
+    private function tiresWheelsList()
+    {
+        TiresWheels::getDb()->createCommand()->truncateTable(TiresWheels::tableName())->execute();
+        $response = $this->api->getTiresWheelsList();
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            TiresWheels::getDb()->createCommand()->batchInsert(TiresWheels::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
+
+    private function typesOfCounterparties()
+    {
+        TypesCounterparties::getDb()->createCommand()->truncateTable(TypesCounterparties::tableName())->execute();
+        $response = $this->api->getTypesOfCounterparties();
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            TypesCounterparties::getDb()->createCommand()->batchInsert(TypesCounterparties::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
+
+    private function serviceTypes()
+    {
+        ServiceTypes::getDb()->createCommand()->truncateTable(ServiceTypes::tableName())->execute();
+        $response = $this->api->getServiceTypes();
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            ServiceTypes::getDb()->createCommand()->batchInsert(ServiceTypes::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
+
+    private function packs()
+    {
+        Packs::getDb()->createCommand()->truncateTable(Packs::tableName())->execute();
+        $response = $this->api
             ->model('Common')
             ->method('getPackList')
             ->execute();
-
-
-        if ($packs['success']) {
-           // print_r($packs);die;
-            $packsList = [];
-            foreach ($packs['data'] as $pack) {
-
-                $packsList[] = [
-                    $pack['Ref'],
-                    $pack['Description'],
-                    $pack['DescriptionRu'],
-                    $pack['Length'],
-                    $pack['Width'],
-                    $pack['Height'],
-                    $pack['VolumetricWeight'],
-                    $pack['TypeOfPacking']
-                ];
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
             }
-            Packs::getDb()->createCommand()->batchInsert(Packs::tableName(), [
-                'Ref',
-                'Description',
-                'DescriptionRu',
-                'Length',
-                'Width',
-                'Height',
-                'VolumetricWeight',
-                'TypeOfPacking'
-            ], $packsList)->execute();
+            Packs::getDb()->createCommand()->batchInsert(Packs::tableName(), array_keys($response['data'][0]), $data)->execute();
         }
+    }
 
-        $typesOfPayersForRedelivery = $this->api->getTypesOfPayersForRedelivery();
-        if ($typesOfPayersForRedelivery['success']) {
-            $typesOfPayersForRedeliveryList = [];
-            foreach ($typesOfPayersForRedelivery['data'] as $redelivery) {
-                $typesOfPayersForRedeliveryList[] = [
-                    $redelivery['Description'],
-                    $redelivery['Ref']
-                ];
+    private function ownershipForms()
+    {
+        OwnershipForms::getDb()->createCommand()->truncateTable(OwnershipForms::tableName())->execute();
+        $response = $this->api
+            ->model('Common')
+            ->method('getOwnershipFormsList')
+            ->execute();
+
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
             }
-            TypesOfPayersForRedelivery::getDb()->createCommand()->batchInsert(TypesOfPayersForRedelivery::tableName(), [
-                'Description',
-                'Ref',
-            ], $typesOfPayersForRedeliveryList)->execute();
+            OwnershipForms::getDb()->createCommand()->batchInsert(OwnershipForms::tableName(), array_keys($response['data'][0]), $data)->execute();
         }
-
-        $tiresWheels = $this->api->getTiresWheelsList();
-        if ($tiresWheels['success']) {
-            $tiresWheelsList = [];
-            foreach ($tiresWheels['data'] as $tiresWheel) {
-                $tiresWheelsList[] = [
-                    $tiresWheel['Ref'],
-                    $tiresWheel['Description'],
-                    $tiresWheel['DescriptionRu'],
-                    $tiresWheel['Weight'],
-                    $tiresWheel['DescriptionType'],
-                ];
-            }
-            TiresWheels::getDb()->createCommand()->batchInsert(TiresWheels::tableName(), [
-                'Ref',
-                'Description',
-                'DescriptionRu',
-                'Weight',
-                'DescriptionType',
-            ], $tiresWheelsList)->execute();
-        }
-
-
-        $typesCounterparties = $this->api->getTypesOfCounterparties();
-        if ($typesCounterparties['success']) {
-            $list = [];
-            foreach ($typesCounterparties['data'] as $typeCounterparties) {
-                $list[] = [
-                    $typeCounterparties['Description'],
-                    $typeCounterparties['Ref']
-                ];
-            }
-            TypesCounterparties::getDb()->createCommand()->batchInsert(TypesCounterparties::tableName(), [
-                'Description',
-                'Ref',
-            ], $list)->execute();
-        }
-
-
-        $serviceTypes = $this->api->getServiceTypes();
-        if ($serviceTypes['success']) {
-            $list = [];
-            foreach ($serviceTypes['data'] as $serviceType) {
-                $list[] = [
-                    $serviceType['Description'],
-                    $serviceType['Ref']
-                ];
-            }
-            ServiceTypes::getDb()->createCommand()->batchInsert(ServiceTypes::tableName(), [
-                'Description',
-                'Ref',
-            ], $list)->execute();
-        }
-
     }
 
 }

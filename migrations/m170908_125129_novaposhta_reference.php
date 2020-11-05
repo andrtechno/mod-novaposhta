@@ -11,6 +11,7 @@ namespace panix\mod\novaposhta\migrations;
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\Errors;
+use panix\mod\novaposhta\models\OwnershipForms;
 use panix\mod\novaposhta\models\Packs;
 use panix\mod\novaposhta\models\Pallets;
 use panix\mod\novaposhta\models\ServiceTypes;
@@ -85,22 +86,27 @@ class m170908_125129_novaposhta_reference extends Migration
 
 
         $this->createTable(TypesCounterparties::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
             'Description' => $this->string(36)->null(),
         ], $tableOptions);
-
-        $this->createIndex('Ref', TypesCounterparties::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', TypesCounterparties::tableName(), 'Ref');
 
 
 
         $this->createTable(ServiceTypes::tableName(), [
-            'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
             'Description' => $this->string(36)->null(),
         ], $tableOptions);
 
-        $this->createIndex('Ref', ServiceTypes::tableName(), 'Ref');
+        $this->addPrimaryKey('Ref', ServiceTypes::tableName(), 'Ref');
+
+        $this->createTable(OwnershipForms::tableName(), [
+            'Ref' => $this->string(36)->null(),
+            'Description' => $this->string(255)->null(),
+            'FullName' => $this->string(255)->null(),
+        ], $tableOptions);
+
+        $this->addPrimaryKey('Ref', OwnershipForms::tableName(), 'Ref');
 
 
     }
@@ -114,6 +120,7 @@ class m170908_125129_novaposhta_reference extends Migration
         $this->dropTable(TiresWheels::tableName());
         $this->dropTable(TypesCounterparties::tableName());
         $this->dropTable(ServiceTypes::tableName());
+        $this->dropTable(OwnershipForms::tableName());
 
     }
 

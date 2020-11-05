@@ -9,11 +9,9 @@ use Yii;
  *
  * @property string $Ref Guid
  * @property string $Description
- * @property string $DescriptionRu
- * @property double $Weight
- * @property string $DescriptionType
+ * @property string $FullName
  */
-class TiresWheels extends CommonActiveRecord
+class OwnershipForms extends CommonActiveRecord
 {
 
     /**
@@ -21,7 +19,7 @@ class TiresWheels extends CommonActiveRecord
      */
     public static function tableName()
     {
-        return '{{%novaposhta_tires_wheels}}';
+        return '{{%novaposhta_ownership_forms}}';
     }
 
     public function getDescription()
