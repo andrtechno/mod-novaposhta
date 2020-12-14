@@ -68,21 +68,21 @@ function setTemplate(temp){
                 <div class="card-body">
                     <?php
                     $tabs[] = [
-                        'label' => Html::icon('upload').' '.Yii::t('novaposhta/default','RECIPIENT'),
-                        'content' => $this->render('tabs/_recipient', ['form' => $form, 'model' => $model]),
+                        'label' => $model::t('Получатель'),
+                        'content' => $this->render('tabs2/_recipient', ['form' => $form, 'model' => $model]),
                         'headerOptions' => [],
                         'options' => ['class' => 'flex-sm-fill text-center nav-item'],
                     ];
                     $tabs[] = [
-                        'label' => Html::icon('download').' '.Yii::t('novaposhta/default','SENDER'),
-                        'content' => $this->render('tabs/_sender', ['form' => $form, 'model' => $model, 'api' => $api]),
+                        'label' => $model::t('Отправитель'),
+                        'content' => $this->render('tabs2/_sender', ['form' => $form, 'model' => $model, 'api' => $api]),
                         'headerOptions' => [],
                         'options' => ['class' => 'flex-sm-fill text-center nav-item'],
                     ];
 
 
                     echo \panix\engine\bootstrap\Tabs::widget([
-                        'encodeLabels'=>false,
+                        //'encodeLabels'=>true,
                         'options' => [
                             'class' => 'nav-pills flex-column flex-sm-row nav-tabs-static'
                         ],
@@ -217,12 +217,14 @@ $this->registerJs("
             
             var warehouse = $('#" . Html::getInputId($model, 'sender_warehouse') . "');
             
+            
             $.each(data, function(key, value) {
                 warehouse.append('<option value=\"'+key+'\" selected=\"\">'+value+'</option>');
             });
 
             warehouse.selectpicker('refresh');
-       
+
+        
         }
     });
 });

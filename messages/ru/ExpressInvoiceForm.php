@@ -11,19 +11,19 @@ return [
     'VOLUMEGENERAL' => 'Объем груза в куб.м.',
 
     'DATETIME' => 'Дата отправления',
-    'RECIPIENT_FIRSTNAME' => 'Имя',
-    'RECIPIENT_MIDDLENAME' => 'Отчество',
-    'RECIPIENT_LASTNAME' => 'Фамилия',
-    'RECIPIENT_PHONE' => 'Телефон',
-    'RECIPIENT_CITY' => 'Город',
-    'RECIPIENT_REGION' => 'Регион',
-    'RECIPIENT_EMAIL' => 'Почта',
-    'RECIPIENT_WAREHOUSE' => 'Адрес',
+    'RECIPIENTFIRSTNAME' => 'Имя',
+    'RECIPIENTMIDDLENAME' => 'Отчество',
+    'RECIPIENTLASTNAME' => 'Фамилия',
+    'RECIPIENTPHONE' => 'Телефон',
+    'RECIPIENTCITY' => 'Город',
+    'RECIPIENTREGION' => 'Регион',
+    'RECIPIENTEMAIL' => 'E-mail',
+    'RECIPIENTADDRESS' => 'Адрес',
 
 
-    'CITYSENDER' => 'Имя',
-    'SENDERADDRESS' => 'Адрес',
-    'CONTACTSENDER' => 'контакт',
-    'SENDERSPHONE' => 'Телефон',
+    'CITYSENDER' => 'Город отправителя',
+    'SENDERADDRESS' => 'Адрес отправителя',
+    'CONTACTSENDER' => 'Контакт',
+    'SENDERSPHONE' => 'Телефон отправителя',
 
 ];

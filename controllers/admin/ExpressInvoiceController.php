@@ -139,25 +139,15 @@ class ExpressInvoiceController extends AdminController
         ]);
     }
 
-    public function test()
-    {
 
-
-    }
-
-    public function actionCreateOld()
+    public function actionCreate2()
     {
 
         $api = Yii::$app->novaposhta;
-        $model = new ExpressInvoiceForm();
-
-        $model->DateTime = date('d.m.Y');
-        $model->SeatsAmount = 1;
-        $model->Weight = 1;
+        $model = new \panix\mod\novaposhta\models\forms\ExpressInvoiceForm();
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             if ($model->validate()) {
-
                 $result = $model->save();
                 if ($result) {
                     return $this->redirect(['/admin/novaposhta/express-invoice']);
@@ -171,7 +161,7 @@ class ExpressInvoiceController extends AdminController
             }
         }
 
-        return $this->render('create', [
+        return $this->render('create2', [
             'model' => $model,
             'api' => $api,
             //'order'=>$order
