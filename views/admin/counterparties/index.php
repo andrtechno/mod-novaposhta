@@ -17,7 +17,7 @@ $all = $api->getCounterparties();
 
 $senders = $api->getCounterparties('Sender');
 $recipient = $api->getCounterparties('Recipient');
-CMS::dump($senders);
+//CMS::dump($senders);
 
 if ($all['success']) {
 
