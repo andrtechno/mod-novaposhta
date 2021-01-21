@@ -82,6 +82,7 @@ class Cities extends ActiveRecord
         if ($wheres) {
             $query->where($wheres);
         }
+        $query->orderBy(['Description'=>SORT_ASC]);
         $list = $query->asArray()->all();
         if ($list) {
             foreach ($list as $item) {
