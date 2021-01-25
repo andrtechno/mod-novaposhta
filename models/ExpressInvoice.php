@@ -81,7 +81,10 @@ class ExpressInvoice extends ActiveRecord
             }
 
             if ($this->order->delivery_city_ref) {
-                $this->CityRecipient = Cities::findOne(['Ref' => $this->order->delivery_city_ref])->DescriptionRu;
+                $site= Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
+                if($site){
+                $this->CityRecipient = $site->Description;
+                }
             }
 
 

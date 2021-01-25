@@ -43,13 +43,62 @@ class NovaposhtaController extends ConsoleController
         Cities::getDb()->createCommand()->truncateTable(Cities::tableName())->execute();
         $cities = $this->api->getCities();
 
-
+        $s=[
+            'Description',
+            'DescriptionRu',
+            'Ref',
+            'Delivery1',
+            'Delivery2',
+            'Delivery3',
+            'Delivery4',
+            'Delivery5',
+            'Delivery6',
+            'Delivery7',
+            'Area',
+            'SettlementType',
+            'IsBranch',
+            'PreventEntryNewStreetsUser',
+            'Conglomerates',
+            'CityID',
+            'SettlementTypeDescription',
+            'SettlementTypeDescriptionRu',
+            'SpecialCashCheck',
+            'AreaDescription',
+            'AreaDescriptionRu',
+        ];
         if ($cities['success']) {
             $data = [];
             foreach ($cities['data'] as $k => $city) {
-                $data[] = array_values($city);
+                $data2[] = array_values($city);
+
+
+                $data[]=[
+                    $city['Description'],
+                    $city['DescriptionRu'],
+                    $city['Ref'],
+                    (is_array($city['Delivery1'])) ? json_encode($city['Delivery1']) : $city['Delivery1'],
+                    (is_array($city['Delivery2'])) ? json_encode($city['Delivery2']) : $city['Delivery2'],
+                    (is_array($city['Delivery3'])) ? json_encode($city['Delivery3']) : $city['Delivery3'],
+                    (is_array($city['Delivery4'])) ? json_encode($city['Delivery4']) : $city['Delivery4'],
+                    (is_array($city['Delivery5'])) ? json_encode($city['Delivery5']) : $city['Delivery5'],
+                    (is_array($city['Delivery6'])) ? json_encode($city['Delivery6']) : $city['Delivery6'],
+                    (is_array($city['Delivery7'])) ? json_encode($city['Delivery7']) : $city['Delivery7'],
+                    $city['Area'],
+                    $city['SettlementType'],
+                    $city['IsBranch'],
+                    $city['PreventEntryNewStreetsUser'],
+                    (is_array($city['Conglomerates'])) ? json_encode($city['Conglomerates']) : $city['Conglomerates'],
+                    $city['CityID'],
+                    $city['SettlementTypeDescription'],
+                    $city['SettlementTypeDescriptionRu'],
+                    $city['SpecialCashCheck'],
+                    $city['AreaDescription'],
+                    $city['AreaDescriptionRu'],
+                ];
+
             }
-            Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), array_keys($cities['data'][0]), $data)->execute();
+
+            Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), $s, $data)->execute();
         }
     }
     /**
