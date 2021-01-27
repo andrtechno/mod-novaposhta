@@ -8,6 +8,7 @@ namespace panix\mod\novaposhta\migrations;
  *
  * Class m170908_125129_novaposhta_reference
  */
+
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\Errors;
@@ -34,11 +35,12 @@ class m170908_125129_novaposhta_reference extends Migration
             'Ref' => $this->string(36)->null(),
             'Description' => $this->string(255)->null(),
             'DescriptionRu' => $this->string(255)->null(),
-            'Length' => $this->decimal(10,1)->null(),
-            'Width' => $this->decimal(10,1)->null(),
-            'Height' => $this->decimal(10,1)->null(),
-            'VolumetricWeight' => $this->decimal(10,2)->null(),
+            'Length' => $this->decimal(10, 1)->null(),
+            'Width' => $this->decimal(10, 1)->null(),
+            'Height' => $this->decimal(10, 1)->null(),
+            'VolumetricWeight' => $this->decimal(10, 2)->null(),
             'TypeOfPacking' => $this->string(36)->null(),
+            'PackagingForPlace' => $this->string(36)->null(),
         ], $tableOptions);
         $this->addPrimaryKey('Ref', Packs::tableName(), 'Ref');
         //$this->createIndex('Ref', Packs::tableName(), 'Ref');
@@ -47,7 +49,7 @@ class m170908_125129_novaposhta_reference extends Migration
             'Ref' => $this->string(36)->null(),
             'Description' => $this->string(255)->null(),
             'DescriptionRu' => $this->string(255)->null(),
-            'Weight' => $this->decimal(10,2)->null(),
+            'Weight' => $this->decimal(10, 2)->null(),
         ], $tableOptions);
 
 
@@ -72,7 +74,6 @@ class m170908_125129_novaposhta_reference extends Migration
         $this->createIndex('Ref', TypesOfPayersForRedelivery::tableName(), 'Ref');
 
 
-
         $this->createTable(TiresWheels::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
             'Ref' => $this->string(36)->null(),
@@ -90,7 +91,6 @@ class m170908_125129_novaposhta_reference extends Migration
             'Description' => $this->string(36)->null(),
         ], $tableOptions);
         $this->addPrimaryKey('Ref', TypesCounterparties::tableName(), 'Ref');
-
 
 
         $this->createTable(ServiceTypes::tableName(), [
