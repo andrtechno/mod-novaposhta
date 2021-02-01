@@ -3,7 +3,7 @@
     "description": "Module novaposhta",
     "keywords": ["pixelion-cms", "module", "novaposhta"],
     "homepage": "https://github.com/andrtechno/mod-novaposhta",
-    "type": "yii2-extension",
+    "type": "pixelion-module",
     "license": "MIT",
     "authors": [
         {
