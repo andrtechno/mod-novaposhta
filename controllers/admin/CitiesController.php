@@ -10,7 +10,7 @@ use panix\engine\controllers\AdminController;
 
 class CitiesController extends AdminController
 {
-
+    public $icon = 'location-map';
 
     public function actionIndex()
     {
@@ -18,7 +18,7 @@ class CitiesController extends AdminController
         $this->pageName = Yii::t('novaposhta/default', 'CITIES');
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => '#'
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
@@ -42,7 +42,7 @@ class CitiesController extends AdminController
         ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'CITIES'),
-            'url' => ['index']
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $api = Yii::$app->novaposhta;

@@ -53,13 +53,13 @@ class Module extends WebModule implements BootstrapInterface
                             [
                                 'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
                                 'url' => ['/admin/novaposhta/express-invoice'],
-                                'icon' => $this->icon,
+                                'icon' => 'books',
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/express-invoice/index') || Yii::$app->user->can('/novaposhta/admin/express-invoice/*'),
                             ],
                             [
                                 'label' => Yii::t('novaposhta/default', 'COUNTERPARTIES'),
                                 'url' => ['/admin/novaposhta/counterparties'],
-                                'icon' => $this->icon,
+                                'icon' => 'user-card',
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/counterparties/index') || Yii::$app->user->can('/novaposhta/admin/counterparties/*'),
                             ],
                             [
@@ -71,20 +71,20 @@ class Module extends WebModule implements BootstrapInterface
                             [
                                 'label' => Yii::t('novaposhta/default', 'CITIES'),
                                 'url' => ['/admin/novaposhta/cities'],
-                                'icon' => $this->icon,
+                                'icon' => 'location-map',
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/cities/index') || Yii::$app->user->can('/novaposhta/admin/cities/*'),
                             ],
                             [
                                 'label' => Yii::t('novaposhta/default', 'WAREHOUSES'),
                                 'url' => ['/admin/novaposhta/warehouses'],
-                                'icon' => $this->icon,
+                                'icon' => 'location',
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/warehouses/index') || Yii::$app->user->can('/novaposhta/admin/warehouses/*'),
                             ],
                             [
                                 'label' => Yii::t('app/default', 'SETTINGS'),
-                                'url' => ['/admin/novaposhta/settings'],
+                                'url' => ['/admin/novaposhta/default/settings'],
                                 'icon' => 'settings',
-                                'visible' => Yii::$app->user->can('/novaposhta/admin/settings/index') || Yii::$app->user->can('/novaposhta/admin/settings/*'),
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/default/settings') || Yii::$app->user->can('/novaposhta/admin/default/*'),
                             ]
                         ]
                     ],

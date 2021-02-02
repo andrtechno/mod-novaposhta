@@ -11,6 +11,7 @@ use panix\engine\controllers\AdminController;
 class WarehousesController extends AdminController
 {
 
+    public $icon = 'location';
 
     public function actionIndex()
     {
@@ -18,7 +19,7 @@ class WarehousesController extends AdminController
         $this->pageName = Yii::t('novaposhta/default', 'WAREHOUSES');
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => '#'
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
@@ -38,7 +39,7 @@ class WarehousesController extends AdminController
         $this->pageName = ($model->DescriptionRu) ? $model->DescriptionRu : $model->Description;
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => '#'
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'WAREHOUSES'),

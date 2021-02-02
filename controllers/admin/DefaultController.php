@@ -6,31 +6,40 @@ use Yii;
 use panix\mod\novaposhta\models\SettingsForm;
 use panix\engine\controllers\AdminController;
 
-class SettingsController extends AdminController
+class DefaultController extends AdminController
 {
 
     public $icon = 'settings';
 
-    public function actionIndex()
+    public function actionSettings()
     {
         $this->pageName = Yii::t('app/default', 'SETTINGS');
         $this->view->params['breadcrumbs'][] = [
-            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => '#'
+            'label' => Yii::t($this->module->id . '/default', 'MODULE_NAME'),
+            'url' => ['index']
         ];
 
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $model = new SettingsForm;
 
         if ($model->load(Yii::$app->request->post())) {
-            if($model->validate()){
+            if ($model->validate()) {
                 $model->save();
                 Yii::$app->session->setFlash("success", Yii::t('app/default', 'SUCCESS_UPDATE'));
             }
             return $this->refresh();
         }
 
-        return $this->render('index', ['model' => $model]);
+        return $this->render('settings', ['model' => $model]);
+    }
+
+    public function actionIndex()
+    {
+        $this->pageName = Yii::t('novaposhta/default', 'MODULE_NAME');
+        $this->view->params['breadcrumbs'][] = $this->pageName;
+
+        $items = Yii::$app->getModule($this->module->id)->getAdminMenu()['modules']['items'][0]['items'];
+        return $this->render('index', ['items' => $items]);
     }
 
 }

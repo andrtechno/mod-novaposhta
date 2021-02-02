@@ -19,6 +19,7 @@ use yii\data\ArrayDataProvider;
 
 class ExpressInvoiceController extends AdminController
 {
+    public $icon = 'books';
 
     public function actions()
     {
@@ -45,19 +46,19 @@ class ExpressInvoiceController extends AdminController
         ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => '#'
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
 
         $data = $api->getDocumentList(['GetFullList' => 1]);
-       // CMS::dump($data);die;
+        // CMS::dump($data);die;
         $dataResult = [];
         $serviceTypes = ServiceTypes::getList();
         if ($data['success']) {
             foreach ($data['data'] as $data) {
                 // CMS::dump($data);die;
-               // $RecipientAddress = Warehouses::find()->where(['Ref'=>$data['RecipientAddress']])->one();
+                // $RecipientAddress = Warehouses::find()->where(['Ref'=>$data['RecipientAddress']])->one();
 
                 $dataResult[] = [
                     'Ref' => $data['Ref'],
@@ -66,12 +67,12 @@ class ExpressInvoiceController extends AdminController
                     'RecipientsPhone' => $data['RecipientsPhone'],
                     'StateName' => $data['StateName'],
                     'IntDocNumber' => $data['IntDocNumber'],
-                    'DateTime'=> $data['DateTime'],
+                    'DateTime' => $data['DateTime'],
                     'CostOnSite' => $data['CostOnSite'],
                     'Description' => $data['Description'],
                     'SenderAddress' => $data['SenderAddress'],
-                    'CityRecipient' =>  Cities::findOne(['Ref'=>$data['CityRecipient']])->getDescription(),
-                    'RecipientAddress' => Warehouses::findOne(['Ref'=>$data['RecipientAddress']])->getDescription(),
+                    'CityRecipient' => Cities::findOne(['Ref' => $data['CityRecipient']])->getDescription(),
+                    'RecipientAddress' => Warehouses::findOne(['Ref' => $data['RecipientAddress']])->getDescription(),
                     'ServiceType' => $serviceTypes[$data['ServiceType']],
                 ];
             }
@@ -101,7 +102,7 @@ class ExpressInvoiceController extends AdminController
         $this->pageName = html_entity_decode(Yii::t('novaposhta/default', 'CREATE_EXPRESS_WAYBILL'));
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => '#'
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
@@ -124,7 +125,7 @@ class ExpressInvoiceController extends AdminController
                     }
                     $model->Ref = $doc[0]['Ref'];
                     $result = $model->save();
-                   // die;
+                    // die;
                     return $this->redirect(['index']);
                 } else {
                     return $this->refresh();
@@ -252,20 +253,20 @@ class ExpressInvoiceController extends AdminController
         if ($data['success']) {
 
 
-           /* $this->buttons = [
-                [
-                    'icon' => 'print',
-                    'label' => Yii::t('app/default', 'PRINT') . ' PDF',
-                    'url' => 'https://my.novaposhta.ua/orders/printDocument/orders[]/' . $id . '/type/pdf/apiKey/' . Yii::$app->settings->get('novaposhta', 'api_key'),
-                    'options' => ['class' => 'btn btn-outline-secondary', 'target' => '_blank']
-                ],
-                [
-                    'icon' => 'print',
-                    'label' => Yii::t('app/default', 'PRINT') . ' HTML',
-                    'url' => 'https://my.novaposhta.ua/orders/printDocument/orders[]/' . $id . '/type/html/apiKey/' . Yii::$app->settings->get('novaposhta', 'api_key'),
-                    'options' => ['class' => 'btn btn-outline-secondary', 'target' => '_blank']
-                ]
-            ];*/
+            /* $this->buttons = [
+                 [
+                     'icon' => 'print',
+                     'label' => Yii::t('app/default', 'PRINT') . ' PDF',
+                     'url' => 'https://my.novaposhta.ua/orders/printDocument/orders[]/' . $id . '/type/pdf/apiKey/' . Yii::$app->settings->get('novaposhta', 'api_key'),
+                     'options' => ['class' => 'btn btn-outline-secondary', 'target' => '_blank']
+                 ],
+                 [
+                     'icon' => 'print',
+                     'label' => Yii::t('app/default', 'PRINT') . ' HTML',
+                     'url' => 'https://my.novaposhta.ua/orders/printDocument/orders[]/' . $id . '/type/html/apiKey/' . Yii::$app->settings->get('novaposhta', 'api_key'),
+                     'options' => ['class' => 'btn btn-outline-secondary', 'target' => '_blank']
+                 ]
+             ];*/
 
 
             $result = $data['data'][0];

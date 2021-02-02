@@ -18,6 +18,7 @@ use yii\widgets\ActiveForm;
 
 class CounterpartiesController extends AdminController
 {
+    public $icon = 'user-card';
 
     public function actions()
     {
@@ -43,7 +44,7 @@ class CounterpartiesController extends AdminController
         $this->pageName = Yii::t('novaposhta/default', 'COUNTERPARTIES');
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => ['index']
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $this->buttons = [
@@ -75,7 +76,7 @@ class CounterpartiesController extends AdminController
         ];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => ['index']
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $result = [];
@@ -134,9 +135,10 @@ class CounterpartiesController extends AdminController
         return $this->render('view', [
             'api' => $api,
             'dataProvider' => $dataProvider,
-            'counterpartyRef'=>$id
+            'counterpartyRef' => $id
         ]);
     }
+
     public function actionCreate()
     {
 
@@ -157,7 +159,7 @@ class CounterpartiesController extends AdminController
         $model = new CounterpartyForm();
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
-            if($model->validate()){
+            if ($model->validate()) {
                 $result = $api->model('Counterparty')->save(array(
                     'CounterpartyProperty' => $model->CounterpartyProperty,//'Recipient',
                     'CityRef' => $model->CityRef,
@@ -167,45 +169,45 @@ class CounterpartiesController extends AdminController
                     'LastName' => $model->LastName,
                     'Phone' => $model->Phone,
                 ));
-                if($result['success']){
-                    Yii::$app->session->setFlash('success','Success');
-                }else{
+                if ($result['success']) {
+                    Yii::$app->session->setFlash('success', 'Success');
+                } else {
 
-                    if(in_array(20000100526,$result['errorCodes'])){ //FirstName
-                        $model->addError('FirstName','FirstName has invalid characters');
+                    if (in_array(20000100526, $result['errorCodes'])) { //FirstName
+                        $model->addError('FirstName', 'FirstName has invalid characters');
                     }
-                    if(in_array(20000100532,$result['errorCodes'])){ //LastName
-                        $model->addError('LastName','LastName has invalid characters');
+                    if (in_array(20000100532, $result['errorCodes'])) { //LastName
+                        $model->addError('LastName', 'LastName has invalid characters');
                     }
-                    if(in_array(20000100552,$result['errorCodes'])){ //Phone
-                        $model->addError('Phone','Phone invalid format');
+                    if (in_array(20000100552, $result['errorCodes'])) { //Phone
+                        $model->addError('Phone', 'Phone invalid format');
                     }
-                    if(in_array(20000100516,$result['errorCodes'])){ //Phone
-                        $model->addError('CounterpartyType','CounterpartyType is not specified');
+                    if (in_array(20000100516, $result['errorCodes'])) { //Phone
+                        $model->addError('CounterpartyType', 'CounterpartyType is not specified');
                     }
-                    if(in_array(20000900772,$result['errorCodes'])){ //Phone
-                        $model->addError('CounterpartyProperty','CounterpartyProperty is invalid');
-                    }
-
-                    if(in_array(20000900760,$result['errorCodes'])){ //CompanyName
-                        $model->addError('CompanyName','CompanyName is invalid');
-                    }
-                    if(in_array(20000900766,$result['errorCodes'])){ //LastName
-                        $model->addError('LastName','LastName must be empty');
-                    }
-                    if(in_array(20000900756,$result['errorCodes'])){ //Phone
-                        $model->addError('Phone','Phone must be empty');
-                    }
-                    if(in_array(20000200235,$result['errorCodes'])){ //OwnershipForm
-                        $model->addError('OwnershipForm','OwnershipForm is not specified');
+                    if (in_array(20000900772, $result['errorCodes'])) { //Phone
+                        $model->addError('CounterpartyProperty', 'CounterpartyProperty is invalid');
                     }
 
-             //   CMS::dump($result);die;
+                    if (in_array(20000900760, $result['errorCodes'])) { //CompanyName
+                        $model->addError('CompanyName', 'CompanyName is invalid');
+                    }
+                    if (in_array(20000900766, $result['errorCodes'])) { //LastName
+                        $model->addError('LastName', 'LastName must be empty');
+                    }
+                    if (in_array(20000900756, $result['errorCodes'])) { //Phone
+                        $model->addError('Phone', 'Phone must be empty');
+                    }
+                    if (in_array(20000200235, $result['errorCodes'])) { //OwnershipForm
+                        $model->addError('OwnershipForm', 'OwnershipForm is not specified');
+                    }
+
+                    //   CMS::dump($result);die;
 
 
                 }
 
-               // CMS::dump($result);die;
+                // CMS::dump($result);die;
             }
         }
         return $this->render('create', [
@@ -213,12 +215,14 @@ class CounterpartiesController extends AdminController
             'model' => $model,
         ]);
     }
+
     public function actionUpdate($id, $counterpartyRef)
     {
         /** @var Novaposhta $api */
         $api = Yii::$app->novaposhta;
-        $response = $api->getCounterparties('Recipient',1,'Петр');
-        CMS::dump($response);die;
+        $response = $api->getCounterparties('Recipient', 1, 'Петр');
+        CMS::dump($response);
+        die;
 
         $result = $api->model('ContactPerson')->update(array(
             'Ref' => $id,
@@ -228,7 +232,8 @@ class CounterpartiesController extends AdminController
             'LastName' => 'Иванов',
             'Phone' => '0501112266',
         ));
-        CMS::dump($result);die;
+        CMS::dump($result);
+        die;
 
 
         $res = $api->model('ContactPerson')
