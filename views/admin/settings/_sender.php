@@ -34,7 +34,7 @@ if ($contacts['success']) {
     return $data['Description'] . ', ' . CMS::phone_format($data['Phones']);
 }));
 ?>
-<?= $form->field($model, 'sender_phone')->widget(PhoneInput::class,['value' => $contacts['data'][0]['Phones']]); ?>
+<?= $form->field($model, 'sender_phone')->widget(PhoneInput::class, ['value' => $contacts['data'][0]['Phones']]); ?>
 <?php // $form->field($model, 'sender_phone')->textInput(['value' => $contacts['data'][0]['Phones']]); ?>
 <?= $form->field($model, 'sender_area')->dropDownList(Area::getList()); ?>
 <?= $form->field($model, 'sender_city')->widget(BootstrapSelect::class, [
@@ -58,15 +58,17 @@ $this->registerCss('
 .bootstrap-select .dropdown-menu{max-height:300px;}
 ');
 $this->registerJs("
+    var selectedItem = '{$model->sender_warehouse}';
     function loadWarehouses(city_id){
         $.ajax({
             url:'/admin/novaposhta/warehouses/by-city',
             type:'GET',
             data:{id:city_id},
             success:function(data){
-                var warehouse = $('#".Html::getInputId($model,'sender_warehouse')."');
+                var warehouse = $('#" . Html::getInputId($model, 'sender_warehouse') . "');
                 $.each(data.items, function(key, value) {
-                    warehouse.append('<option value=\"'+key+'\" selected=\"\">'+value+'</option>');
+                    isSelected = (selectedItem == key)?'selected=\"selected\"':'';
+                    warehouse.append('<option value=\"'+key+'\" '+isSelected+'>'+value+'</option>');
                 });
                 warehouse.selectpicker('refresh');
             }
@@ -74,11 +76,11 @@ $this->registerJs("
     }
 
 
-    $('#".Html::getInputId($model,'sender_city')."').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    $('#" . Html::getInputId($model, 'sender_city') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         //console.log(clickedIndex, $(this).val(), previousValue);
         loadWarehouses($(this).val());
     });
-    $('#".Html::getInputId($model,'sender_city')."').on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    $('#" . Html::getInputId($model, 'sender_city') . "').on('loaded.bs.select', function (e, clickedIndex, isSelected, previousValue) {
         loadWarehouses($(this).val());
     });
 
