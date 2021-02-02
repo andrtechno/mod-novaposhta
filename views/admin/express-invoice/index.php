@@ -30,7 +30,7 @@ GridView::widget([
         ],
         [
             'attribute' => 'ServiceType',
-            'header' => Yii::t('novaposhta/default', 'ServiceType'),
+            'header' => Yii::t('novaposhta/default', 'SERVICE_TYPE'),
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-center'],
         ],
@@ -51,7 +51,7 @@ GridView::widget([
         ],
         [
             'attribute' => 'RecipientAddress',
-            'header' => Yii::t('novaposhta/default', 'RecipientAddress'),
+            'header' => Yii::t('novaposhta/default', 'RECIPIENT_ADDRESS'),
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
@@ -62,11 +62,11 @@ GridView::widget([
         ],
         [
             'attribute' => 'SenderAddress',
-            'header' => Yii::t('novaposhta/default', 'SenderAddress'),
+            'header' => Yii::t('novaposhta/default', 'SENDER_ADDRESS'),
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
-                return $model['SenderAddress'];
+                return $model['CitySender'] . ' &mdash; <br/>' . $model['SenderAddress'];
             }
         ],
 

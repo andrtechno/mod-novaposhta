@@ -29,4 +29,7 @@ return [
     'LAST_NAME' => 'Фамилия',
     'MIDDLE_NAME' => 'Отчество',
     'CREATE_COUNTERPARTY' => 'Создать контрагента',
+    'SERVICE_TYPE'=>'Тип доставки',
+    'RECIPIENT_ADDRESS'=>'Адрес получателя',
+    'SENDER_ADDRESS'=>'Адрес Отправителя'
 ];

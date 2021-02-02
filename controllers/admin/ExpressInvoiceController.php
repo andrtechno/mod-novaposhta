@@ -57,7 +57,7 @@ class ExpressInvoiceController extends AdminController
         $serviceTypes = ServiceTypes::getList();
         if ($data['success']) {
             foreach ($data['data'] as $data) {
-                // CMS::dump($data);die;
+               // CMS::dump($data);die;
                 // $RecipientAddress = Warehouses::find()->where(['Ref'=>$data['RecipientAddress']])->one();
 
                 $dataResult[] = [
@@ -70,7 +70,8 @@ class ExpressInvoiceController extends AdminController
                     'DateTime' => $data['DateTime'],
                     'CostOnSite' => $data['CostOnSite'],
                     'Description' => $data['Description'],
-                    'SenderAddress' => $data['SenderAddress'],
+                    'CitySender' => Cities::findOne(['Ref' => $data['CitySender']])->getDescription(),
+                    'SenderAddress' => Warehouses::findOne(['Ref' => $data['SenderAddress']])->getDescription(),
                     'CityRecipient' => Cities::findOne(['Ref' => $data['CityRecipient']])->getDescription(),
                     'RecipientAddress' => Warehouses::findOne(['Ref' => $data['RecipientAddress']])->getDescription(),
                     'ServiceType' => $serviceTypes[$data['ServiceType']],
@@ -202,7 +203,7 @@ class ExpressInvoiceController extends AdminController
 
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => ['index']
+            'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $post = Yii::$app->request->post();
@@ -273,7 +274,7 @@ class ExpressInvoiceController extends AdminController
             $this->pageName = 'ТТН: ' . $result['IntDocNumber'];
             $this->view->params['breadcrumbs'][] = [
                 'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-                'url' => '#'
+                'url' => ['/novaposhta/admin/default/index']
             ];
             $this->view->params['breadcrumbs'][] = [
                 'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),

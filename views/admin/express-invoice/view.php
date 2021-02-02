@@ -17,32 +17,32 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
         'items' => [
             [
                 'label' => Yii::t('app/default', 'PRINT') . ' PDF',
-                'url' => $api->printLink('printDocument', [$model['Ref']], 'pdf_link'),
+                'url' => $api->printLink('printDocument', [$result['Ref']], 'pdf_link'),
                 'linkOptions' => ['target' => '_blank']
             ],
             [
                 'label' => Yii::t('app/default', 'PRINT') . ' HTML',
-                'url' => $api->printLink('printDocument', [$model['Ref']], 'html_link'),
+                'url' => $api->printLink('printDocument', [$result['Ref']], 'html_link'),
                 'linkOptions' => ['target' => '_blank']
             ],
             [
                 'label' => 'Маркировка 85x85 ' . Yii::t('app/default', 'PRINT') . ' PDF',
-                'url' => $api->printLink('printMarking85x85', [$model['Ref']], 'pdf8_link'),
+                'url' => $api->printLink('printMarking85x85', [$result['Ref']], 'pdf8_link'),
                 'linkOptions' => ['target' => '_blank']
             ],
             [
                 'label' => 'Маркировка 85x85 ' . Yii::t('app/default', 'PRINT') . ' HTML',
-                'url' => $api->printLink('printMarking85x85', [$model['Ref']], 'html_link'),
+                'url' => $api->printLink('printMarking85x85', [$result['Ref']], 'html_link'),
                 'linkOptions' => ['target' => '_blank']
             ],
             [
                 'label' => 'Маркировка 100x100 ' . Yii::t('app/default', 'PRINT') . ' PDF (zebra)',
-                'url' => $api->printLink('printMarking100x100', [$model['Ref']], 'pdf_link', true),
+                'url' => $api->printLink('printMarking100x100', [$result['Ref']], 'pdf_link', true),
                 'linkOptions' => ['target' => '_blank']
             ],
             [
                 'label' => 'Маркировка 100x100 ' . Yii::t('app/default', 'PRINT') . ' HTML (zebra)',
-                'url' => $api->printLink('printMarking100x100', [$model['Ref']], 'html_link', true),
+                'url' => $api->printLink('printMarking100x100', [$result['Ref']], 'html_link', true),
                 'linkOptions' => ['target' => '_blank']
             ],
         ],
@@ -63,8 +63,10 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                     <h4>Отправитель:
                         <small class="text-muted"><?= $result['Sender']; ?></small>
                     </h4>
-                    <div><i class="icon-user-outline"></i> <?= $result['ContactSender']; ?>
-                        , <?= Html::tel($result['SendersPhone']); ?></div>
+                    <div>
+                        <i class="icon-user-outline"></i> <?= $result['ContactSender']; ?>
+                        <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['SendersPhone']), 'tel:' . $result['SendersPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?>
+                    </div>
                     <div><i class="icon-location"></i> Адрес: <?= $result['SenderAddress']; ?></div>
 
                 </div>
@@ -73,7 +75,9 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                         <small class="text-muted"><?= $result['Recipient']; ?></small>
                     </h4>
                     <div>
-                        <i class="icon-user-outline"></i> <?= $result['ContactRecipient']; ?> <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['RecipientsPhone']), 'tel:' . $result['RecipientsPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?>
+                        <i class="icon-user-outline"></i> <?= $result['ContactRecipient']; ?>
+
+                        <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['RecipientsPhone']), 'tel:' . $result['RecipientsPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?>
                     </div>
                     <div><i class="icon-location"></i> Адрес: <?= $result['CityRecipient']; ?>
                         , <?= $result['RecipientAddress']; ?></div>
@@ -81,16 +85,20 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                 <div class="col-sm-6">
                     <h4>Обратная доставка</h4>
                     <?php
+
                     if (isset($result['BackwardDeliveryData'])) {
+                        //  CMS::dump($result['BackwardDeliveryData']);
                         $data = $result['BackwardDeliveryData'][0]; ?>
                         <div><?= $data['CargoType']; ?></div>
                         <div><?= $data['PayerType']; ?></div>
-                        <div><?= $data['RedeliveryString']; ?></div>
+                        <div><?= $data['RedeliveryString']; ?>
+                            <?php if ($data['CargoTypeRef'] == 'Money') { ?>
+                                грн.
+                            <?php } ?>
+
+                        </div>
                     <?php } ?>
-                    <?php
 
-
-                    ?>
 
                 </div>
             </div>
@@ -133,16 +141,16 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                                 ?></td>
                         </tr>
                         <tr>
-                            <th>ServiceType.</th>
-                            <td><?= $result['ServiceType']; ?> ServiceTypeRef</td>
+                            <th><?= Yii::t('novaposhta/default', 'SERVICE_TYPE'); ?></th>
+                            <td><?= $result['ServiceType']; ?></td>
                         </tr>
                         <tr>
                             <th>Способ оплаты</th>
-                            <td><?= $result['PaymentMethod']; ?> PaymentMethodRef</td>
+                            <td><?= $result['PaymentMethod']; ?></td>
                         </tr>
                         <tr>
                             <th>PayerType.</th>
-                            <td><?= $result['PayerType']; ?> PayerTypeRef</td>
+                            <td><?= $result['PayerType']; ?></td>
                         </tr>
                         <tr>
                             <th>Кол. мест</th>
@@ -168,7 +176,7 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
 <?php
 
 
-CMS::dump($result);
+//CMS::dump($result);
 
 
 $deliveryDate = $api->getDocumentDeliveryDate($result['CitySenderRef'], $result['CityRecipientRef'], $result['ServiceTypeRef'], $result['DateTime']);
@@ -178,5 +186,14 @@ $deliveryDate = $api->getDocumentDeliveryDate($result['CitySenderRef'], $result[
 
 $documentPrice = $api->getDocumentPrice($result['CitySenderRef'], $result['CityRecipientRef'], $result['ServiceTypeRef'], $result['Weight'], $result['Cost'], $result['CargoTypeRef']);
 //CMS::dump($documentPrice);
+
+$ei = \panix\mod\novaposhta\models\ExpressInvoice::find()->where(['Ref' => $result['Ref']])->one();
+if ($ei->orderItem && false) { ?>
+         <div class="card">
+             <?= $ei->orderItem->id; ?>
+
+         </div>
+
+    <?php }
 
 
