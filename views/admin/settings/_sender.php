@@ -16,7 +16,7 @@ use panix\ext\telinput\PhoneInput;
  */
 
 $senderData = Yii::$app->novaposhta->getCounterparties('Sender', 1, '', '');
-CMS::dump($senderData['data']);
+//CMS::dump($senderData['data']);
 $contacts = Yii::$app->novaposhta->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
 $contactsList = [];
 if ($contacts['success']) {
