@@ -48,4 +48,22 @@ class WarehousesController extends AdminController
         $api = Yii::$app->novaposhta;
         return $this->render('view', ['model' => $model, 'api' => $api]);
     }
+
+
+    /**
+     * @param $id int City Id
+     * @return \yii\web\Response JSON result
+     */
+    public function actionByCity($id)
+    {
+        $model = Warehouses::findAll(['CityRef' => $id]);
+        $result = [];
+        if ($model) {
+            $result['total'] = count($model);
+            foreach ($model as $item) {
+                $result['items'][$item->Ref] = $item->getDescription();
+            }
+        }
+        return $this->asJson($result);
+    }
 }
