@@ -21,7 +21,7 @@ use panix\ext\bootstrapselect\BootstrapSelect;
 <?= $form->field($model, 'recipient_MiddleName'); ?>
 <?php
 if ($model->RecipientsPhone) {
-    $call = Html::a(Html::icon('phone') . ' Позвонить &mdash; <strong>' . CMS::phoneOperator($model->RecipientsPhone) . '</strong>', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light']);
+    $call = Html::a(Html::icon('phone') . ' Позвонить', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light']);
 } else {
     $call = '';
 }
@@ -29,9 +29,9 @@ if ($model->RecipientsPhone) {
 <?= $form->field($model, 'recipient_Email'); ?>
 <?= $form->field($model, 'RecipientsPhone', [
     'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}\n{error}{endWrapper}",
-    //'parts' => [
-     //   '{call}' => $call
-    //]
+    'parts' => [
+        '{call}' => $call
+    ]
 ])->widget(PhoneInput::class); ?>
 
 
