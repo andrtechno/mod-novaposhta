@@ -35,16 +35,16 @@ $this->registerJs("
 function setTemplate(temp){
     var message;
     if(temp === 1){
-        $('#expressinvoice-weight').val('10');
-        $('#expressinvoice-volumegeneral').val('40');
+        $('#expressinvoice-weight').val('0.5');
+        $('#expressinvoice-volumegeneral').val('0.002');
         message = 'Шаблон применен.';
     } else if(temp === 2) {
-        $('#expressinvoice-weight').val('20');
-        $('#expressinvoice-volumegeneral').val('50');
+        $('#expressinvoice-weight').val('1');
+        $('#expressinvoice-volumegeneral').val('0.004');
         message = 'Шаблон применен.';
     } else if(temp === 3) {
-        $('#expressinvoice-weight').val('20');
-        $('#expressinvoice-volumegeneral').val('50');
+        $('#expressinvoice-weight').val('2');
+        $('#expressinvoice-volumegeneral').val('0.008');
         message = 'Шаблон применен.';
     }else{
         $('#expressinvoice-weight').val('');
