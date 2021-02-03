@@ -2,6 +2,7 @@
 
 namespace panix\mod\novaposhta\models;
 
+use panix\engine\CMS;
 use Yii;
 use panix\mod\cart\models\Order;
 use panix\mod\novaposhta\components\Novaposhta;
@@ -210,8 +211,9 @@ class ExpressInvoice extends ActiveRecord
          */
         $api = Yii::$app->novaposhta;
         $senderInfo = $api->getCounterparties('Sender', 1, '', '');
-        //  CMS::dump($senderInfo);
+
         $sender = $senderInfo['data'][0];
+
 // Информация о складе отправителя
 
         $city = $api->getCity('Киев', 'Киевская');
@@ -241,9 +243,9 @@ class ExpressInvoice extends ActiveRecord
                 // 'City' => 'Белгород-Днестровский',
                 // Область отправления
                 // 'Region' => 'Одесская',
-                'CitySender' => $city['data'][0]['Ref'],
+                'CitySender' => $this->CitySender,//$city['data'][0]['Ref'],
                 // Отделение отправления по ID (в данном случае - в первом попавшемся)
-                'SenderAddress' => $senderWarehouses['data'][0]['Ref'],
+                'SenderAddress' => $this->SenderAddress,//$senderWarehouses['data'][0]['Ref'],
                 // Отделение отправления по адресу
                 // 'Warehouse' => $senderWarehouses['data'][0]['DescriptionRu'],
             ],
@@ -295,7 +297,7 @@ class ExpressInvoice extends ActiveRecord
             ]
         );
 
-
+      //  CMS::dump($this->attributes);die;
         if ($result['success']) {
             foreach ($result['warnings'] as $warning) {
                 Yii::$app->session->addFlash('warning', $warning);
