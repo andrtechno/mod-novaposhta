@@ -55,8 +55,7 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
         <div class="col-sm-6">
             <div class="card">
                 <div class="card-header">
-                    <h5><?= $this->context->pageName; ?> <span class="float-right">Статус: <span
-                                    class="h6 badge badge-secondary"><?= $result['StateName']; ?></span></span></h5>
+                    <h5>11</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped">
@@ -66,11 +65,10 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                         </tr>
                         <tr>
                             <td><i class="icon-user-outline"></i> <?= $result['ContactSender']; ?>
-                                <br/>
                                 <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['SendersPhone']), 'tel:' . $result['SendersPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?>
                             </td>
                             <td> <i class="icon-user-outline"></i> <?= $result['ContactRecipient']; ?>
-<br/>
+
                                 <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['RecipientsPhone']), 'tel:' . $result['RecipientsPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?>
                             </td>
                         </tr>
@@ -84,9 +82,49 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h5>Обратная доставка</h5>
+                    <h5>11</h5>
                 </div>
                 <div class="card-body">
+                    11
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            sdd
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h5><?= $this->context->pageName; ?> <span class="float-right">Статус: <span
+                            class="h6 badge badge-secondary"><?= $result['StateName']; ?></span></span></h5>
+        </div>
+        <div class="card-body p-3">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4>Отправитель:
+                        <small class="text-muted"><?= $result['Sender']; ?></small>
+                    </h4>
+                    <div>
+                        <i class="icon-user-outline"></i> <?= $result['ContactSender']; ?>
+                        <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['SendersPhone']), 'tel:' . $result['SendersPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?>
+                    </div>
+                    <div><i class="icon-location"></i> Адрес: <?= $result['SenderAddress']; ?></div>
+
+                </div>
+                <div class="col-sm-6">
+                    <h4>Получатель:
+                        <small class="text-muted"><?= $result['Recipient']; ?></small>
+                    </h4>
+                    <div>
+                        <i class="icon-user-outline"></i> <?= $result['ContactRecipient']; ?>
+
+                        <?= Html::a(Html::icon('phone-outline') . ' ' . CMS::phone_format($result['RecipientsPhone']), 'tel:' . $result['RecipientsPhone'], ['class' => 'btn btn-sm btn-outline-secondary']); ?>
+                    </div>
+                    <div><i class="icon-location"></i> Адрес: <?= $result['CityRecipient']; ?>
+                        , <?= $result['RecipientAddress']; ?></div>
+                </div>
+                <div class="col-sm-6">
+                    <h4>Обратная доставка</h4>
                     <?php
 
                     if (isset($result['BackwardDeliveryData'])) {
@@ -101,84 +139,80 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
 
                         </div>
                     <?php } ?>
+
+
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-                        <div class="card">
-                <div class="card-header">
-                    <h5>Информация об отправки</h5>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4>Информация об отправки:</h4>
+
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th>Вес</th>
+                            <td><strong><?= $result['Weight']; ?></strong> кг.</td>
+                        </tr>
+                        <tr>
+                            <th>Цена</th>
+                            <td><strong><?= $result['Cost']; ?></strong> грн.</td>
+                        </tr>
+                        <tr>
+                            <th>Цена доствки</th>
+                            <td><strong><?= $result['CostOnSite']; ?></strong> грн.</td>
+                        </tr>
+                        <tr>
+                            <th>Дата создания</th>
+                            <td><?= CMS::date(strtotime($result['DateTime']), true, 'UTC'); ?></td>
+                        </tr>
+                        <tr>
+                            <th>Объем куб.м.</th>
+                            <td><?= $result['VolumeGeneral']; ?></td>
+                        </tr>
+
+                        <tr>
+                            <th>Тип груза</th>
+                            <td><?= $result['CargoType']; ?><?php
+
+                                $s = \panix\mod\novaposhta\models\CargoTypes::findOne($result['CargoTypeRef']);
+                                if ($s) {
+                                    echo $s->Description;
+                                }
+                                ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= Yii::t('novaposhta/default', 'SERVICE_TYPE'); ?></th>
+                            <td><?= $result['ServiceType']; ?></td>
+                        </tr>
+                        <tr>
+                            <th>Способ оплаты</th>
+                            <td><?= $result['PaymentMethod']; ?></td>
+                        </tr>
+                        <tr>
+                            <th>PayerType.</th>
+                            <td><?= $result['PayerType']; ?></td>
+                        </tr>
+                        <tr>
+                            <th>Кол. мест</th>
+                            <td><?= $result['SeatsAmount']; ?></td>
+                        </tr>
+                    </table>
+
+
                 </div>
-                <div class="card-body">
-
-
-            <table class="table table-bordered table-striped">
-                <tr>
-                    <th>Вес</th>
-                    <td><strong><?= $result['Weight']; ?></strong> кг.</td>
-                </tr>
-                <tr>
-                    <th>Цена</th>
-                    <td><strong><?= $result['Cost']; ?></strong> грн.</td>
-                </tr>
-                <tr>
-                    <th>Цена доствки</th>
-                    <td><strong><?= $result['CostOnSite']; ?></strong> грн.</td>
-                </tr>
-                <tr>
-                    <th>Дата создания</th>
-                    <td><?= CMS::date(strtotime($result['DateTime']), true, 'UTC'); ?></td>
-                </tr>
-                <tr>
-                    <th>Объем куб.м.</th>
-                    <td><?= $result['VolumeGeneral']; ?></td>
-                </tr>
-
-                <tr>
-                    <th>Тип груза</th>
-                    <td><?= $result['CargoType']; ?><?php
-
-                        $s = \panix\mod\novaposhta\models\CargoTypes::findOne($result['CargoTypeRef']);
-                        if ($s) {
-                            echo $s->Description;
-                        }
-                        ?></td>
-                </tr>
-                <tr>
-                    <th><?= Yii::t('novaposhta/default', 'SERVICE_TYPE'); ?></th>
-                    <td><?= $result['ServiceType']; ?></td>
-                </tr>
-                <tr>
-                    <th>Способ оплаты</th>
-                    <td><?= $result['PaymentMethod']; ?></td>
-                </tr>
-                <tr>
-                    <th>PayerType.</th>
-                    <td><?= $result['PayerType']; ?></td>
-                </tr>
-                <tr>
-                    <th>Кол. мест</th>
-                    <td><?= $result['SeatsAmount']; ?></td>
-                </tr>
-            </table>
-                </div>
-                        </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5>Трекинг <?= $result['IntDocNumber']; ?>:</h5>
-                </div>
-                <div class="card-body">
+                <div class="col-sm-6">
+                    <h4>Трекинг <?= $result['IntDocNumber']; ?>:</h4>
                     <?php
                     $tracking = $api->documentsTracking($result['IntDocNumber']);
                     if ($tracking['success']) { ?>
-                        <div class="alert alert-info m-3"><?= $tracking['data'][0]['Status']; ?></div>
+                        <div class="alert alert-info"><?= $tracking['data'][0]['Status']; ?></div>
                     <?php } ?>
                 </div>
+
             </div>
         </div>
     </div>
-
 
 <?php
 
