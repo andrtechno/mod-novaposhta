@@ -286,7 +286,7 @@ class ExpressInvoice extends ActiveRecord
 
 
 //Параметр груза для каждого места отправления
-                /*"OptionsSeat" => [
+                "OptionsSeat" => [
                     [
                         "weight" => 5,
                         "volumetricHeight" => 50,
@@ -305,7 +305,7 @@ class ExpressInvoice extends ActiveRecord
                         "description" => "1",
                         "specialCargo" => "1"
                     ]
-                ],*/
+                ],
 
 
                 // Обратная доставка
