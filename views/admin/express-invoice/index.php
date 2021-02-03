@@ -6,11 +6,12 @@ use panix\engine\widgets\Pjax;
 use panix\engine\CMS;
 
 Pjax::begin([
-    // 'dataProvider' => $dataProvider,
+     'id' => 'pjax-grid-express-invoice',
 ]);
 ?>
 <?=
 GridView::widget([
+    'id'=>'grid-express-invoice',
     'tableOptions' => ['class' => 'table table-striped'],
     'dataProvider' => $dataProvider,
     // 'filterModel' => $searchModel,
@@ -79,7 +80,6 @@ GridView::widget([
                 'view' => function ($url, $model, $key) {
                     return Html::a(Html::icon('eye'), ['view', 'id' => $model['Ref']], [
                         'title' => Yii::t('app/default', 'View'),
-
                         'class' => 'd-flex align-items-center btn btn-sm btn-outline-secondary']);
                 },
                 'delete' => function ($url, $model, $key) {

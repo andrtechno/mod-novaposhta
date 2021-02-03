@@ -24,7 +24,7 @@ class ExpressInvoiceController extends AdminController
     public function actions()
     {
         return [
-            'delete' => [
+            'delete2' => [
                 'class' => 'panix\engine\actions\DeleteAction',
                 'modelClass' => ExpressInvoice::class,
             ],
@@ -290,7 +290,7 @@ class ExpressInvoiceController extends AdminController
         return $this->render('view', ['api' => $api, 'result' => $result]);
     }
 
-    public function actionDelete2($id)
+    public function actionDelete($id)
     {
         /** @var Novaposhta $api */
         $api = Yii::$app->novaposhta;
