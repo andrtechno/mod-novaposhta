@@ -1,4 +1,5 @@
 <?php
+
 use panix\engine\Html;
 use panix\engine\bootstrap\ActiveForm;
 use panix\ext\telinput\PhoneInput;
@@ -70,13 +71,13 @@ function setTemplate(temp){
                 <div class="card-body">
                     <?php
                     $tabs[] = [
-                        'label' => Html::icon('upload').' '.Yii::t('novaposhta/default','RECIPIENT'),
+                        'label' => Html::icon('upload') . ' ' . Yii::t('novaposhta/default', 'RECIPIENT'),
                         'content' => $this->render('tabs/_recipient', ['form' => $form, 'model' => $model]),
                         'headerOptions' => [],
                         'options' => ['class' => 'flex-sm-fill text-center nav-item'],
                     ];
                     $tabs[] = [
-                        'label' => Html::icon('download').' '.Yii::t('novaposhta/default','SENDER'),
+                        'label' => Html::icon('download') . ' ' . Yii::t('novaposhta/default', 'SENDER'),
                         'content' => $this->render('tabs/_sender', ['form' => $form, 'model' => $model, 'api' => $api]),
                         'headerOptions' => [],
                         'options' => ['class' => 'flex-sm-fill text-center nav-item'],
@@ -84,7 +85,7 @@ function setTemplate(temp){
 
 
                     echo \panix\engine\bootstrap\Tabs::widget([
-                        'encodeLabels'=>false,
+                        'encodeLabels' => false,
                         'options' => [
                             'class' => 'nav-pills flex-column flex-sm-row nav-tabs-static'
                         ],
@@ -100,7 +101,6 @@ function setTemplate(temp){
                     <h5>Параметры отправления</h5>
                 </div>
                 <div class="card-body" style="background-color: #f6f6f6;">
-
 
 
                     <div class="text-center mt-3">
@@ -132,22 +132,78 @@ function setTemplate(temp){
                         ],
                         'dateFormat' => 'php:d.m.Y'
                     ]); ?>
+                    <?php
 
-                    <?= $form->field($model, 'SeatsAmount'); ?>
+
+                    echo \panix\ext\multipleinput\MultipleInput::widget([
+                        'model' => $model,
+                        'attribute' => 'OptionsSeat',
+                        //  'max' => 7,
+                        'min' => 1,
+                        'cloneButton' => true,
+                        'allowEmptyList' => false,
+                        'enableGuessTitle' => true,
+                        //'addButtonPosition' => \panix\ext\multipleinput\MultipleInput::POS_HEADER, // show add button in the header
+                        'columns' => [
+
+                            [
+                                'name' => 'volumetricWeight',
+                                'title' => $model::t('WEIGHT'),
+                                'enableError' => true,
+                                'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+                                'columnOptions' => ['class' => 'text-center'],
+                                'headerOptions' => [
+                                    'style' => 'width: 100px;',
+                                ],
+                            ],
+                            [
+                                'name' => 'volumetricHeight',
+                                'title' => $model::t('HEIGHT'),
+                                'enableError' => true,
+                                'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+                                'headerOptions' => [
+                                    'style' => 'width: 100px;',
+                                ],
+                            ],
+                            [
+                                'name' => 'volumetricWidth',
+                                'title' => $model::t('WIDTH'),
+                                'enableError' => true,
+                                'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+                                'headerOptions' => [
+                                    'style' => 'width: 100px;',
+                                ],
+                            ],
+                            [
+                                'name' => 'volumetricLength',
+                                'title' => $model::t('LENGTH'),
+                                'enableError' => true,
+                                'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+                                'headerOptions' => [
+                                    'style' => 'width: 100px;',
+                                ],
+                            ],
+
+                        ]
+                    ]);
+
+
+                    ?>
+                    <?php // $form->field($model, 'SeatsAmount'); ?>
                     <?= $form->field($model, 'Description')->textarea(); ?>
                     <?= $form->field($model, 'CargoType')->dropDownList($model->cargoTypes()); ?>
 
                     <div class="form-group row">
                         <div class="col-12">
-                            <?= $form->field($model, 'Weight', [
+                            <?php /* $form->field($model, 'Weight', [
                                 'template' => '<div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">{label}</div><div class="col-sm-8 col-md-8 col-lg-9 col-xl-8">
                             <div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">кг.</span></div>{hint}{error}</div></div>',
                                 'options' => ['class' => ' row']
-                            ]);
+                            ]);*/
                             ?>
 
                         </div>
-                        <?php if (isset($model->products['weight'])) { ?>
+                        <?php if (isset($model->products['weight']) && false) { ?>
                             <div class="mt-3">
                                 <div class="alert alert-warning">Не указан <strong>Вес.</strong> Данный список
                                     товаров
@@ -165,15 +221,15 @@ function setTemplate(temp){
 
                     <div class="form-group row">
                         <div class="col-12">
-                            <?= $form->field($model, 'VolumeGeneral', [
+                            <?php /* $form->field($model, 'VolumeGeneral', [
                                 'template' => '<div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">{label}</div><div class="col-sm-8 col-md-8 col-lg-9 col-xl-8">
                             <div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">м³</span></div>{hint}{error}</div></div>',
                                 'options' => ['class' => ' row']
-                            ]);
+                            ]);*/
                             ?>
 
                         </div>
-                        <?php if (isset($model->products['volumeGeneral'])) { ?>
+                        <?php if (isset($model->products['volumeGeneral']) && false) { ?>
                             <div class="mt-3">
                                 <div class="alert alert-warning">Не указан <strong>Обьем.</strong> Данный список
                                     товаров не

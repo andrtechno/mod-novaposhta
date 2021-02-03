@@ -7,7 +7,11 @@ return [
     'SEATSAMOUNT' => 'Кол-во мест',
     'DESCRIPTION' => 'Описание груза',
     'CARGOTYPE' => 'Тип доставки',
-    'WEIGHT' => 'Вес груза',
+    'WEIGHT' => 'Вес (кг)',
+    'WIDTH'=>'Ширина (см)',
+    'HEIGHT'=>'Высота (см)',
+    'LENGTH'=>'Длина (см)',
+
     'VOLUMEGENERAL' => 'Объем груза в куб.м.',
 
     'DATETIME' => 'Дата отправления',

@@ -115,7 +115,7 @@ class ExpressInvoiceController extends AdminController
         if ($model->load($post)) {
             if ($model->validate()) {
                 $doc = $model->create();
-
+               // CMS::dump($model->getCubeFormula());die;
 
                 if ($doc['success']) {
                     if (Yii::$app->request->get('order_id')) {

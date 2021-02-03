@@ -37,7 +37,7 @@ class m170908_125123_novaposhta_cities extends Migration
             'SettlementType' => $this->string(36)->null(),
             'IsBranch' => $this->tinyInteger(1)->defaultValue(0),
             'PreventEntryNewStreetsUser' => $this->string(255)->null(),
-            'Conglomerates' => $this->string(255)->null(),
+            'Conglomerates' => $this->text()->null(),
             'CityID' => $this->integer()->null(),
             'SettlementTypeDescriptionRu' => $this->string(36)-> null(),
             'SettlementTypeDescription' => $this->string(36)->null(),

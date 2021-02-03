@@ -1043,6 +1043,7 @@ class Novaposhta extends Component
         // CMS::dump($recipient);die;
         // Full params is merge of arrays $sender, $recipient, $params
         $paramsInternetDocument = array_merge($sender, $recipient, $params);
+       // CMS::dump($paramsInternetDocument);die;
         // Creating new Internet Document
         return $this->model('InternetDocument')->save($paramsInternetDocument);
     }

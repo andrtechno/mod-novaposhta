@@ -8,6 +8,9 @@ use panix\mod\cart\models\Order;
 use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\query\CommonQuery;
 use panix\engine\db\ActiveRecord;
+use yii\helpers\Html;
+use yii\validators\NumberValidator;
+use yii\validators\RequiredValidator;
 
 /**
  * This is the model class for table "novaposhta_express_invoice".
@@ -33,6 +36,7 @@ class ExpressInvoice extends ActiveRecord
     public $recipient_City;
     public $recipient_Region;
     public $recipient_Email;
+    public $OptionsSeat;
 
     //public $recipient_Warehouse;
 
@@ -93,7 +97,7 @@ class ExpressInvoice extends ActiveRecord
                 if (!$original->width || !$original->height || !$original->length) {
                     $this->products['volumeGeneral'][] = $product;
                 } else {
-                    $this->VolumeGeneral += $original->width + $original->height + $original->length;
+                    $this->VolumeGeneral += $original->width + $original->height + $original->length / 4000;
                 }
                 if (!$original->weight) {
                     $this->products['weight'][] = $product;
@@ -109,7 +113,7 @@ class ExpressInvoice extends ActiveRecord
             //$this->recipient_City = Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
             $this->recipient_City = $this->order->delivery_city_ref;
 
-            $this->CargoType = 'Cargo';
+            $this->CargoType = 'Parcel';
             if ($this->order->products) {
                 $list = [];
                 foreach ($this->order->products as $product) {
@@ -125,12 +129,75 @@ class ExpressInvoice extends ActiveRecord
         parent::init();
     }
 
+    public function validateOptionsSeatRequire($attribute)
+    {
+        $validator = new RequiredValidator();
+        if (isset($this->{$attribute})) {
+            foreach ($this->{$attribute} as $index => $row) {
+                $error = null;
+                foreach (array_keys($row) as $name) {
+                    $error = null;
+                    $value = isset($row[$name]) ? $row[$name] : null;
+                    $validator->validate($value, $error);
+                    if (!empty($error)) {
+                        $key = $attribute . '[' . $index . '][' . $name . ']';
+                        $this->addError($key, $error);
+                    }
+                }
+            }
+        }
+    }
+
+    public function validateOptionsSeatNumber($attribute)
+    {
+        $validator = new NumberValidator();
+        $validator->integerOnly = false;
+        if (isset($this->{$attribute})) {
+            foreach ($this->{$attribute} as $index => $row) {
+                $error = null;
+                foreach (array_keys($row) as $name) {
+                    $value = isset($row[$name]) ? $row[$name] : null;
+                    $error = null;
+
+                    $validator->validate($value, $error);
+                    if (!empty($error)) {
+                        $key = $attribute . '[' . $index . '][' . $name . ']';
+                        $this->addError($key, $error);
+                    }
+                }
+            }
+        }
+    }
+
+    public function getCalcCube()
+    {
+        $result = 0;
+        foreach ($this->OptionsSeat as $index => $row) {
+            $result += ($row['volumetricWidth'] * $row['volumetricHeight'] * $row['volumetricLength']) / 4000;
+        }
+        return $result;
+    }
+
+    public function getCalcTotalWeight()
+    {
+        $result = 0;
+        foreach ($this->OptionsSeat as $index => $row) {
+            $result += $row['volumetricWeight'];
+        }
+        return $result;
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
-        return [ //'pattern' => '/^[a-zA-Z0-9-_]\w*$/i',
+        return [
+
+            ['OptionsSeat', 'validateOptionsSeatRequire', 'skipOnEmpty' => false],
+            ['OptionsSeat', 'validateOptionsSeatNumber'],
+
+            //'pattern' => '/^[a-zA-Z0-9-_]\w*$/i',
             [['recipient_FirstName', 'recipient_LastName'], 'match', 'pattern' => '/^([а-яА-Я]+)$/u', 'message' => '{attribute} должен содержать только буквы кириллицы.'],
             // [['Description'], 'match', 'pattern' => '/^([а-яА-Я0-9\w+]+)$/u','message'=>'{attribute} должен содержать только буквы кириллицы.'],
             [[
@@ -138,10 +205,10 @@ class ExpressInvoice extends ActiveRecord
                 'PaymentMethod',
                 'DateTime',
                 'CargoType',
-                'VolumeGeneral',
-                'Weight',
+               // 'VolumeGeneral',
+               // 'Weight',
                 'ServiceType',
-                'SeatsAmount',
+               // 'SeatsAmount',
                 'Description',
                 'Cost',
                 'CitySender',
@@ -274,40 +341,19 @@ class ExpressInvoice extends ActiveRecord
                 // Стоимость груза в грн
                 'Cost' => $this->Cost,
                 // Кол-во мест
-                'SeatsAmount' => $this->SeatsAmount,
+                'SeatsAmount' => count($this->OptionsSeat),
                 // Описание груза
                 'Description' => $this->Description,
                 // Тип доставки, дополнительно - getCargoTypes
-                'CargoType' => 'Cargo',
+                'CargoType' => $this->CargoType,
                 // Вес груза
-                'Weight' => $this->Weight,
+                'Weight' => $this->getCalcTotalWeight(),
                 // Объем груза в куб.м.
-                'VolumeGeneral' => $this->VolumeGeneral,
+                'VolumeGeneral' => $this->getCalcCube(),
 
 
-//Параметр груза для каждого места отправления
-                "OptionsSeat" => [
-                    [
-                        "weight" => 5,
-                        "volumetricHeight" => 50,
-                        "volumetricWidth" => 10,
-                        "volumetricLength" => 10,
-                        "cost" => "1",
-                        "description" => "1",
-                        "specialCargo" => "1"
-                    ],
-                    [
-                        "weight" => 7,
-                        "volumetricHeight" => 50,
-                        "volumetricWidth" => 10,
-                        "volumetricLength" => 10,
-                        "cost" => "1",
-                        "description" => "1",
-                        "specialCargo" => "1"
-                    ]
-                ],
-
-
+                //Параметр груза для каждого места отправления
+                'OptionsSeat' => $this->OptionsSeat,
                 // Обратная доставка
                 'BackwardDeliveryData' => [
                     [
