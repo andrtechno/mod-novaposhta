@@ -99,7 +99,7 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                             <td><strong><?= $result['Cost']; ?></strong> грн.</td>
                         </tr>
                         <tr>
-                            <th>Цена доствки</th>
+                            <th>Цена доставки</th>
                             <td><strong><?= $result['CostOnSite']; ?></strong> грн.</td>
                         </tr>
                         <tr>
@@ -197,7 +197,7 @@ $documentPrice = $api->getDocumentPrice($result['CitySenderRef'], $result['CityR
 //CMS::dump($documentPrice);
 
 $ei = \panix\mod\novaposhta\models\ExpressInvoice::find()->where(['Ref' => $result['Ref']])->one();
-if ($ei->orderItem && false) { ?>
+if ($ei && $ei->orderItem && false) { ?>
     <div class="card">
         <?= $ei->orderItem->id; ?>
 
