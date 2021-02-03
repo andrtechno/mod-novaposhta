@@ -66,7 +66,10 @@ class ExpressInvoice extends ActiveRecord
             $this->SeatsAmount = $config->seatsAmount;
         }
 
-        $this->DateTime = date('d.m.Y');
+
+        $date = new \DateTime('now', new \DateTimeZone('Europe/Kiev'));
+        $this->DateTime = $date->format('d.m.Y');
+
         $senderData = Yii::$app->novaposhta->getCounterparties('Sender', 1, '', '');
         if ($senderData['success']) {
             $contact = Yii::$app->novaposhta->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
@@ -205,10 +208,10 @@ class ExpressInvoice extends ActiveRecord
                 'PaymentMethod',
                 'DateTime',
                 'CargoType',
-               // 'VolumeGeneral',
-               // 'Weight',
+                // 'VolumeGeneral',
+                // 'Weight',
                 'ServiceType',
-               // 'SeatsAmount',
+                // 'SeatsAmount',
                 'Description',
                 'Cost',
                 'CitySender',
@@ -293,7 +296,7 @@ class ExpressInvoice extends ActiveRecord
         $address = $api->getCounterpartyAddresses($senderInfo['data'][0]['Ref']);
 
 //CMS::dump($senderInfo);die;
-        // print_r($this);die;
+        // print_r($this->DateTime);die;
         $result = $api->newInternetDocument(
         // Данные отправителя
             [
@@ -348,6 +351,7 @@ class ExpressInvoice extends ActiveRecord
                 'CargoType' => $this->CargoType,
                 // Вес груза
                 'Weight' => $this->getCalcTotalWeight(),
+                'VolumeWeight' => $this->getCalcTotalWeight(),
                 // Объем груза в куб.м.
                 'VolumeGeneral' => $this->getCalcCube(),
 
