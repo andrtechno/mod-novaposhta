@@ -306,8 +306,6 @@ class ExpressInvoiceController extends AdminController
         }
         return $this->redirect(['index']);
 
-        //  CMS::dump($response);
-        //  die;
     }
 
 }
