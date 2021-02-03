@@ -57,7 +57,7 @@ class ExpressInvoiceController extends AdminController
         $serviceTypes = ServiceTypes::getList();
         if ($data['success']) {
             foreach ($data['data'] as $data) {
-               // CMS::dump($data);die;
+                // CMS::dump($data);die;
                 // $RecipientAddress = Warehouses::find()->where(['Ref'=>$data['RecipientAddress']])->one();
 
                 $dataResult[] = [
@@ -115,22 +115,29 @@ class ExpressInvoiceController extends AdminController
         if ($model->load($post)) {
             if ($model->validate()) {
                 $doc = $model->create();
-                if ($doc) {
+
+
+                if ($doc['success']) {
                     if (Yii::$app->request->get('order_id')) {
                         $model->order_id = Yii::$app->request->get('order_id');
                         $order = Order::findOne($model->order_id);
                         if ($order) {
-                            $order->ttn = $doc[0]['IntDocNumber'];
+                            $order->ttn = $doc['data'][0]['IntDocNumber'];
                             $order->save(false);
                         }
                     }
-                    $model->Ref = $doc[0]['Ref'];
+                    $model->Ref = $doc['data'][0]['Ref'];
                     $result = $model->save();
-                    // die;
+                    foreach ($doc['warnings'] as $warn) {
+                        Yii::$app->session->addFlash('warning', $warn);
+                    }
                     return $this->redirect(['index']);
                 } else {
-                    return $this->refresh();
+                    foreach ($doc['errors'] as $key => $error) {
+                        Yii::$app->session->addFlash('error', $doc['errorCodes'][$key] . ' - ' . $error);
+                    }
                 }
+
             }
         }
 

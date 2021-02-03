@@ -58,6 +58,8 @@ function setTemplate(temp){
 }
 
 ", \yii\web\View::POS_END);
+
+
 ?>
     <div class="row">
         <div class="col-sm-6">

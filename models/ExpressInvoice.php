@@ -283,6 +283,31 @@ class ExpressInvoice extends ActiveRecord
                 'Weight' => $this->Weight,
                 // Объем груза в куб.м.
                 'VolumeGeneral' => $this->VolumeGeneral,
+
+
+//Параметр груза для каждого места отправления
+                /*"OptionsSeat" => [
+                    [
+                        "weight" => 5,
+                        "volumetricHeight" => 50,
+                        "volumetricWidth" => 10,
+                        "volumetricLength" => 10,
+                        "cost" => "1",
+                        "description" => "1",
+                        "specialCargo" => "1"
+                    ],
+                    [
+                        "weight" => 7,
+                        "volumetricHeight" => 50,
+                        "volumetricWidth" => 10,
+                        "volumetricLength" => 10,
+                        "cost" => "1",
+                        "description" => "1",
+                        "specialCargo" => "1"
+                    ]
+                ],*/
+
+
                 // Обратная доставка
                 'BackwardDeliveryData' => [
                     [
@@ -297,20 +322,18 @@ class ExpressInvoice extends ActiveRecord
             ]
         );
 
-      //  CMS::dump($this->attributes);die;
-        if ($result['success']) {
+        //  CMS::dump($this->attributes);die;
+        /*if ($result['success']) {
             foreach ($result['warnings'] as $warning) {
-                Yii::$app->session->addFlash('warning', $warning);
+                Yii::$app->session->setFlash('warning', $warning);
             }
             $this->_invoice = $result['data'];
 
-            return $this->_invoice;
+            return $result['data'];
         } else {
-            foreach ($result['errors'] as $error) {
-                Yii::$app->session->addFlash('error', $error);
-            }
-            return false;
-        }
+
+        }*/
+        return $result;
     }
 
     public function getOrderItem()
