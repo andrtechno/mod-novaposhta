@@ -24,13 +24,14 @@ class ExpressInvoice extends ActiveRecord
     const route = '/admin/novaposhta/default';
     const MODULE_ID = 'novaposhta';
     public $order;
+    public $order_id;
     public $products;
     public $inValidProduct;
     public $recipient_FirstName;
     public $recipient_MiddleName;
     public $recipient_LastName;
     //public $recipient_Phone;
-    public $recipient_City;
+    public $CityRecipient;
     public $recipient_Region;
     public $recipient_Email;
 
@@ -77,7 +78,8 @@ class ExpressInvoice extends ActiveRecord
             if ($this->order->user_phone)
                 $this->RecipientsPhone = $this->order->user_phone;
             if ($this->order->delivery_warehouse_ref) {
-                $this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
+            //$this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
+            $this->RecipientAddress = $this->order->delivery_warehouse_ref;
             }
 
             if ($this->order->delivery_city_ref) {
@@ -85,6 +87,7 @@ class ExpressInvoice extends ActiveRecord
                 if ($site) {
                     $this->CityRecipient = $site->Description;
                 }
+                $this->CityRecipient = $this->order->delivery_city_ref;
             }
 
 
@@ -107,7 +110,7 @@ class ExpressInvoice extends ActiveRecord
             $this->recipient_LastName = $this->order->user_lastname;
             $this->recipient_Email = $this->order->user_email;
             //$this->recipient_City = Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
-            $this->recipient_City = $this->order->delivery_city_ref;
+           // $this->CityRecipient = $this->order->delivery_city_ref;
 
             $this->CargoType = 'Cargo';
             if ($this->order->products) {
@@ -163,7 +166,7 @@ class ExpressInvoice extends ActiveRecord
                 // 'recipient_MiddleName',
                 'recipient_LastName',
                 //'recipient_Phone',
-                'recipient_City',
+                'CityRecipient',
                 //'recipient_Region',
                 //'recipient_Email',
                 'RecipientAddress'
@@ -257,10 +260,12 @@ class ExpressInvoice extends ActiveRecord
                 'MiddleName' => ($this->recipient_MiddleName) ? $this->recipient_MiddleName : '',
                 'LastName' => $this->recipient_LastName,
                 'Phone' => $this->RecipientsPhone,
-                'City' => $this->recipient_City,
+                'City' => $this->CityRecipient,
                 'Region' => ($this->recipient_Region) ? $this->recipient_Region : '',
                 'Email' => ($this->recipient_Email) ? $this->recipient_Email : '',
-                'Warehouse' => $this->RecipientAddress,
+                //'Warehouse' => $this->RecipientAddress,
+                'CityRecipient'=>$this->CityRecipient,
+                'RecipientAddress'=>$this->RecipientAddress
             ],
             [
                 // Дата отправления
@@ -354,7 +359,7 @@ class ExpressInvoice extends ActiveRecord
     public function attributeLabels()
     {
         return array_merge([
-            'recipient_City' => self::t('RECIPIENT_CITY'),
+            'CityRecipient' => self::t('RECIPIENT_CITY'),
             'recipient_LastName' => self::t('RECIPIENT_LASTNAME'),
             'recipient_FirstName' => self::t('RECIPIENT_FIRSTNAME'),
             'recipient_MiddleName' => self::t('RECIPIENT_MIDDLENAME'),
