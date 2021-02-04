@@ -9,7 +9,6 @@ return [
     'CARGOTYPE' => 'Тип доставки',
     'WEIGHT' => 'Вес груза',
     'VOLUMEGENERAL' => 'Объем груза в куб.м.',
-
     'DATETIME' => 'Дата отправления',
     'RECIPIENT_FIRSTNAME' => 'Имя',
     'RECIPIENT_MIDDLENAME' => 'Отчество',
@@ -19,8 +18,6 @@ return [
     'RECIPIENT_REGION' => 'Регион',
     'RECIPIENT_EMAIL' => 'Почта',
     'RECIPIENTADDRESS' => 'Адрес',
-
-
     'CITYSENDER' => 'Город',
     'SENDERADDRESS' => 'Адрес',
     'CONTACTSENDER' => 'Контактное лицо',
