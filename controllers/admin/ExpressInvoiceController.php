@@ -127,7 +127,7 @@ class ExpressInvoiceController extends AdminController
                         }
                     }
                     $model->Ref = $doc['data'][0]['Ref'];
-                    $result = $model->save();
+                    $model->save();
                     foreach ($doc['warnings'] as $warn) {
                         Yii::$app->session->addFlash('warning', $warn);
                     }

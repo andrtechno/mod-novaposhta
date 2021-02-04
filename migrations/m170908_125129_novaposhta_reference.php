@@ -11,7 +11,6 @@ namespace panix\mod\novaposhta\migrations;
 
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\CargoTypes;
-use panix\mod\novaposhta\models\Errors;
 use panix\mod\novaposhta\models\OwnershipForms;
 use panix\mod\novaposhta\models\Packs;
 use panix\mod\novaposhta\models\Pallets;

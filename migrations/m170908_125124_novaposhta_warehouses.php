@@ -8,8 +8,8 @@ namespace panix\mod\novaposhta\migrations;
  *
  * Class m170908_125124_novaposhta_warehouses
  */
+
 use panix\engine\db\Migration;
-use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\Warehouses;
 use Yii;
 
@@ -22,8 +22,6 @@ class m170908_125124_novaposhta_warehouses extends Migration
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
-
-
 
 
         $this->createTable(Warehouses::tableName(), [
@@ -72,14 +70,13 @@ class m170908_125124_novaposhta_warehouses extends Migration
         $this->createIndex('TypeOfWarehouse', Warehouses::tableName(), 'TypeOfWarehouse');
 
 
-
-       /* $this->addForeignKey(
-            'np_warehouse_fk_CityRef',
-            Warehouses::tableName(),
-            'CityRef',
-            Cities::tableName(),
-            'Ref'
-        );*/
+        /* $this->addForeignKey(
+             'np_warehouse_fk_CityRef',
+             Warehouses::tableName(),
+             'CityRef',
+             Cities::tableName(),
+             'Ref'
+         );*/
 
         /*$this->addForeignKey(
             '{{%novaposhta__warehouses_CityRef_fk}}',
@@ -90,6 +87,7 @@ class m170908_125124_novaposhta_warehouses extends Migration
         );*/
 
     }
+
     public function safeDown()
     {
         try {
@@ -99,7 +97,7 @@ class m170908_125124_novaposhta_warehouses extends Migration
             return false;
         }
 
-        return __CLASS__." was reverted.\n";
+        return __CLASS__ . " was reverted.\n";
     }
 
 

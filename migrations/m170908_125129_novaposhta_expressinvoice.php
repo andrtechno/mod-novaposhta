@@ -8,6 +8,7 @@ namespace panix\mod\novaposhta\migrations;
  *
  * Class m170908_125129_novaposhta_expressinvoice
  */
+
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\ExpressInvoice;
 use Yii;

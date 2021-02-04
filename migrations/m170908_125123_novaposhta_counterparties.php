@@ -8,9 +8,10 @@ namespace panix\mod\novaposhta\migrations;
  *
  * Class m170908_125123_novaposhta_counterparties
  */
+
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\counterparties\Counterparties;
-use Yii;
+
 
 class m170908_125123_novaposhta_counterparties extends Migration
 {

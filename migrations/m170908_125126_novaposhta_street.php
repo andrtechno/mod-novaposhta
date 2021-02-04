@@ -8,6 +8,7 @@ namespace panix\mod\novaposhta\migrations;
  *
  * Class m170908_125126_novaposhta_street
  */
+
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\Street;
 use Yii;
@@ -21,8 +22,6 @@ class m170908_125126_novaposhta_street extends Migration
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
-
-
 
 
         $this->createTable(Street::tableName(), [
