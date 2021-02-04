@@ -1,6 +1,5 @@
 <?php
 
-namespace panix\mod\novaposhta\migrations;
 
 /**
  * Generation migrate by PIXELION CMS
@@ -11,7 +10,6 @@ namespace panix\mod\novaposhta\migrations;
 
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\Street;
-use Yii;
 
 class m170908_125126_novaposhta_street extends Migration
 {

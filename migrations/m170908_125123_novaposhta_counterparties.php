@@ -1,7 +1,5 @@
 <?php
 
-namespace panix\mod\novaposhta\migrations;
-
 /**
  * Generation migrate by PIXELION CMS
  * @author PIXELION CMS development team <dev@pixelion.com.ua>

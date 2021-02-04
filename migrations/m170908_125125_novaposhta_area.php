@@ -1,7 +1,5 @@
 <?php
 
-namespace panix\mod\novaposhta\migrations;
-
 /**
  * Generation migrate by PIXELION CMS
  * @author PIXELION CMS development team <dev@pixelion.com.ua>
@@ -11,7 +9,6 @@ namespace panix\mod\novaposhta\migrations;
 
 use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\Area;
-use Yii;
 
 class m170908_125125_novaposhta_area extends Migration
 {

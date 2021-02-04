@@ -1,15 +1,13 @@
 <?php
 
-namespace panix\mod\novaposhta\migrations;
-
 /**
  * Generation migrate by PIXELION CMS
  * @author PIXELION CMS development team <dev@pixelion.com.ua>
  *
  * Class m170908_125123_novaposhta_cities
  */
-use Yii;
-use yii\db\Migration;
+
+use panix\engine\db\Migration;
 use panix\mod\novaposhta\models\Cities;
 
 class m170908_125123_novaposhta_cities extends Migration

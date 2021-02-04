@@ -1,7 +1,5 @@
 <?php
 
-namespace panix\mod\novaposhta\migrations;
-
 /**
  * Generation migrate by PIXELION CMS
  * @author PIXELION CMS development team <dev@pixelion.com.ua>
@@ -18,7 +16,6 @@ use panix\mod\novaposhta\models\ServiceTypes;
 use panix\mod\novaposhta\models\TiresWheels;
 use panix\mod\novaposhta\models\TypesCounterparties;
 use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
-use Yii;
 
 class m170908_125129_novaposhta_reference extends Migration
 {
