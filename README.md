@@ -1,6 +1,6 @@
-# mod-pages
+### Module "Nova Poshta"
 
-Module for PIXELION CMS
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Nova_Poshta_2014_logo.svg/1200px-Nova_Poshta_2014_logo.svg.png" width="300">
 
 [![Latest Stable Version](https://poser.pugx.org/panix/mod-novaposhta/v/stable)](https://packagist.org/packages/panix/mod-novaposhta)
 [![Total Downloads](https://poser.pugx.org/panix/mod-novaposhta/downloads)](https://packagist.org/packages/panix/mod-novaposhta)
@@ -17,7 +17,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 #### Either run
 
 ```
-php composer require --prefer-dist panix/mod-novaposhta "*"
+php composer require --prefer-dist panix/mod-novaposhta "^1.0"
 ```
 
 or add
@@ -31,9 +31,10 @@ to the require section of your `composer.json` file.
 
 #### Add to web config.
 ```
-    'modules' => [
-        'novaposhta' => ['class' => 'panix\mod\novaposhta\Module'],
-    ],
+'modules' => [
+    ...
+    'novaposhta' => ['class' => 'panix\mod\novaposhta\Module'],
+]
 ```
 #### Migrate
 ```
