@@ -19,7 +19,7 @@ return [
     'RECIPIENT_MIDDLENAME' => 'Отчество',
     'RECIPIENT_LASTNAME' => 'Фамилия',
     'RECIPIENTSPHONE' => 'Телефон',
-    'RECIPIENT_CITY' => 'Город',
+    'CITYRECIPIENT' => 'Город',
     'RECIPIENT_REGION' => 'Регион',
     'RECIPIENT_EMAIL' => 'Почта',
     'RECIPIENTADDRESS' => 'Адрес',
