@@ -5,6 +5,7 @@
     "homepage": "https://github.com/andrtechno/mod-novaposhta",
     "type": "pixelion-module",
     "license": "MIT",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "PIXELION CMS",
