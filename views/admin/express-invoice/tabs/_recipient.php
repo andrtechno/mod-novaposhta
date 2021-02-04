@@ -35,7 +35,7 @@ if ($model->RecipientsPhone) {
 ])->widget(PhoneInput::class); ?>
 
 
-<?= $form->field($model, 'recipient_City')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'CityRecipient')->widget(BootstrapSelect::class, [
     'items' => ArrayHelper::map(Cities::find()->all(), 'Ref', 'DescriptionRu'),
     'jsOptions' => ['liveSearch' => true],
     'options' => ['data-size' => 10]
@@ -47,7 +47,7 @@ if ($model->RecipientsPhone) {
 
 
 <?= $form->field($model, 'RecipientAddress')->widget(BootstrapSelect::class, [
-    'items' => Warehouses::getList($model->recipient_City),
+    'items' => Warehouses::getList($model->CityRecipient),
     'jsOptions' => ['liveSearch' => true],
     'options' => ['data-size' => 10]
 ]); ?>

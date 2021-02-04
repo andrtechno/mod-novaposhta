@@ -120,6 +120,7 @@ class ExpressInvoiceController extends AdminController
                 if ($doc['success']) {
                     if (Yii::$app->request->get('order_id')) {
                         $model->order_id = Yii::$app->request->get('order_id');
+
                         $order = Order::findOne($model->order_id);
                         if ($order) {
                             $order->ttn = $doc['data'][0]['IntDocNumber'];
