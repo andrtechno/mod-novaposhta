@@ -33,23 +33,36 @@ $this->registerCss('
 
 $this->registerJs("
 
+
+
+
+
+
 function setTemplate(temp){
     var message;
     if(temp === 1){
-        $('#expressinvoice-weight').val('0.5');
-        $('#expressinvoice-volumegeneral').val('0.002');
+        $('#expressinvoice-optionsseat-0-volumetricweight').val('0.5');
+        $('#expressinvoice-optionsseat-0-volumetricheight').val('10');
+        $('#expressinvoice-optionsseat-0-volumetricwidth').val('12');
+        $('#expressinvoice-optionsseat-0-volumetriclength').val('17');
         message = 'Шаблон применен.';
     } else if(temp === 2) {
-        $('#expressinvoice-weight').val('1');
-        $('#expressinvoice-volumegeneral').val('0.004');
+        $('#expressinvoice-optionsseat-0-volumetricweight').val('1');
+        $('#expressinvoice-optionsseat-0-volumetricheight').val('10');
+        $('#expressinvoice-optionsseat-0-volumetricwidth').val('17');
+        $('#expressinvoice-optionsseat-0-volumetriclength').val('24');
         message = 'Шаблон применен.';
     } else if(temp === 3) {
-        $('#expressinvoice-weight').val('2');
-        $('#expressinvoice-volumegeneral').val('0.008');
+        $('#expressinvoice-optionsseat-0-volumetricweight').val('2');
+        $('#expressinvoice-optionsseat-0-volumetricheight').val('10');
+        $('#expressinvoice-optionsseat-0-volumetricwidth').val('24');
+        $('#expressinvoice-optionsseat-0-volumetriclength').val('34');
         message = 'Шаблон применен.';
     }else{
-        $('#expressinvoice-weight').val('');
-        $('#expressinvoice-volumegeneral').val('');
+        $('#expressinvoice-optionsseat-0-volumetricweight').val('');
+        $('#expressinvoice-optionsseat-0-volumetricheight').val('');
+        $('#expressinvoice-optionsseat-0-volumetricwidth').val('');
+        $('#expressinvoice-optionsseat-0-volumetriclength').val('');
         message = 'Шаблон очищен.';
     }
     if(message)
