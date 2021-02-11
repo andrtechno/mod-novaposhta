@@ -33,11 +33,11 @@ echo \panix\ext\multipleinput\MultipleInput::widget([
     'model' => $model,
     'attribute' => 'templates',
     //  'max' => 7,
-    'min' => 1,
+   // 'min' => 1,
     'cloneButton' => true,
-    'allowEmptyList' => false,
+    'allowEmptyList' => true,
     'enableGuessTitle' => true,
-    //'addButtonPosition' => \panix\ext\multipleinput\MultipleInput::POS_HEADER, // show add button in the header
+    'addButtonPosition' => \panix\ext\multipleinput\MultipleInput::POS_HEADER, // show add button in the header
     'columns' => [
 
         [

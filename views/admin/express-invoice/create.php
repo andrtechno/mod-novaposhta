@@ -20,7 +20,7 @@ $form = ActiveForm::begin([
         ],
     ]
 ]);
-
+$templates = Yii::$app->settings->get('novaposhta', 'templates');
 
 //$contact = $api->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
 //\panix\engine\CMS::dump($contact);
@@ -30,27 +30,6 @@ $this->registerCss('
     /*height:300px;*/
 }
 ');
-$js = <<<JS
-$(document).on('click','.btn-template',function(){
-    var volumetricweight = $(this).data('volumetricweight');
-    var volumetricheight = $(this).data('volumetricheight');
-    var volumetricwidth = $(this).data('volumetricwidth');
-    var volumetriclength = $(this).data('volumetriclength');
-    var message = $(this).data('message');
-    
-    $('#expressinvoice-optionsseat-0-volumetricweight').val(volumetricweight);
-    $('#expressinvoice-optionsseat-0-volumetricheight').val(volumetricheight);
-    $('#expressinvoice-optionsseat-0-volumetricwidth').val(volumetricwidth);
-    $('#expressinvoice-optionsseat-0-volumetriclength').val(volumetriclength);
-
-    if(message)
-        common.notify(message,'success');
-    
-    return false;
-});
-JS;
-
-$this->registerJs($js, \yii\web\View::POS_END);
 
 
 ?>
@@ -93,7 +72,6 @@ $this->registerJs($js, \yii\web\View::POS_END);
                     <h5>Параметры отправления</h5>
                 </div>
                 <div class="card-body" style="background-color: #f6f6f6;">
-
 
 
                     <?= $form->field($model, 'ServiceType')->dropDownList(\panix\mod\novaposhta\models\ServiceTypes::getList()) ?>
@@ -156,24 +134,49 @@ $this->registerJs($js, \yii\web\View::POS_END);
 
 
 
-
-                    <div class="text-center mt-3 mb-3">
-                        <?= Html::a(Html::icon('delete').' Очистить', '#', ['data' => [
-                            'message' => 'Шаблон очищен!',
-                            'volumetricweight' => '',
-                            'volumetricheight' => '',
-                            'volumetricwidth' => '',
-                            'volumetriclength' => '',
-                        ], 'class' => 'btn-template btn btn-sm btn-outline-danger']); ?>
-                        <div class="btn-group">
+                    <?php if ($templates) { ?>
                         <?php
-                        foreach (Yii::$app->settings->get('novaposhta', 'templates') as $k => $template) {
-                            $name='' . $template['volumetricWeight']."кг. ({$template['volumetricHeight']}в {$template['volumetricWidth']}ш {$template['volumetricLength']}д )";
-                            echo Html::a($name/*'Шаблон №' . ($k + 1)*/, '#', ['data' => array_merge($template, ['message' => 'Шаблон применен']), 'class' => 'btn-template btn btn-sm btn-outline-secondary']);
-                        }
+                        $js = <<<JS
+$(document).on('click','.btn-template',function(){
+    var volumetricweight = $(this).data('volumetricweight');
+    var volumetricheight = $(this).data('volumetricheight');
+    var volumetricwidth = $(this).data('volumetricwidth');
+    var volumetriclength = $(this).data('volumetriclength');
+    var message = $(this).data('message');
+    
+    $('#expressinvoice-optionsseat-0-volumetricweight').val(volumetricweight);
+    $('#expressinvoice-optionsseat-0-volumetricheight').val(volumetricheight);
+    $('#expressinvoice-optionsseat-0-volumetricwidth').val(volumetricwidth);
+    $('#expressinvoice-optionsseat-0-volumetriclength').val(volumetriclength);
+
+    if(message)
+        common.notify(message,'success');
+    
+    return false;
+});
+JS;
+
+                        $this->registerJs($js, \yii\web\View::POS_END);
+
                         ?>
+                        <div class="text-center mt-3 mb-3">
+                            <?= Html::a(Html::icon('delete') . ' Очистить', '#', ['data' => [
+                                'message' => 'Шаблон очищен!',
+                                'volumetricweight' => '',
+                                'volumetricheight' => '',
+                                'volumetricwidth' => '',
+                                'volumetriclength' => '',
+                            ], 'class' => 'btn-template btn btn-sm btn-outline-danger']); ?>
+                            <div class="btn-group">
+                                <?php
+                                foreach (Yii::$app->settings->get('novaposhta', 'templates') as $k => $template) {
+                                    $name = '' . $template['volumetricWeight'] . "кг. ({$template['volumetricHeight']}в {$template['volumetricWidth']}ш {$template['volumetricLength']}д )";
+                                    echo Html::a($name/*'Шаблон №' . ($k + 1)*/, '#', ['data' => array_merge($template, ['message' => 'Шаблон применен']), 'class' => 'btn-template btn btn-sm btn-outline-secondary']);
+                                }
+                                ?>
+                            </div>
                         </div>
-                    </div>
+                    <?php } ?>
                     <?php
 
 
@@ -230,10 +233,6 @@ $this->registerJs($js, \yii\web\View::POS_END);
 
 
                     ?>
-
-
-
-
 
 
                 </div>

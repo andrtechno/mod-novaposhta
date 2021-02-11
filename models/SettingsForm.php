@@ -40,7 +40,8 @@ class SettingsForm extends SettingsModel
     public function validateTemplateRequire($attribute)
     {
         $validator = new RequiredValidator();
-        if (isset($this->{$attribute})) {
+
+        if (isset($this->{$attribute}) && $this->{$attribute}) {
             foreach ($this->{$attribute} as $index => $row) {
                 $error = null;
                 foreach (array_keys($row) as $name) {
@@ -60,7 +61,7 @@ class SettingsForm extends SettingsModel
     {
         $validator = new NumberValidator();
         $validator->integerOnly = false;
-        if (isset($this->{$attribute})) {
+        if (isset($this->{$attribute}) && $this->{$attribute}) {
             foreach ($this->{$attribute} as $index => $row) {
                 $error = null;
                 foreach (array_keys($row) as $name) {

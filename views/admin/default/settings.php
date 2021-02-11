@@ -42,17 +42,17 @@ die;*/
                 echo panix\engine\bootstrap\Tabs::widget([
                     'items' => [
                         [
-                            'label' => 'Общие',
+                            'label' => Yii::t('novaposhta/default','COMMON'),
                             'content' => $this->render('_main', ['form' => $form, 'model' => $model]),
                             'active' => true,
                         ],
                         [
-                            'label' => 'Отправление',
+                            'label' => Yii::t('novaposhta/default','DEPARTURE'),
                             'content' => $this->render('_sender', ['form' => $form, 'model' => $model]),
                             'headerOptions' => [],
                         ],
                         [
-                            'label' => 'Шаблоны',
+                            'label' => Yii::t('novaposhta/default','TEMPLATES_SEAT'),
                             'content' => $this->render('_template', ['form' => $form, 'model' => $model]),
                             'headerOptions' => [],
                         ],
