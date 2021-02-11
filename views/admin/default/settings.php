@@ -51,6 +51,11 @@ die;*/
                             'content' => $this->render('_sender', ['form' => $form, 'model' => $model]),
                             'headerOptions' => [],
                         ],
+                        [
+                            'label' => 'Шаблоны',
+                            'content' => $this->render('_template', ['form' => $form, 'model' => $model]),
+                            'headerOptions' => [],
+                        ],
 
                     ],
                 ]);

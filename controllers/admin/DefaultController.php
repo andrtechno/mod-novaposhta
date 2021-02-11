@@ -26,8 +26,9 @@ class DefaultController extends AdminController
             if ($model->validate()) {
                 $model->save();
                 Yii::$app->session->setFlash("success", Yii::t('app/default', 'SUCCESS_UPDATE'));
+                return $this->refresh();
             }
-            return $this->refresh();
+
         }
 
         return $this->render('settings', ['model' => $model]);
