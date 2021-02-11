@@ -114,6 +114,7 @@ class ExpressInvoiceController extends AdminController
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             if ($model->validate()) {
+
                 $doc = $model->create();
                // CMS::dump($model->getCubeFormula());die;
 

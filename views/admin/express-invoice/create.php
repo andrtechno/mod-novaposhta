@@ -182,8 +182,7 @@ function setTemplate(temp){
                                 'headerOptions' => [
                                     'style' => 'width: 100px;',
                                 ],
-                            ],
-
+                            ]
                         ]
                     ]);
 

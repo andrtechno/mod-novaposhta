@@ -345,7 +345,7 @@ class ExpressInvoice extends ActiveRecord
                 // Тип оплаты, дополнительно - getPaymentForms()
                 'PaymentMethod' => 'Cash',
                 // Кто оплачивает за доставку
-                'PayerType' => 'Recipient',
+                'PayerType' => $this->PayerType,
                 // Стоимость груза в грн
                 'Cost' => $this->Cost,
                 // Кол-во мест
