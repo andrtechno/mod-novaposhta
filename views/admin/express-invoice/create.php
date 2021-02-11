@@ -230,33 +230,6 @@ function setTemplate(temp){
                         <?php } ?>
                     </div>
 
-
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <?php /* $form->field($model, 'VolumeGeneral', [
-                                'template' => '<div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">{label}</div><div class="col-sm-8 col-md-8 col-lg-9 col-xl-8">
-                            <div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">м³</span></div>{hint}{error}</div></div>',
-                                'options' => ['class' => ' row']
-                            ]);*/
-                            ?>
-
-                        </div>
-                        <?php if (isset($model->products['volumeGeneral']) && false) { ?>
-                            <div class="mt-3">
-                                <div class="alert alert-warning">Не указан <strong>Обьем.</strong> Данный список
-                                    товаров не
-                                    учитываеться в общем
-                                    объеме.
-                                    <?php foreach ($model->products['volumeGeneral'] as $product) { ?>
-                                        <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
-
-
                     <?= $form->field($model, 'PayerType')->dropDownList(['Recipient' => Yii::t('novaposhta/default', 'RECIPIENT'), 'Sender' => Yii::t('novaposhta/default', 'SENDER')]) ?>
                     <?= $form->field($model, 'PaymentMethod')->dropDownList($model->paymentFormsList()) ?>
                 </div>
