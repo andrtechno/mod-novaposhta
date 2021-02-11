@@ -28,7 +28,6 @@ die;*/
 
 
 <?php
-print_r(Yii::$app->settings->get('novaposhta','templates'));
 
 echo \panix\ext\multipleinput\MultipleInput::widget([
     'model' => $model,
