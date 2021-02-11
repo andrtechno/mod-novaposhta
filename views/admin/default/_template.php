@@ -43,7 +43,7 @@ echo \panix\ext\multipleinput\MultipleInput::widget([
 
         [
             'name' => 'volumetricWeight',
-            'title' => $model::t('WEIGHT'),
+            'title' => \panix\mod\novaposhta\models\ExpressInvoice::t('WEIGHT'),
             'enableError' => true,
             'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
             'columnOptions' => ['class' => 'text-center'],
@@ -53,7 +53,7 @@ echo \panix\ext\multipleinput\MultipleInput::widget([
         ],
         [
             'name' => 'volumetricHeight',
-            'title' => $model::t('HEIGHT'),
+            'title' => \panix\mod\novaposhta\models\ExpressInvoice::t('HEIGHT'),
             'enableError' => true,
             'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
             'headerOptions' => [
@@ -62,7 +62,7 @@ echo \panix\ext\multipleinput\MultipleInput::widget([
         ],
         [
             'name' => 'volumetricWidth',
-            'title' => $model::t('WIDTH'),
+            'title' => \panix\mod\novaposhta\models\ExpressInvoice::t('WIDTH'),
             'enableError' => true,
             'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
             'headerOptions' => [
@@ -71,7 +71,7 @@ echo \panix\ext\multipleinput\MultipleInput::widget([
         ],
         [
             'name' => 'volumetricLength',
-            'title' => $model::t('LENGTH'),
+            'title' => \panix\mod\novaposhta\models\ExpressInvoice::t('LENGTH'),
             'enableError' => true,
             'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
             'headerOptions' => [
