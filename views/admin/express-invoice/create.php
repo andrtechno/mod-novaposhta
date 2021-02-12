@@ -170,7 +170,7 @@ JS;
                             <div class="btn-group">
                                 <?php
                                 foreach (Yii::$app->settings->get('novaposhta', 'templates') as $k => $template) {
-                                    $name = '' . $template['volumetricWeight'] . "кг. ({$template['volumetricHeight']}в {$template['volumetricWidth']}ш {$template['volumetricLength']}д )";
+                                    $name = '' . $template['volumetricWeight'] . "кг. ({$template['volumetricHeight']}в {$template['volumetricWidth']}ш {$template['volumetricLength']}д)";
                                     echo Html::a($name/*'Шаблон №' . ($k + 1)*/, '#', ['data' => array_merge($template, ['message' => 'Шаблон применен']), 'class' => 'btn-template btn btn-sm btn-outline-secondary']);
                                 }
                                 ?>
