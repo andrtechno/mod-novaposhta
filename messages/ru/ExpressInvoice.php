@@ -24,7 +24,7 @@ return [
     'RECIPIENT_EMAIL' => 'Почта',
     'RECIPIENTADDRESS' => 'Адрес',
 
-    'BackwardDeliveryData_PayerType' => 'Тип плательщика',
+    'BackwardDeliveryData_PayerType' => 'Кто платит',
     'BackwardDeliveryData_CargoType' => 'Тип',
     'BackwardDeliveryData_RedeliveryString' => 'Значение',
     'CITYSENDER' => 'Город',
