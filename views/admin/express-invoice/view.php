@@ -162,19 +162,45 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                     </div>
                     <div class="card-body">
                         <ul class="list-group">
-                        <?php foreach ($result['BackwardDeliveryData'] as $backward) { ?>
-                            <li class="list-group-item border-0"><?= $backward['CargoType']; ?></li>
-                            <li class="list-group-item border-0"><?= $backward['PayerType']; ?></li>
-                            <li class="list-group-item border-0"><?= $backward['RedeliveryString']; ?>
-                                <?php if ($backward['CargoTypeRef'] == 'Money') { ?>
-                                    грн.
-                                <?php } ?></li>
-                        <?php } ?>
+                            <?php foreach ($result['BackwardDeliveryData'] as $backward) { ?>
+                                <li class="list-group-item border-0"><?= $backward['CargoType']; ?></li>
+                                <li class="list-group-item border-0"><?= $backward['PayerType']; ?></li>
+                                <li class="list-group-item border-0"><?= $backward['RedeliveryString']; ?>
+                                    <?php if ($backward['CargoTypeRef'] == 'Money') { ?>
+                                        грн.
+                                    <?php } ?></li>
+                            <?php } ?>
 
                         </ul>
                     </div>
                 </div>
             <?php } ?>
+
+            <?php
+            $recipient = \panix\mod\novaposhta\models\Warehouses::findOne(['Ref' => $result['RecipientAddressRef']]);
+            $sender = \panix\mod\novaposhta\models\Warehouses::findOne(['Ref' => $result['SenderAddressRef']]);
+
+
+            echo \panix\ext\leaflet\LeafletWidget::widget([
+                'lat' => $recipient->Latitude,
+                'lng' => $recipient->Longitude,
+                'markers' => [
+
+                    [
+                        'draggable' => false,
+                        'coords' => [$sender->Latitude, $sender->Longitude],
+                        'popup' => $sender->getCityDescription() . ', ' . $sender->getDescription(),
+                        'label' => 'Отправитель'
+                    ],
+                    [
+                        'draggable' => false,
+                        'coords' => [$recipient->Latitude, $recipient->Longitude],
+                        'popup' => $recipient->getCityDescription() . ', ' . $recipient->getDescription(),
+                        'label' => 'Получатель'
+                    ],
+                ]
+            ]);
+            ?>
         </div>
     </div>
 
@@ -191,7 +217,8 @@ $deliveryDate = $api->getDocumentDeliveryDate($result['CitySenderRef'], $result[
 
 
 $documentPrice = $api->getDocumentPrice($result['CitySenderRef'], $result['CityRecipientRef'], $result['ServiceTypeRef'], $result['Weight'], $result['Cost'], $result['CargoTypeRef']);
-//CMS::dump($documentPrice);
+
+
 
 $ei = \panix\mod\novaposhta\models\ExpressInvoice::find()->where(['Ref' => $result['Ref']])->one();
 if ($ei && $ei->orderItem && false) { ?>

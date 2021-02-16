@@ -28,6 +28,9 @@ GridView::widget([
             'header' => Yii::t('novaposhta/default', '№'),
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-left'],
+            'value' => function ($model) {
+                return '<code>'.$model['IntDocNumber'] . '</code>';
+            }
         ],
         [
             'attribute' => 'ServiceType',
@@ -57,7 +60,7 @@ GridView::widget([
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
 
-                return '<strong>'.$model['RecipientContactPerson'].'</strong> '.CMS::phone_format($model['RecipientContactPhone']).'<br/>'.$model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
+                return '<strong>'.$model['RecipientContactPerson'].'</strong> '.Html::a(CMS::phone_format($model['RecipientContactPhone']),'tel:' . $model['RecipientsPhone']).'<br/>'.$model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
 
             }
 
