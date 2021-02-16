@@ -110,49 +110,7 @@ $this->registerCss('
 
 
 
-                    <?php if ($templates) { ?>
-                        <?php
-                        $js = <<<JS
-$(document).on('click','.btn-template',function(){
-    var volumetricweight = $(this).data('volumetricweight');
-    var volumetricheight = $(this).data('volumetricheight');
-    var volumetricwidth = $(this).data('volumetricwidth');
-    var volumetriclength = $(this).data('volumetriclength');
-    var message = $(this).data('message');
-    
-    $('#expressinvoice-optionsseat-0-volumetricweight').val(volumetricweight);
-    $('#expressinvoice-optionsseat-0-volumetricheight').val(volumetricheight);
-    $('#expressinvoice-optionsseat-0-volumetricwidth').val(volumetricwidth);
-    $('#expressinvoice-optionsseat-0-volumetriclength').val(volumetriclength);
 
-    if(message)
-        common.notify(message,'success');
-    
-    return false;
-});
-JS;
-
-                        $this->registerJs($js, \yii\web\View::POS_END);
-
-                        ?>
-                        <div class="text-center mt-3 mb-3">
-                            <?= Html::a(Html::icon('delete') . ' Очистить', '#', ['data' => [
-                                'message' => 'Шаблон очищен!',
-                                'volumetricweight' => '',
-                                'volumetricheight' => '',
-                                'volumetricwidth' => '',
-                                'volumetriclength' => '',
-                            ], 'class' => 'btn-template btn btn-sm btn-outline-danger']); ?>
-                            <div class="btn-group">
-                                <?php
-                                foreach (Yii::$app->settings->get('novaposhta', 'templates') as $k => $template) {
-                                    $name = '' . $template['volumetricWeight'] . "кг. ({$template['volumetricHeight']}в {$template['volumetricWidth']}ш {$template['volumetricLength']}д)";
-                                    echo Html::a($name/*'Шаблон №' . ($k + 1)*/, '#', ['data' => array_merge($template, ['message' => 'Шаблон применен']), 'class' => 'btn-template btn btn-sm btn-outline-secondary']);
-                                }
-                                ?>
-                            </div>
-                        </div>
-                    <?php } ?>
                     <?php
 
                     echo $form->field($model, 'Cost'); ?>
@@ -215,6 +173,50 @@ JS;
                         ]
                     ]);
 
+                    if ($templates) { ?>
+                    <?php
+                    $js = <<<JS
+$(document).on('click','.btn-template',function(){
+    var volumetricweight = $(this).data('volumetricweight');
+    var volumetricheight = $(this).data('volumetricheight');
+    var volumetricwidth = $(this).data('volumetricwidth');
+    var volumetriclength = $(this).data('volumetriclength');
+    var message = $(this).data('message');
+    
+    $('#expressinvoice-optionsseat-0-volumetricweight').val(volumetricweight);
+    $('#expressinvoice-optionsseat-0-volumetricheight').val(volumetricheight);
+    $('#expressinvoice-optionsseat-0-volumetricwidth').val(volumetricwidth);
+    $('#expressinvoice-optionsseat-0-volumetriclength').val(volumetriclength);
+
+    if(message)
+        common.notify(message,'success');
+    
+    return false;
+});
+JS;
+
+                    $this->registerJs($js, \yii\web\View::POS_END);
+
+                    ?>
+                    <div class="text-center mt-3 mb-3">
+                        <?= Html::a(Html::icon('delete') . ' Очистить', '#', ['data' => [
+                            'message' => 'Шаблон очищен!',
+                            'volumetricweight' => '',
+                            'volumetricheight' => '',
+                            'volumetricwidth' => '',
+                            'volumetriclength' => '',
+                        ], 'class' => 'btn-template btn btn-sm btn-outline-danger']); ?>
+                        <div class="btn-group">
+                            <?php
+                            foreach (Yii::$app->settings->get('novaposhta', 'templates') as $k => $template) {
+                                $name = '' . $template['volumetricWeight'] . "кг. ({$template['volumetricHeight']}в {$template['volumetricWidth']}ш {$template['volumetricLength']}д)";
+                                echo Html::a($name/*'Шаблон №' . ($k + 1)*/, '#', ['data' => array_merge($template, ['message' => 'Шаблон применен']), 'class' => 'btn-template btn btn-sm btn-outline-secondary']);
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+                    <?php
                     echo '<h4 class="text-center mt-3">Количество мест</h4>';
                     echo \panix\ext\multipleinput\MultipleInput::widget([
                         'model' => $model,

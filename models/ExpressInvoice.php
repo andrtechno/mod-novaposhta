@@ -366,18 +366,9 @@ class ExpressInvoice extends ActiveRecord
 
                 //Параметр груза для каждого места отправления
                 'OptionsSeat' => $this->OptionsSeat,
-                'BackwardDeliveryData' => $this->BackwardDeliveryData,
                 // Обратная доставка
-                /*'BackwardDeliveryData' => [
-                    [
-                        // Кто оплачивает обратную доставку
-                        'PayerType' => 'Recipient',
-                        // Тип доставки
-                        'CargoType' => 'Money',
-                        // Значение обратной доставки
-                        'RedeliveryString' => $this->BackwardRedeliveryString,
-                    ]
-                ]*/
+                'BackwardDeliveryData' => $this->BackwardDeliveryData,
+
             ]
         );
 
