@@ -56,7 +56,8 @@ GridView::widget([
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
-                return $model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
+
+                return '<strong>'.$model['RecipientContactPerson'].'</strong> '.CMS::phone_format($model['RecipientContactPhone']).'<br/>'.$model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
 
             }
 

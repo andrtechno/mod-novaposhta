@@ -155,29 +155,26 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                     <?php } ?>
                 </div>
             </div>
+            <?php if (isset($result['BackwardDeliveryData']) && $result['BackwardDeliveryData']) { ?>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Обратная доставка</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                        <?php foreach ($result['BackwardDeliveryData'] as $backward) { ?>
+                            <li class="list-group-item border-0"><?= $backward['CargoType']; ?></li>
+                            <li class="list-group-item border-0"><?= $backward['PayerType']; ?></li>
+                            <li class="list-group-item border-0"><?= $backward['RedeliveryString']; ?>
+                                <?php if ($backward['CargoTypeRef'] == 'Money') { ?>
+                                    грн.
+                                <?php } ?></li>
+                        <?php } ?>
 
-            <div class="card">
-                <div class="card-header">
-                    <h5>Обратная доставка</h5>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <?php
-
-                    if (isset($result['BackwardDeliveryData'])) {
-                        //  CMS::dump($result['BackwardDeliveryData']);
-                        $data = $result['BackwardDeliveryData'][0]; ?>
-                        <div><?= $data['CargoType']; ?></div>
-                        <div><?= $data['PayerType']; ?></div>
-                        <div><?= $data['RedeliveryString']; ?>
-                            <?php if ($data['CargoTypeRef'] == 'Money') { ?>
-                                грн.
-                            <?php } ?>
-
-                        </div>
-                    <?php } ?>
-                </div>
-            </div>
-
+            <?php } ?>
         </div>
     </div>
 

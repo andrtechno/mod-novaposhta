@@ -57,11 +57,11 @@ class ExpressInvoiceController extends AdminController
         $serviceTypes = ServiceTypes::getList();
         if ($data['success']) {
             foreach ($data['data'] as $data) {
-                // CMS::dump($data);die;
-                // $RecipientAddress = Warehouses::find()->where(['Ref'=>$data['RecipientAddress']])->one();
 
                 $dataResult[] = [
                     'Ref' => $data['Ref'],
+                    'RecipientContactPerson' => $data['RecipientContactPerson'],
+                    'RecipientContactPhone' => $data['RecipientContactPhone'],
                     'ContactSender' => $data['ContactSender'],
                     'ContactRecipient' => $data['ContactRecipient'],
                     'RecipientsPhone' => $data['RecipientsPhone'],
