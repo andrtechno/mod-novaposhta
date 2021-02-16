@@ -76,19 +76,7 @@ $this->registerCss('
 
                     <?= $form->field($model, 'ServiceType')->dropDownList(\panix\mod\novaposhta\models\ServiceTypes::getList()) ?>
 
-                    <div class="form-group row required">
-                        <div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">
-                            <?= Html::activeLabel($model, 'Cost', ['class' => 'col-form-label']); ?>
-                        </div>
-                        <div class="col-sm-8 col-md-8 col-lg-9 col-xl-8">
-                            <div class="input-group">
-                                <?= Html::activeTextInput($model, 'Cost', ['class' => 'form-control']); ?>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">грн.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <?= $form->field($model, 'DateTime')->widget(\panix\engine\jui\DatePicker::class, [
                         'clientOptions' => [
                             'changeMonth' => true,
@@ -111,9 +99,19 @@ $this->registerCss('
 
 
 
-                    <?php
-
-                    echo $form->field($model, 'Cost'); ?>
+                    <div class="form-group row required">
+                        <div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">
+                            <?= Html::activeLabel($model, 'Cost', ['class' => 'col-form-label']); ?>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-9 col-xl-8">
+                            <div class="input-group">
+                                <?= Html::activeTextInput($model, 'Cost', ['class' => 'form-control']); ?>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">грн.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <?php
 
                     echo '<h4 class="text-center mt-3">Обратная доставка</h4>';
