@@ -70,14 +70,6 @@ $form = ActiveForm::begin();
                 <h4 class="m-2">Обратная доставка</h4>
             </div>
         </div>
-        <?php
-
-        //$s = $api->getPaymentForms();
-        // \panix\engine\CMS::dump($s);
-
-        ?>
-
-
     </div>
     <div class="card-footer text-center">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']); ?>

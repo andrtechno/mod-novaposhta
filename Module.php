@@ -37,6 +37,7 @@ class Module extends WebModule implements BootstrapInterface
         $app->setComponents([
             'novaposhta' => ['class' => 'panix\mod\novaposhta\components\Novaposhta'],
         ]);
+
     }
 
     public function getAdminMenu()
