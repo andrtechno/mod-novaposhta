@@ -99,34 +99,10 @@ $this->registerCss('
                     ]); ?>
 
 
-                    <?php // $form->field($model, 'SeatsAmount'); ?>
+
                     <?= $form->field($model, 'Description')->textarea(); ?>
                     <?= $form->field($model, 'CargoType')->dropDownList($model->cargoTypes()); ?>
 
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <?php /* $form->field($model, 'Weight', [
-                                'template' => '<div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">{label}</div><div class="col-sm-8 col-md-8 col-lg-9 col-xl-8">
-                            <div class="input-group">{input}<div class="input-group-append"><span class="input-group-text">кг.</span></div>{hint}{error}</div></div>',
-                                'options' => ['class' => ' row']
-                            ]);*/
-                            ?>
-
-                        </div>
-                        <?php if (isset($model->products['weight']) && false) { ?>
-                            <div class="mt-3">
-                                <div class="alert alert-warning">Не указан <strong>Вес.</strong> Данный список
-                                    товаров
-                                    не учитываеться в общем
-                                    списке Веса.
-                                    <?php foreach ($model->products['weight'] as $product) { ?>
-                                        <div><?= Html::a($product->name, ['/admin/shop/product/update', 'id' => $product->product_id]); ?></div>
-
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
 
                     <?= $form->field($model, 'PayerType')->dropDownList(['Recipient' => Yii::t('novaposhta/default', 'RECIPIENT'), 'Sender' => Yii::t('novaposhta/default', 'SENDER')]) ?>
                     <?= $form->field($model, 'PaymentMethod')->dropDownList($model->paymentFormsList()) ?>
@@ -179,7 +155,67 @@ JS;
                     <?php } ?>
                     <?php
 
+                    echo $form->field($model, 'Cost'); ?>
+                    <?php
 
+                    echo '<h4 class="text-center mt-3">Обратная доставка</h4>';
+
+                    echo \panix\ext\multipleinput\MultipleInput::widget([
+                        'model' => $model,
+                        'attribute' => 'BackwardDeliveryData',
+                        //  'max' => 7,
+                       // 'min' => 1,
+                        // 'cloneButton' => true,
+                        'allowEmptyList' => true,
+                        'enableGuessTitle' => true,
+                        //'addButtonPosition' => \panix\ext\multipleinput\MultipleInput::POS_HEADER, // show add button in the header
+                        'columns' => [
+
+                            [
+                                'name' => 'PayerType',
+                                'type' => 'dropDownList',
+                                'title' => $model::t('BackwardDeliveryData_PayerType'),
+                                'enableError' => true,
+                                'options' => ['class' => 'custom-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+                                'columnOptions' => ['class' => 'text-center'],
+                                'headerOptions' => [
+                                    'style' => 'width: 100px;',
+                                ],
+                                'items' => [
+                                    'Recipient' => 'Получатель',
+                                    'Sender' => 'Отправитель'
+
+                                ]
+                            ],
+                            [
+                                'name' => 'CargoType',
+                                'type' => 'dropDownList',
+                                'title' => $model::t('BackwardDeliveryData_CargoType'),
+                                'enableError' => true,
+                                'options' => ['class' => 'custom-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+                                'headerOptions' => [
+                                    'style' => 'width: 100px;',
+                                ],
+                                'items' => [
+                                    'Money' => 'Money',
+                                    //'Trays' => 'Trays',
+                                    'Documents' => 'Documents',
+                                    'Other' => 'Other'
+                                ]
+                            ],
+                            [
+                                'name' => 'RedeliveryString',
+                                'title' => $model::t('BackwardDeliveryData_RedeliveryString'),
+                                'enableError' => true,
+                                'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off'],
+                                'headerOptions' => [
+                                    'style' => 'width: 100px;',
+                                ],
+                            ]
+                        ]
+                    ]);
+
+                    echo '<h4 class="text-center mt-3">Количество мест</h4>';
                     echo \panix\ext\multipleinput\MultipleInput::widget([
                         'model' => $model,
                         'attribute' => 'OptionsSeat',

@@ -38,6 +38,7 @@ class ExpressInvoice extends ActiveRecord
     public $recipient_Region;
     public $recipient_Email;
     public $OptionsSeat;
+    public $BackwardDeliveryData;
 
     //public $recipient_Warehouse;
 
@@ -202,6 +203,8 @@ class ExpressInvoice extends ActiveRecord
 
             ['OptionsSeat', 'validateOptionsSeatRequire', 'skipOnEmpty' => false],
             ['OptionsSeat', 'validateOptionsSeatNumber'],
+            //['BackwardDeliveryData', 'validateOptionsSeatNumber'],
+
 
             //'pattern' => '/^[a-zA-Z0-9-_]\w*$/i',
             [['recipient_FirstName', 'recipient_LastName'], 'match', 'pattern' => '/^([а-яА-Я]+)$/u', 'message' => '{attribute} должен содержать только буквы кириллицы.'],
@@ -244,7 +247,7 @@ class ExpressInvoice extends ActiveRecord
 
             [['recipient_Email'], 'email'],
             [['Description'], 'string', 'max' => 50],
-            //[['ref'], 'string'],
+            [['BackwardDeliveryData'], 'safe'],
             //[['ref'], 'trim'],
         ];
     }
@@ -343,7 +346,7 @@ class ExpressInvoice extends ActiveRecord
                 // Тип доставки, дополнительно - getServiceTypes()
                 'ServiceType' => $this->ServiceType,
                 // Тип оплаты, дополнительно - getPaymentForms()
-                'PaymentMethod' => 'Cash',
+                'PaymentMethod' => $this->PaymentMethod,
                 // Кто оплачивает за доставку
                 'PayerType' => $this->PayerType,
                 // Стоимость груза в грн
@@ -363,17 +366,18 @@ class ExpressInvoice extends ActiveRecord
 
                 //Параметр груза для каждого места отправления
                 'OptionsSeat' => $this->OptionsSeat,
+                'BackwardDeliveryData' => $this->BackwardDeliveryData,
                 // Обратная доставка
-                'BackwardDeliveryData' => [
+                /*'BackwardDeliveryData' => [
                     [
                         // Кто оплачивает обратную доставку
                         'PayerType' => 'Recipient',
                         // Тип доставки
                         'CargoType' => 'Money',
                         // Значение обратной доставки
-                        'RedeliveryString' => $this->Cost,
+                        'RedeliveryString' => $this->BackwardRedeliveryString,
                     ]
-                ]
+                ]*/
             ]
         );
 

@@ -140,6 +140,8 @@ class ExpressInvoiceController extends AdminController
                     }
                 }
 
+            }else{
+                //CMS::dump($model->errors);die;
             }
         }
 
