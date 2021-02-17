@@ -7,6 +7,7 @@ return [
     'COUNTERPARTIES' => 'Контрагент',
     'CREATE_EXPRESS_WAYBILL' => 'Создать &laquo;Экспресс-накладную&raquo;',
     'CREATE_EXPRESS_WAYBILL_CART' => 'Создать &laquo;ЭН&raquo; для &laquo;Новой почты&raquo;',
+    'UPDATE_EXPRESS_WAYBILL_CART' => 'Изменить &laquo;ЭН&raquo;',
     'WAREHOUSES' => 'Склады',
     'CITIES' => 'Города',
     'RECEPTION' => 'Прием',
@@ -29,10 +30,10 @@ return [
     'LAST_NAME' => 'Фамилия',
     'MIDDLE_NAME' => 'Отчество',
     'CREATE_COUNTERPARTY' => 'Создать контрагента',
-    'SERVICE_TYPE'=>'Тип доставки',
-    'RECIPIENT_ADDRESS'=>'Адрес получателя',
-    'SENDER_ADDRESS'=>'Адрес Отправителя',
-    'TEMPLATES_SEAT'=>'Шаблоны мест',
-    'DEPARTURE'=>'Отправление',
-    'COMMON'=>'Общие'
+    'SERVICE_TYPE' => 'Тип доставки',
+    'RECIPIENT_ADDRESS' => 'Адрес получателя',
+    'SENDER_ADDRESS' => 'Адрес Отправителя',
+    'TEMPLATES_SEAT' => 'Шаблоны мест',
+    'DEPARTURE' => 'Отправление',
+    'COMMON' => 'Общие'
 ];

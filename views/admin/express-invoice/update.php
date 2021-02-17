@@ -22,7 +22,6 @@ $form = ActiveForm::begin([
                 <h5><?= Html::encode($this->context->pageName) ?></h5>
             </div>
             <div class="card-body">
-                <div class="alert alert-info m-0">В разработке!</div>
                 <?php
                 $tabs[] = [
                     'label' => Html::icon('upload') . ' ' . Yii::t('novaposhta/default', 'RECIPIENT'),
@@ -62,7 +61,7 @@ $form = ActiveForm::begin([
 
             </div>
             <div class="card-footer text-center">
-                <?= Html::submitButton('Save', ['class' => 'btn btn-success']); ?>
+                <?= Html::submitButton(Yii::t('app/default','UPDATE'), ['class' => 'btn btn-success']); ?>
             </div>
         </div>
     </div>
