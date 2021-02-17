@@ -35,5 +35,6 @@ return [
     'SENDER_ADDRESS' => 'Адрес Отправителя',
     'TEMPLATES_SEAT' => 'Шаблоны мест',
     'DEPARTURE' => 'Отправление',
-    'COMMON' => 'Общие'
+    'COMMON' => 'Общие',
+    'SUCCESS_UPDATE_EXPRESS' => 'ЭН <strong>{0}</strong> успешно изменена.'
 ];

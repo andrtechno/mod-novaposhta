@@ -302,7 +302,7 @@ class ExpressInvoiceController extends AdminController
                         }
                     }
 
-                    Yii::$app->session->addFlash('success', 'ЭН ' . $response['data'][0]['IntDocNumber'] . ' успешно изменена.');
+                    Yii::$app->session->addFlash('success', Yii::t('novaposhta/default', 'SUCCESS_UPDATE_EXPRESS', $response['data'][0]['IntDocNumber']));
 
                     if (isset($response['warnings'])) {
                         foreach ($response['warnings'] as $warn) {
