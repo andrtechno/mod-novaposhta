@@ -51,7 +51,13 @@ class ExpressInvoiceController extends AdminController
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
 
-        $data = $api->getDocumentList(['GetFullList' => 1]);
+        $data = $api->getDocumentList([
+            'GetFullList' => 1,
+            //'RedeliveryMoney' => 1,
+            // 'DateTime'=>'17.02.2021',
+            "DateTimeFrom" => "10.02.2021",
+            "DateTimeTo" => "18.02.2021"
+        ]);
         // CMS::dump($data);die;
         $dataResult = [];
         $serviceTypes = ServiceTypes::getList();
@@ -114,11 +120,11 @@ class ExpressInvoiceController extends AdminController
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             $model->order_id = Yii::$app->request->get('order_id');
-          //  print_r($model->attributes);die;
+            //  print_r($model->attributes);die;
             if ($model->validate()) {
 
                 $doc = $model->create();
-               // CMS::dump($model->getCubeFormula());die;
+                // CMS::dump($model->getCubeFormula());die;
 
                 if ($doc['success']) {
                     if ($model->order_id) {
@@ -131,9 +137,9 @@ class ExpressInvoiceController extends AdminController
                         }
                     }
                     $model->Ref = $doc['data'][0]['Ref'];
-                   // CMS::dump($model->attributes);
+                    // CMS::dump($model->attributes);
                     $model->save();
-                   // die;
+                    // die;
                     foreach ($doc['warnings'] as $warn) {
                         Yii::$app->session->addFlash('warning', $warn);
                     }
@@ -144,7 +150,7 @@ class ExpressInvoiceController extends AdminController
                     }
                 }
 
-            }else{
+            } else {
                 //CMS::dump($model->errors);die;
             }
         }
@@ -189,18 +195,26 @@ class ExpressInvoiceController extends AdminController
     {
         /** @var Novaposhta $api */
         $api = Yii::$app->novaposhta;
-        $model = ExpressInvoice::findOne(['Ref'=>$id]);
+        $model = ExpressInvoice::findOne(['Ref' => $id]);
+
         $data = $api->getDocument($id);
         if ($data['success']) {
             $result = $data['data'][0];
-            $this->pageName = 'Редактирование '.$result['Number'];
-           // CMS::dump($result);
+            $this->pageName = 'Редактирование ' . $result['Number'];
+            // CMS::dump($result);
+            //  die;
 //$test = $api->getCounterpartyContactPersons($result['RecipientRef']);
-          //  CMS::dump($test);
-
+            //  CMS::dump($test);
+//echo $result['DateTime'];
+//echo '<br>';
             $model->Description = $result['Description'];
             $model->PayerType = $result['PayerTypeRef'];
             $model->PaymentMethod = $result['PaymentMethodRef'];
+
+            // $date = new \DateTime($result['DateTime'], new \DateTimeZone('Europe/Kiev'));
+            // $model->DateTime = $date->format('d.m.Y');
+//echo $model->DateTime;die;
+
             $model->DateTime = $result['DateTime'];
             $model->CargoType = $result['CargoTypeRef'];
             $model->VolumeGeneral = $result['VolumeGeneral'];
@@ -218,8 +232,10 @@ class ExpressInvoiceController extends AdminController
             $model->RecipientAddress = $result['RecipientAddressRef'];
             $model->ContactRecipient = $result['ContactRecipientRef'];
             $model->RecipientsPhone = $result['RecipientsPhone'];
-            $model->OptionsSeat = $result['OptionsSeat'];
-            $model->BackwardDeliveryData = $result['BackwardDeliveryData'];
+            if (isset($result['OptionsSeat']))
+                $model->OptionsSeat = $result['OptionsSeat'];
+            if (isset($result['BackwardDeliveryData']))
+                $model->BackwardDeliveryData = $result['BackwardDeliveryData'];
         }
 
 
@@ -232,45 +248,78 @@ class ExpressInvoiceController extends AdminController
         $post = Yii::$app->request->post();
 
         if ($model->load($post)) {
+
+
             if ($model->validate()) {
-                $response = $api->model('InternetDocument')->update([
-                    'Ref' => $id,
-                    'Description' => $model->Description,
-                    'PayerType' => $model->PayerType,
-                    'PaymentMethod' => $model->PaymentMethod,
-                    'DateTime' => $model->DateTime,
-                    'CargoType' => $model->CargoType,
-                    'VolumeGeneral' => $model->VolumeGeneral,
-                    'Weight' => $model->Weight,
-                    'ServiceType' => $model->ServiceType,
-                    'SeatsAmount' => $model->SeatsAmount,
-                    'Cost' => $model->Cost,
-                    'CitySender' => $model->CitySender,
-                    'Sender' => $model->Sender,
-                    'SenderAddress' => $model->SenderAddress,
-                    'ContactSender' => $model->ContactSender,
-                    'SendersPhone' => $model->SendersPhone,
-                    'CityRecipient' => $model->CityRecipient,
-                    'Recipient' => $model->Recipient,
-                    'RecipientAddress' => $model->RecipientAddress,
-                    'ContactRecipient' => $model->ContactRecipient,
-                    'RecipientsPhone' => $model->RecipientsPhone,
-                    'OptionsSeat' => $model->OptionsSeat,
-                    'BackwardDeliveryData' => $model->BackwardDeliveryData,
-                ]);
+                $params = [];
+
+                $params['Ref'] = $id;
+                $params['Description'] = $model->Description;
+                $params['PayerType'] = $model->PayerType;
+                $params['PaymentMethod'] = $model->PaymentMethod;
+                $params['DateTime'] = $model->DateTime;
+                $params['CargoType'] = $model->CargoType;
+                $params['VolumeGeneral'] = $model->VolumeGeneral;
+                $params['Weight'] = $model->Weight;
+                $params['ServiceType'] = $model->ServiceType;
+                $params['SeatsAmount'] = $model->SeatsAmount;
+                $params['Cost'] = $model->Cost;
+                $params['CitySender'] = $model->CitySender;
+                $params['Sender'] = $model->Sender;
+                $params['SenderAddress'] = $model->SenderAddress;
+                $params['ContactSender'] = $model->ContactSender;
+                $params['SendersPhone'] = $model->SendersPhone;
+                $params['CityRecipient'] = $model->CityRecipient;
+                $params['Recipient'] = $model->Recipient;
+                $params['RecipientAddress'] = $model->RecipientAddress;
+                $params['ContactRecipient'] = $model->ContactRecipient;
+                $params['RecipientsPhone'] = $model->RecipientsPhone;
+
+
+                $params['SeatsAmount'] = count($model->OptionsSeat);
+                $params['Weight'] = $model->getCalcTotalWeight();
+                $params['VolumeWeight'] = $model->getCalcTotalWeight();
+                // Объем груза в куб.м.
+                $params['VolumeGeneral'] = $model->getCalcCube();
+                if ($model->OptionsSeat) {
+                    $params['OptionsSeat'] = $model->OptionsSeat;
+
+                }
+                if ($model->BackwardDeliveryData)
+                    $params['BackwardDeliveryData'] = $model->BackwardDeliveryData;
+                //  CMS::dump($params['DateTime']);  die;
+                $response = $api->model('InternetDocument')->update($params);
+                // CMS::dump($response);die;
+
                 if ($response['success']) {
-                    foreach ($response['warnings'] as $warn) {
-                        Yii::$app->session->addFlash('warning', $warn);
+                    if ($model->order_id) {
+                        $order = Order::findOne($model->order_id);
+                        if ($order) {
+
+                            $order->ttn = $response['data'][0]['IntDocNumber'];
+                            $order->delivery_price = $response['data'][0]['CostOnSite'];
+                            $order->save(false);
+                        }
                     }
+
+                    Yii::$app->session->addFlash('success', 'ЭН ' . $response['data'][0]['IntDocNumber'] . ' успешно изменена.');
+
+                    if (isset($response['warnings'])) {
+                        foreach ($response['warnings'] as $warn) {
+                            Yii::$app->session->addFlash('warning', $warn);
+                        }
+                    }
+
                     return $this->redirect(['index']);
-                }else{
+                } else {
                     foreach ($response['errors'] as $key => $error) {
                         Yii::$app->session->addFlash('error', $response['errorCodes'][$key] . ' - ' . $error);
                     }
                 }
 
-            }else{
-                CMS::dump($model->errors);die;
+            } else {
+                CMS::dump($model->errors);
+                die;
             }
         }
 

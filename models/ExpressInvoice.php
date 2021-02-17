@@ -245,8 +245,7 @@ class ExpressInvoice extends ActiveRecord
             ], 'required'],
 
 
-            [['recipient_FirstName', 'recipient_LastName',], 'required','on'=>'create'],
-
+            [['recipient_FirstName', 'recipient_LastName',], 'required', 'on' => 'create'],
 
 
             [['recipient_Email'], 'email'],
@@ -256,44 +255,48 @@ class ExpressInvoice extends ActiveRecord
             //[['ref'], 'trim'],
         ];
     }
-public function scenarios()
-{
-    $scenarios['create']=['recipient_FirstName','recipient_LastName','CitySender','SenderAddress'];
-    $scenarios['update']=[
-       // 'BackwardDeliveryData',
-        'Description',
-        'CitySender',
-        'SenderAddress',
-        'ServiceType',
-        'DateTime',
-        'CargoType',
-        'PaymentMethod',
-        'PayerType'
-    ];
-    return array_merge($scenarios,parent::scenarios());
-}
 
-    private $old_ie;
-
-    public function beforeSave($insert)
+    public function scenarios()
     {
-        if ($insert) {
-            $this->old_ie = ExpressInvoice::find()->where(['order_id' => $this->order_id])->all();
-        }
-        return parent::beforeSave($insert);
+        $scenarios['create'] = ['recipient_FirstName', 'recipient_LastName', 'CitySender', 'SenderAddress'];
+        $scenarios['update'] = [
+            'OptionsSeat',
+            'BackwardDeliveryData',
+            'RecipientAddress',
+            'CityRecipient',
+            'Description',
+            'CitySender',
+            'SenderAddress',
+            'ServiceType',
+            'DateTime',
+            'CargoType',
+            'PaymentMethod',
+            'PayerType'
+        ];
+        return array_merge($scenarios, parent::scenarios());
     }
 
-    public function afterSave($insert, $changedAttributes)
-    {
-        if ($insert) {
+    /* private $old_ie;
 
-            foreach ($this->old_ie as $ie) {
-                $ie->delete();
-            }
+     public function beforeSave($insert)
+     {
+         if ($insert) {
+             $this->old_ie = ExpressInvoice::find()->where(['order_id' => $this->order_id])->all();
+         }
+         return parent::beforeSave($insert);
+     }
 
-        }
-        parent::afterSave($insert, $changedAttributes);
-    }
+     public function afterSave($insert, $changedAttributes)
+     {
+         if ($insert) {
+
+             foreach ($this->old_ie as $ie) {
+              //   $ie->delete();
+             }
+
+         }
+         parent::afterSave($insert, $changedAttributes);
+     }*/
 
     public function paymentFormsList()
     {

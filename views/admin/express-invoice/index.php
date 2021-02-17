@@ -6,12 +6,12 @@ use panix\engine\widgets\Pjax;
 use panix\engine\CMS;
 
 Pjax::begin([
-     'id' => 'pjax-grid-express-invoice',
+    'id' => 'pjax-grid-express-invoice',
 ]);
 ?>
 <?=
 GridView::widget([
-    'id'=>'grid-express-invoice',
+    'id' => 'grid-express-invoice',
     'tableOptions' => ['class' => 'table table-striped'],
     'dataProvider' => $dataProvider,
     // 'filterModel' => $searchModel,
@@ -29,7 +29,7 @@ GridView::widget([
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
-                return '<code>'.$model['IntDocNumber'] . '</code>';
+                return '<code>' . $model['IntDocNumber'] . '</code>';
             }
         ],
         [
@@ -60,7 +60,7 @@ GridView::widget([
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
 
-                return '<strong>'.$model['RecipientContactPerson'].'</strong> '.Html::a(CMS::phone_format($model['RecipientContactPhone']),'tel:' . $model['RecipientsPhone']).'<br/>'.$model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
+                return '<strong>' . $model['RecipientContactPerson'] . '</strong> ' . Html::a(CMS::phone_format($model['RecipientContactPhone']), 'tel:' . $model['RecipientsPhone']) . '<br/>' . $model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
 
             }
 
