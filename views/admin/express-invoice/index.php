@@ -78,11 +78,16 @@ GridView::widget([
 
         [
             'class' => 'panix\engine\grid\columns\ActionColumn',
-            'template' => '{view}{delete}{print}',
+            'template' => '{view}{update}{delete}{print}',
             'header' => Yii::t('app/default', 'OPTIONS'),
             'buttons' => [
                 'view' => function ($url, $model, $key) {
                     return Html::a(Html::icon('eye'), ['view', 'id' => $model['Ref']], [
+                        'title' => Yii::t('app/default', 'View'),
+                        'class' => 'd-flex align-items-center btn btn-sm btn-outline-secondary']);
+                },
+                'update' => function ($url, $model, $key) {
+                    return Html::a(Html::icon('edit'), ['update', 'id' => $model['Ref']], [
                         'title' => Yii::t('app/default', 'View'),
                         'class' => 'd-flex align-items-center btn btn-sm btn-outline-secondary']);
                 },

@@ -148,7 +148,13 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
                     <h5>Трекинг <?= $result['IntDocNumber']; ?>:</h5>
                 </div>
                 <div class="card-body">
+
+
                     <?php
+
+                    //$deliveryDate = $api->getDocumentDeliveryDate($result['CitySenderRef'], $result['CityRecipientRef'], $result['ServiceTypeRef'], $result['DateTime']);
+                    //echo 'Орентировочная дата доставки: ' . CMS::date(strtotime($deliveryDate['data'][0]['DeliveryDate']['date']), true);
+
                     $tracking = $api->documentsTracking($result['IntDocNumber']);
                     if ($tracking['success']) { ?>
                         <div class="alert alert-info m-3"><?= $tracking['data'][0]['Status']; ?></div>
@@ -208,19 +214,7 @@ echo \panix\engine\bootstrap\ButtonDropdown::widget([
 <?php
 
 
-//CMS::dump($result);
-
-
-$deliveryDate = $api->getDocumentDeliveryDate($result['CitySenderRef'], $result['CityRecipientRef'], $result['ServiceTypeRef'], $result['DateTime']);
-
-//CMS::dump($deliveryDate);
-
-
-$documentPrice = $api->getDocumentPrice($result['CitySenderRef'], $result['CityRecipientRef'], $result['ServiceTypeRef'], $result['Weight'], $result['Cost'], $result['CargoTypeRef']);
-
-
 $ei = \panix\mod\novaposhta\models\ExpressInvoice::find()->where(['Ref' => $result['Ref']])->one();
-
 
 if ($ei->orderItem) { ?>
     <div class="card">
@@ -230,9 +224,7 @@ if ($ei->orderItem) { ?>
         <div class="card-card">
             Сумма заказа: <?= $ei->orderItem->full_price; ?>
         </div>
-
     </div>
-
 <?php }
 
 

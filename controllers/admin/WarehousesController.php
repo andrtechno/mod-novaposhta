@@ -57,7 +57,7 @@ class WarehousesController extends AdminController
      */
     public function actionByCity($id)
     {
-        $model = Warehouses::findAll(['CityRef' => $id]);
+        $model = Warehouses::find()->where(['CityRef' => $id])->all();
         $result = [];
         if ($model) {
             $result['total'] = count($model);

@@ -237,15 +237,17 @@ class ExpressInvoice extends ActiveRecord
 
             //получаель
             [[
-                'recipient_FirstName',
-                // 'recipient_MiddleName',
-                'recipient_LastName',
                 //'recipient_Phone',
                 'CityRecipient',
                 //'recipient_Region',
                 //'recipient_Email',
                 'RecipientAddress'
             ], 'required'],
+
+
+            [['recipient_FirstName', 'recipient_LastName',], 'required','on'=>'create'],
+
+
 
             [['recipient_Email'], 'email'],
             [['Description'], 'string', 'max' => 50],
@@ -254,6 +256,22 @@ class ExpressInvoice extends ActiveRecord
             //[['ref'], 'trim'],
         ];
     }
+public function scenarios()
+{
+    $scenarios['create']=['recipient_FirstName','recipient_LastName','CitySender','SenderAddress'];
+    $scenarios['update']=[
+       // 'BackwardDeliveryData',
+        'Description',
+        'CitySender',
+        'SenderAddress',
+        'ServiceType',
+        'DateTime',
+        'CargoType',
+        'PaymentMethod',
+        'PayerType'
+    ];
+    return array_merge($scenarios,parent::scenarios());
+}
 
     private $old_ie;
 

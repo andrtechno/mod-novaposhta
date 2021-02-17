@@ -98,7 +98,7 @@ class ExpressInvoiceController extends AdminController
 
         $api = Yii::$app->novaposhta;
         $model = new ExpressInvoice();
-
+        $model->scenario = 'create';
 
         $this->pageName = html_entity_decode(Yii::t('novaposhta/default', 'CREATE_EXPRESS_WAYBILL'));
         $this->view->params['breadcrumbs'][] = [
@@ -187,41 +187,50 @@ class ExpressInvoiceController extends AdminController
 
     public function actionUpdate($id = false)
     {
+        /** @var Novaposhta $api */
         $api = Yii::$app->novaposhta;
-        $model = new ExpressInvoiceForm();
+        $model = ExpressInvoice::findOne(['Ref'=>$id]);
         $data = $api->getDocument($id);
         if ($data['success']) {
             $result = $data['data'][0];
+            $this->pageName = 'Редактирование '.$result['Number'];
+           // CMS::dump($result);
+//$test = $api->getCounterpartyContactPersons($result['RecipientRef']);
+          //  CMS::dump($test);
+
             $model->Description = $result['Description'];
-            $model->PayerType = $result['PayerType'];
-            $model->PaymentMethod = $result['PaymentMethod'];
+            $model->PayerType = $result['PayerTypeRef'];
+            $model->PaymentMethod = $result['PaymentMethodRef'];
             $model->DateTime = $result['DateTime'];
-            $model->CargoType = $result['CargoType'];
+            $model->CargoType = $result['CargoTypeRef'];
             $model->VolumeGeneral = $result['VolumeGeneral'];
             $model->Weight = $result['Weight'];
-            $model->ServiceType = $result['ServiceType'];
+            $model->ServiceType = $result['ServiceTypeRef'];
             $model->SeatsAmount = $result['SeatsAmount'];
             $model->Cost = $result['Cost'];
-            $model->CitySender = $result['CitySender'];
-            $model->Sender = $result['Sender'];
-            $model->SenderAddress = $result['SenderAddress'];
-            $model->ContactSender = $result['ContactSender'];
+            $model->CitySender = $result['CitySenderRef'];
+            $model->Sender = $result['SenderRef'];
+            $model->SenderAddress = $result['SenderAddressRef'];
+            $model->ContactSender = $result['ContactSenderRef'];
             $model->SendersPhone = $result['SendersPhone'];
-            $model->CityRecipient = $result['CityRecipient'];
-            $model->Recipient = $result['Recipient'];
-            $model->RecipientAddress = $result['RecipientAddress'];
-            $model->ContactRecipient = $result['ContactRecipient'];
+            $model->CityRecipient = $result['CityRecipientRef'];
+            $model->Recipient = $result['RecipientRef'];
+            $model->RecipientAddress = $result['RecipientAddressRef'];
+            $model->ContactRecipient = $result['ContactRecipientRef'];
             $model->RecipientsPhone = $result['RecipientsPhone'];
+            $model->OptionsSeat = $result['OptionsSeat'];
+            $model->BackwardDeliveryData = $result['BackwardDeliveryData'];
         }
 
-        $this->pageName = Yii::t('novaposhta/default', 'CREATE_BTN');
 
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['/novaposhta/admin/default/index']
         ];
+        $model->scenario = 'update';
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $post = Yii::$app->request->post();
+
         if ($model->load($post)) {
             if ($model->validate()) {
                 $response = $api->model('InternetDocument')->update([
@@ -246,11 +255,22 @@ class ExpressInvoiceController extends AdminController
                     'RecipientAddress' => $model->RecipientAddress,
                     'ContactRecipient' => $model->ContactRecipient,
                     'RecipientsPhone' => $model->RecipientsPhone,
+                    'OptionsSeat' => $model->OptionsSeat,
+                    'BackwardDeliveryData' => $model->BackwardDeliveryData,
                 ]);
                 if ($response['success']) {
-                    CMS::dump($response);
-                    die('ok');
+                    foreach ($response['warnings'] as $warn) {
+                        Yii::$app->session->addFlash('warning', $warn);
+                    }
+                    return $this->redirect(['index']);
+                }else{
+                    foreach ($response['errors'] as $key => $error) {
+                        Yii::$app->session->addFlash('error', $response['errorCodes'][$key] . ' - ' . $error);
+                    }
                 }
+
+            }else{
+                CMS::dump($model->errors);die;
             }
         }
 

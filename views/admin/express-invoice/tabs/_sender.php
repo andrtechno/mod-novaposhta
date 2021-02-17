@@ -3,7 +3,7 @@ use panix\engine\CMS;
 use panix\ext\bootstrapselect\BootstrapSelect;
 use panix\ext\telinput\PhoneInput;
 use yii\helpers\ArrayHelper;
-
+use panix\engine\Html;
 /**
  * @var \yii\web\View $this
  * @var \yii\bootstrap4\ActiveForm $form
@@ -46,3 +46,33 @@ if ($contacts['success']) {
 
 
 <?= $form->field($model, 'SendersPhone')->widget(PhoneInput::class); ?>
+
+
+<?php
+
+$this->registerJs("
+    $('#" . Html::getInputId($model, 'CitySender') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    console.log(clickedIndex, $(this).val(), previousValue);
+    $(this).selectpicker('val');
+    $.ajax({
+        url:'/admin/novaposhta/warehouses/by-city',
+        type:'GET',
+        data:{id:$(this).val()},
+        success:function(data){
+            console.log(data);
+            
+            var warehouse = $('#" . Html::getInputId($model, 'SenderAddress') . "');
+            warehouse.html('');
+            $.each(data.items, function(key, value) {
+                warehouse.append('<option value=\"'+key+'\" selected=\"\">'+value+'</option>');
+            });
+
+            warehouse.selectpicker('refresh');
+       
+        }
+    });
+});
+
+
+");
+?>
