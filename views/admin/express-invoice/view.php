@@ -219,11 +219,17 @@ $deliveryDate = $api->getDocumentDeliveryDate($result['CitySenderRef'], $result[
 $documentPrice = $api->getDocumentPrice($result['CitySenderRef'], $result['CityRecipientRef'], $result['ServiceTypeRef'], $result['Weight'], $result['Cost'], $result['CargoTypeRef']);
 
 
-
 $ei = \panix\mod\novaposhta\models\ExpressInvoice::find()->where(['Ref' => $result['Ref']])->one();
-if ($ei && $ei->orderItem && YII_DEBUG) { ?>
+
+
+if ($ei->orderItem) { ?>
     <div class="card">
-        <?= $ei->orderItem->id; ?>
+        <div class="card-header">
+            <h5>Информация о заказе №<?= CMS::idToNumber($ei->orderItem->id); ?></h5>
+        </div>
+        <div class="card-card">
+            Сумма заказа: <?= $ei->orderItem->full_price; ?>
+        </div>
 
     </div>
 

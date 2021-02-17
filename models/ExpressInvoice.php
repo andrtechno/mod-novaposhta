@@ -20,6 +20,8 @@ use yii\validators\RequiredValidator;
  * @property string $text
  * @property integer $created_at
  * @property integer $updated_at
+ *
+ * @property Order $orderItem
  */
 class ExpressInvoice extends ActiveRecord
 {
@@ -27,7 +29,7 @@ class ExpressInvoice extends ActiveRecord
     const route = '/admin/novaposhta/default';
     const MODULE_ID = 'novaposhta';
     public $order;
-    public $order_id;
+
     public $products;
     public $inValidProduct;
     public $recipient_FirstName;
@@ -86,8 +88,8 @@ class ExpressInvoice extends ActiveRecord
             if ($this->order->user_phone)
                 $this->RecipientsPhone = $this->order->user_phone;
             if ($this->order->delivery_warehouse_ref) {
-            //$this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
-            $this->RecipientAddress = $this->order->delivery_warehouse_ref;
+                //$this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
+                $this->RecipientAddress = $this->order->delivery_warehouse_ref;
             }
 
             if ($this->order->delivery_city_ref) {
@@ -118,7 +120,7 @@ class ExpressInvoice extends ActiveRecord
             $this->recipient_LastName = $this->order->user_lastname;
             $this->recipient_Email = $this->order->user_email;
             //$this->recipient_City = Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
-           // $this->CityRecipient = $this->order->delivery_city_ref;
+            // $this->CityRecipient = $this->order->delivery_city_ref;
 
             $this->CargoType = 'Parcel';
             if ($this->order->products) {
@@ -248,10 +250,32 @@ class ExpressInvoice extends ActiveRecord
             [['recipient_Email'], 'email'],
             [['Description'], 'string', 'max' => 50],
             [['BackwardDeliveryData'], 'safe'],
+            [['order_id'], 'integer'],
             //[['ref'], 'trim'],
         ];
     }
 
+    private $old_ie;
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->old_ie = ExpressInvoice::find()->where(['order_id' => $this->order_id])->all();
+        }
+        return parent::beforeSave($insert);
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($insert) {
+
+            foreach ($this->old_ie as $ie) {
+                $ie->delete();
+            }
+
+        }
+        parent::afterSave($insert, $changedAttributes);
+    }
 
     public function paymentFormsList()
     {
@@ -339,8 +363,8 @@ class ExpressInvoice extends ActiveRecord
                 'Region' => ($this->recipient_Region) ? $this->recipient_Region : '',
                 'Email' => ($this->recipient_Email) ? $this->recipient_Email : '',
                 //'Warehouse' => $this->RecipientAddress,
-                'CityRecipient'=>$this->CityRecipient,
-                'RecipientAddress'=>$this->RecipientAddress
+                'CityRecipient' => $this->CityRecipient,
+                'RecipientAddress' => $this->RecipientAddress
             ],
             [
                 // Дата отправления

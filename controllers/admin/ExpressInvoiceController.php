@@ -113,24 +113,27 @@ class ExpressInvoiceController extends AdminController
 
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
+            $model->order_id = Yii::$app->request->get('order_id');
+          //  print_r($model->attributes);die;
             if ($model->validate()) {
 
                 $doc = $model->create();
                // CMS::dump($model->getCubeFormula());die;
 
                 if ($doc['success']) {
-                    if (Yii::$app->request->get('order_id')) {
-                        $model->order_id = Yii::$app->request->get('order_id');
-
+                    if ($model->order_id) {
                         $order = Order::findOne($model->order_id);
                         if ($order) {
+
                             $order->ttn = $doc['data'][0]['IntDocNumber'];
                             $order->delivery_price = $doc['data'][0]['CostOnSite'];
                             $order->save(false);
                         }
                     }
                     $model->Ref = $doc['data'][0]['Ref'];
+                   // CMS::dump($model->attributes);
                     $model->save();
+                   // die;
                     foreach ($doc['warnings'] as $warn) {
                         Yii::$app->session->addFlash('warning', $warn);
                     }
