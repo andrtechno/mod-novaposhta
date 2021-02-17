@@ -113,7 +113,7 @@ class ExpressInvoice extends ActiveRecord
                 }
             }
 
-            $this->Cost = $this->order->total_price;
+            $this->Cost = $this->order->full_price;
             $this->recipient_FirstName = $this->order->user_name;
             $this->recipient_LastName = $this->order->user_lastname;
             $this->recipient_Email = $this->order->user_email;

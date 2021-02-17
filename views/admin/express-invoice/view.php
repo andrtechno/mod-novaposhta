@@ -221,7 +221,7 @@ $documentPrice = $api->getDocumentPrice($result['CitySenderRef'], $result['CityR
 
 
 $ei = \panix\mod\novaposhta\models\ExpressInvoice::find()->where(['Ref' => $result['Ref']])->one();
-if ($ei && $ei->orderItem && false) { ?>
+if ($ei && $ei->orderItem && YII_DEBUG) { ?>
     <div class="card">
         <?= $ei->orderItem->id; ?>
 
