@@ -262,6 +262,8 @@ class ExpressInvoice extends ActiveRecord
                 $result[$item['Ref']] = $item['Description'];
             }
         }
+        //first Cash!
+        arsort($result);
         return $result;
     }
 

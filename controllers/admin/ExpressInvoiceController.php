@@ -125,6 +125,7 @@ class ExpressInvoiceController extends AdminController
                         $order = Order::findOne($model->order_id);
                         if ($order) {
                             $order->ttn = $doc['data'][0]['IntDocNumber'];
+                            $order->delivery_price = $doc['data'][0]['CostOnSite'];
                             $order->save(false);
                         }
                     }
