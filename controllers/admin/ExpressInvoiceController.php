@@ -53,10 +53,10 @@ class ExpressInvoiceController extends AdminController
 
         $data = $api->getDocumentList([
             'GetFullList' => 1,
-            //'RedeliveryMoney' => 1,
+            'RedeliveryMoney' => 1,
             // 'DateTime'=>'17.02.2021',
-            "DateTimeFrom" => "10.02.2021",
-            "DateTimeTo" => "18.02.2021"
+            //"DateTimeFrom" => "10.02.2021",
+            //"DateTimeTo" => "18.02.2021"
         ]);
         // CMS::dump($data);die;
         $dataResult = [];
