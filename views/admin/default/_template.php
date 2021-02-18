@@ -41,7 +41,7 @@ echo \panix\ext\multipleinput\MultipleInput::widget([
     'columns' => [
 
         [
-            'name' => 'volumetricWeight',
+            'name' => 'weight',
             'title' => \panix\mod\novaposhta\models\ExpressInvoice::t('WEIGHT'),
             'enableError' => true,
             'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
