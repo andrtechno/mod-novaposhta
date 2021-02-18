@@ -156,26 +156,26 @@ class ExpressInvoiceController extends AdminController
         $api = Yii::$app->novaposhta;
         $model = ExpressInvoice::findOne(['Ref' => $id]);
 
-        $data = $api->getDocument($id);
-        if ($data['success']) {
-            $result = $data['data'][0];
+       // $data = $api->getDocument($id);
+       // if ($data['success']) {
+          //  $result = $data['data'][0];
            // CMS::dump($result);die;
-            $this->pageName = 'Редактирование ' . $result['Number'];
+            //$this->pageName = 'Редактирование ' . $result['Number'];
             // CMS::dump($result);
             //  die;
 //$test = $api->getCounterpartyContactPersons($result['RecipientRef']);
             //  CMS::dump($test);
 //echo $result['DateTime'];
 //echo '<br>';
-            $model->Description = $result['Description'];
-            $model->PayerType = $result['PayerTypeRef'];
-            $model->PaymentMethod = $result['PaymentMethodRef'];
+          //  $model->Description = $result['Description'];
+           // $model->PayerType = $result['PayerTypeRef'];
+           // $model->PaymentMethod = $result['PaymentMethodRef'];
 
             // $date = new \DateTime($result['DateTime'], new \DateTimeZone('Europe/Kiev'));
             // $model->DateTime = $date->format('d.m.Y');
 //echo $model->DateTime;die;
 
-            $model->DateTime = $result['DateTime'];
+           /* $model->DateTime = $result['DateTime'];
             $model->CargoType = $result['CargoTypeRef'];
             $model->VolumeGeneral = $result['VolumeGeneral'];
             $model->Weight = $result['Weight'];
@@ -196,7 +196,7 @@ class ExpressInvoiceController extends AdminController
                 $model->OptionsSeat = $result['OptionsSeat'];
             if (isset($result['BackwardDeliveryData']))
                 $model->BackwardDeliveryData = $result['BackwardDeliveryData'];
-        }
+        }*/
 
 
         $this->view->params['breadcrumbs'][] = [
@@ -211,6 +211,7 @@ class ExpressInvoiceController extends AdminController
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $post = Yii::$app->request->post();
         $model->scenario = 'update';
+       // \panix\engine\CMS::dump($model->BackwardDeliveryData);die;
         if ($model->load($post)) {
 
 

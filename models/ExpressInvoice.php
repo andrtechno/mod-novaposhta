@@ -324,7 +324,7 @@ class ExpressInvoice extends ActiveRecord
             $params['CityRecipient'] = $this->CityRecipientRef;
             $params['Recipient'] = $this->RecipientRef;
             $params['RecipientAddress'] = $this->RecipientAddressRef;
-            $params['ContactRecipient'] = $this->ContactRecipient;
+            $params['ContactRecipient'] = $this->ContactRecipientRef;
             $params['RecipientsPhone'] = $this->RecipientsPhone;
             $params['SeatsAmount'] = count($this->OptionsSeat);
             $params['Weight'] = $this->getCalcTotalWeight();
@@ -545,6 +545,12 @@ class ExpressInvoice extends ActiveRecord
     {
         return $this->hasOne(Order::class, ['id' => 'order_id']);
     }
+public function afterFind()
+{
+    $this->BackwardDeliveryData = json_decode($this->BackwardDeliveryData,true);
+    $this->OptionsSeat = json_decode($this->OptionsSeat,true);
+    parent::afterFind();
+}
 
     public function afterDelete()
     {

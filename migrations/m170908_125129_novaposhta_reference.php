@@ -36,7 +36,7 @@ class m170908_125129_novaposhta_reference extends Migration
             'Height' => $this->decimal(10, 1)->null(),
             'VolumetricWeight' => $this->decimal(10, 2)->null(),
             'TypeOfPacking' => $this->string(36)->null(),
-            'PackagingForPlace' => $this->string(36)->null(),
+            'PackagingForPlace' => $this->boolean()->null(),
         ], $tableOptions);
         $this->addPrimaryKey('Ref', Packs::tableName(), 'Ref');
         //$this->createIndex('Ref', Packs::tableName(), 'Ref');

@@ -21,7 +21,7 @@ class m170501_125135_novaposhta_errors extends Migration
         }
 
         $this->createTable(Errors::tableName(), [
-            'MessageCode' => $this->integer()->null(),
+            'MessageCode' => $this->bigInteger()->unsigned()->null(),
             'MessageText' => $this->text()->null(),
             'MessageDescriptionRU' => $this->text()->null(),
             'MessageDescriptionUA' => $this->text()->null(),

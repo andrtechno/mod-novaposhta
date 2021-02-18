@@ -11,7 +11,8 @@ $form = ActiveForm::begin([
             'offset' => 'offset-sm-4 offset-lg-3 offset-xl-4',
             'wrapper' => 'col-sm-8 col-md-8 col-lg-9 col-xl-8',
         ],
-    ]
+    ],
+    'enableClientValidation'=>false
 ]);
 
 ?>
