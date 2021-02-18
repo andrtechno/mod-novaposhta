@@ -12,7 +12,7 @@ use panix\ext\multipleinput\MultipleInput;
 $templates = Yii::$app->settings->get('novaposhta', 'templates');
 ?>
 
-<?= $form->field($model, 'ServiceType')->dropDownList(\panix\mod\novaposhta\models\ServiceTypes::getList()) ?>
+<?= $form->field($model, 'ServiceTypeRef')->dropDownList(\panix\mod\novaposhta\models\ServiceTypes::getList()) ?>
 
 
 <?= $form->field($model, 'DateTime')->widget(\panix\engine\jui\DatePicker::class, [
@@ -25,13 +25,11 @@ $templates = Yii::$app->settings->get('novaposhta', 'templates');
 ]); ?>
 
 
-
-<?= $form->field($model, 'Description')->textarea(); ?>
 <?= $form->field($model, 'CargoType')->dropDownList($model->cargoTypes()); ?>
 <?= $form->field($model, 'PayerType')->dropDownList(['Recipient' => Yii::t('novaposhta/default', 'RECIPIENT'), 'Sender' => Yii::t('novaposhta/default', 'SENDER')]) ?>
 <?= $form->field($model, 'PaymentMethod')->dropDownList($model->paymentFormsList()) ?>
 
-
+<?= $form->field($model, 'Description')->textarea(); ?>
 <div class="form-group row required">
     <div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">
         <?= Html::activeLabel($model, 'Cost', ['class' => 'col-form-label']); ?>
@@ -162,7 +160,7 @@ echo MultipleInput::widget([
     'columns' => [
 
         [
-            'name' => 'volumetricWeight',
+            'name' => 'weight',
             'title' => $model::t('WEIGHT'),
             'enableError' => true,
             'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
@@ -197,6 +195,18 @@ echo MultipleInput::widget([
             'headerOptions' => [
                 'style' => 'width: 100px;',
             ],
+
+        ],
+        [
+            'name'  => 'comment',
+            'type'  => 'static',
+            'value' => function($data) use($model) {
+ //   print_r($data['volumetricWidth']);
+                return $model->getCalcCubeFormula($data['volumetricWidth'],$data['volumetricHeight'],$data['volumetricLength']);
+            },
+            'headerOptions' => [
+                'style' => 'width: 70px;',
+            ]
         ]
     ]
 ]);

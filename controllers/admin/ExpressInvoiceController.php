@@ -6,10 +6,13 @@ use panix\engine\CMS;
 use panix\engine\Html;
 use panix\mod\cart\models\Order;
 use panix\mod\cart\widgets\delivery\novaposhta\api\NovaPoshtaApi;
+use panix\mod\discounts\models\DiscountSearch;
 use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\ExpressInvoice;
 use panix\mod\novaposhta\models\ExpressInvoiceForm;
+use panix\mod\novaposhta\models\search\ExpressInvoiceSearch;
+use panix\mod\novaposhta\models\search\ExpressInvoiceSearch2;
 use panix\mod\novaposhta\models\ServiceTypes;
 use panix\mod\novaposhta\models\Warehouses;
 use Yii;
@@ -24,13 +27,12 @@ class ExpressInvoiceController extends AdminController
     public function actions()
     {
         return [
-            'delete2' => [
+            'delete' => [
                 'class' => 'panix\engine\actions\DeleteAction',
                 'modelClass' => ExpressInvoice::class,
             ],
         ];
     }
-
     public function actionIndex()
     {
         /** @var Novaposhta $api */
@@ -48,18 +50,16 @@ class ExpressInvoiceController extends AdminController
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['/novaposhta/admin/default/index']
         ];
+
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
 
-        $data = $api->getDocumentList([
-            'GetFullList' => 1,
-            'RedeliveryMoney' => 1,
-            // 'DateTime'=>'17.02.2021',
-            //"DateTimeFrom" => "10.02.2021",
-            //"DateTimeTo" => "18.02.2021"
-        ]);
+        $searchModel = new ExpressInvoiceSearch2();
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+
+
         // CMS::dump($data);die;
-        $dataResult = [];
+        /*$dataResult = [];
         $serviceTypes = ServiceTypes::getList();
         if ($data['success']) {
             foreach ($data['data'] as $data) {
@@ -83,21 +83,17 @@ class ExpressInvoiceController extends AdminController
                     'ServiceType' => $serviceTypes[$data['ServiceType']],
                 ];
             }
-        }
+        }*/
 
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $dataResult,
-            'pagination' => [
-                'pageSize' => 100,
-            ],
-            //  'sort' => $sort,
-        ]);
+
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'api' => $api,
+            'searchModel'=>$searchModel
         ]);
     }
+
 
     public function actionCreate()
     {
@@ -116,38 +112,27 @@ class ExpressInvoiceController extends AdminController
             'url' => ['index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
-
+        $isNew = $model->isNewRecord;
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             $model->order_id = Yii::$app->request->get('order_id');
             //  print_r($model->attributes);die;
             if ($model->validate()) {
-
-                $doc = $model->create();
-                // CMS::dump($model->getCubeFormula());die;
-
-                if ($doc['success']) {
-                    if ($model->order_id) {
-                        $order = Order::findOne($model->order_id);
-                        if ($order) {
-
-                            $order->ttn = $doc['data'][0]['IntDocNumber'];
-                            $order->delivery_price = $doc['data'][0]['CostOnSite'];
-                            $order->save(false);
+                $model->save();
+               // CMS::dump($model->attributes);
+               // die;
+                if($model->_errors){
+                    foreach ($model->_errors as $error) {
+                        Yii::$app->session->addFlash('error', $error);
+                    }
+                }else{
+                    if($model->_warnings){
+                        foreach ($model->_warnings as $wrn) {
+                            Yii::$app->session->addFlash('warning', $wrn);
                         }
                     }
-                    $model->Ref = $doc['data'][0]['Ref'];
-                    // CMS::dump($model->attributes);
-                    $model->save();
-                    // die;
-                    foreach ($doc['warnings'] as $warn) {
-                        Yii::$app->session->addFlash('warning', $warn);
-                    }
+                    Yii::$app->session->addFlash('success', Yii::t('novaposhta/default', ($isNew)?'SUCCESS_CREATE_EXPRESS':'SUCCESS_UPDATE_EXPRESS', $model->IntDocNumber));
                     return $this->redirect(['index']);
-                } else {
-                    foreach ($doc['errors'] as $key => $error) {
-                        Yii::$app->session->addFlash('error', $doc['errorCodes'][$key] . ' - ' . $error);
-                    }
                 }
 
             } else {
@@ -163,33 +148,7 @@ class ExpressInvoiceController extends AdminController
     }
 
 
-    public function actionCreate2()
-    {
 
-        $api = Yii::$app->novaposhta;
-        $model = new \panix\mod\novaposhta\models\forms\ExpressInvoiceForm();
-        $post = Yii::$app->request->post();
-        if ($model->load($post)) {
-            if ($model->validate()) {
-                $result = $model->save();
-                if ($result) {
-                    return $this->redirect(['/admin/novaposhta/express-invoice']);
-                } else {
-                    CMS::dump($result);
-                    die('err');
-                }
-
-            } else {
-                print_r($model->getErrors());
-            }
-        }
-
-        return $this->render('create2', [
-            'model' => $model,
-            'api' => $api,
-            //'order'=>$order
-        ]);
-    }
 
     public function actionUpdate($id = false)
     {
@@ -200,6 +159,7 @@ class ExpressInvoiceController extends AdminController
         $data = $api->getDocument($id);
         if ($data['success']) {
             $result = $data['data'][0];
+           // CMS::dump($result);die;
             $this->pageName = 'Редактирование ' . $result['Number'];
             // CMS::dump($result);
             //  die;
@@ -228,7 +188,7 @@ class ExpressInvoiceController extends AdminController
             $model->ContactSender = $result['ContactSenderRef'];
             $model->SendersPhone = $result['SendersPhone'];
             $model->CityRecipient = $result['CityRecipientRef'];
-            $model->Recipient = $result['RecipientRef'];
+            $model->RecipientRef = $result['RecipientRef'];
             $model->RecipientAddress = $result['RecipientAddressRef'];
             $model->ContactRecipient = $result['ContactRecipientRef'];
             $model->RecipientsPhone = $result['RecipientsPhone'];
@@ -243,55 +203,37 @@ class ExpressInvoiceController extends AdminController
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['/novaposhta/admin/default/index']
         ];
-        $model->scenario = 'update';
+        $this->view->params['breadcrumbs'][] = [
+            'label' => Yii::t('novaposhta/default', 'EXPRESS_WAYBILL'),
+            'url' => ['index']
+        ];
+
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $post = Yii::$app->request->post();
-
+        $model->scenario = 'update';
         if ($model->load($post)) {
 
 
             if ($model->validate()) {
-                $params = [];
 
-                $params['Ref'] = $id;
-                $params['Description'] = $model->Description;
-                $params['PayerType'] = $model->PayerType;
-                $params['PaymentMethod'] = $model->PaymentMethod;
-                $params['DateTime'] = $model->DateTime;
-                $params['CargoType'] = $model->CargoType;
-                $params['VolumeGeneral'] = $model->VolumeGeneral;
-                $params['Weight'] = $model->Weight;
-                $params['ServiceType'] = $model->ServiceType;
-                $params['SeatsAmount'] = $model->SeatsAmount;
-                $params['Cost'] = $model->Cost;
-                $params['CitySender'] = $model->CitySender;
-                $params['Sender'] = $model->Sender;
-                $params['SenderAddress'] = $model->SenderAddress;
-                $params['ContactSender'] = $model->ContactSender;
-                $params['SendersPhone'] = $model->SendersPhone;
-                $params['CityRecipient'] = $model->CityRecipient;
-                $params['Recipient'] = $model->Recipient;
-                $params['RecipientAddress'] = $model->RecipientAddress;
-                $params['ContactRecipient'] = $model->ContactRecipient;
-                $params['RecipientsPhone'] = $model->RecipientsPhone;
-
-
-                $params['SeatsAmount'] = count($model->OptionsSeat);
-                $params['Weight'] = $model->getCalcTotalWeight();
-                $params['VolumeWeight'] = $model->getCalcTotalWeight();
-                // Объем груза в куб.м.
-                $params['VolumeGeneral'] = $model->getCalcCube();
-                if ($model->OptionsSeat) {
-                    $params['OptionsSeat'] = $model->OptionsSeat;
-
+                $model->save();
+                if($model->_errors){
+                    foreach ($model->_errors as $error) {
+                        Yii::$app->session->addFlash('error', $error);
+                    }
+                }else{
+                    if($model->_warnings){
+                        foreach ($model->_warnings as $wrn) {
+                            Yii::$app->session->addFlash('warning', $wrn);
+                        }
+                    }
+                    Yii::$app->session->addFlash('success', Yii::t('novaposhta/default', 'SUCCESS_UPDATE_EXPRESS', $model->IntDocNumber));
+                    return $this->redirect(['index']);
                 }
-                if ($model->BackwardDeliveryData)
-                    $params['BackwardDeliveryData'] = $model->BackwardDeliveryData;
-                //  CMS::dump($params['DateTime']);  die;
-                $response = $api->model('InternetDocument')->update($params);
-                // CMS::dump($response);die;
 
-                if ($response['success']) {
+               //  CMS::dump($model->_errors);die;
+
+               /* if ($response['success']) {
                     if ($model->order_id) {
                         $order = Order::findOne($model->order_id);
                         if ($order) {
@@ -315,7 +257,7 @@ class ExpressInvoiceController extends AdminController
                     foreach ($response['errors'] as $key => $error) {
                         Yii::$app->session->addFlash('error', $response['errorCodes'][$key] . ' - ' . $error);
                     }
-                }
+                }*/
 
             } else {
                 CMS::dump($model->errors);

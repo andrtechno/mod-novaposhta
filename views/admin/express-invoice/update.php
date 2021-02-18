@@ -51,7 +51,7 @@ $form = ActiveForm::begin([
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <h5><?= Html::encode($this->context->pageName) ?></h5>
+                <h5>Параметры отправления</h5>
             </div>
             <div class="card-body" style="background-color: #f6f6f6;">
 
@@ -61,7 +61,7 @@ $form = ActiveForm::begin([
 
             </div>
             <div class="card-footer text-center">
-                <?= Html::submitButton(Yii::t('app/default','UPDATE'), ['class' => 'btn btn-success']); ?>
+                <?= Html::submitButton(Yii::t('app/default', 'UPDATE'), ['class' => 'btn btn-success']); ?>
             </div>
         </div>
     </div>

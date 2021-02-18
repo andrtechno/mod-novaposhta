@@ -4,7 +4,11 @@ use panix\engine\Html;
 use panix\engine\grid\GridView;
 use panix\engine\widgets\Pjax;
 use panix\engine\CMS;
+use yii\widgets\ActiveForm;
 
+?>
+
+<?php
 Pjax::begin([
     'id' => 'pjax-grid-express-invoice',
 ]);
@@ -14,7 +18,7 @@ GridView::widget([
     'id' => 'grid-express-invoice',
     'tableOptions' => ['class' => 'table table-striped'],
     'dataProvider' => $dataProvider,
-    // 'filterModel' => $searchModel,
+    'filterModel' => $searchModel,
     'rowOptions' => function ($model, $index, $widget, $grid) {
         $date = new \DateTime($model['DateTime'], new \DateTimeZone('Europe/Kiev'));
         $now = (int)$date->format('U');
@@ -60,7 +64,7 @@ GridView::widget([
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
 
-                return '<strong>' . $model['RecipientContactPerson'] . '</strong> ' . Html::a(CMS::phone_format($model['RecipientContactPhone']), 'tel:' . $model['RecipientsPhone']) . '<br/>' . $model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
+                return '<strong>' . $model['ContactRecipient'] . '</strong> ' . Html::a(CMS::phone_format($model['RecipientsPhone']), 'tel:' . $model['RecipientsPhone']) . '<br/>' . $model['CityRecipient'] . ' &mdash; <br/>' . $model['RecipientAddress'];
 
             }
 
@@ -91,12 +95,12 @@ GridView::widget([
                         'title' => Yii::t('app/default', 'View'),
                         'class' => 'd-flex align-items-center btn btn-sm btn-outline-secondary']);
                 },
-                'delete' => function ($url, $model, $key) {
+                /*'delete' => function ($url, $model, $key) {
                     return Html::a(Html::icon('delete'), ['delete', 'id' => $model['Ref']], [
                         'title' => Yii::t('app/default', 'DELETE'),
                         'data-confirm' => 'yes?',
                         'class' => 'd-flex align-items-center btn btn-sm btn-outline-danger']);
-                },
+                },*/
                 'print' => function ($url, $model, $key) use ($api) {
 
                     // $result = $api->printDocument(['4eb9b43e-9432-11ea-8513-b88303659df5'],'pdf_link')

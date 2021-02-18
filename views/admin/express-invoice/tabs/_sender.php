@@ -30,28 +30,28 @@ if ($contacts['success']) {
     return $data['Description'] . ', ' . CMS::phone_format($data['Phones']);
 }));
 ?>
-<?= $form->field($model, 'CitySender')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'CitySenderRef')->widget(BootstrapSelect::class, [
     'items' => \panix\mod\novaposhta\models\Cities::getList(['IsBranch' => 1]),
     'jsOptions' => ['liveSearch' => true],
     'options' => ['data-size' => 10]
 ]); ?>
 
 
-<?= $form->field($model, 'SenderAddress')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'SenderAddressRef')->widget(BootstrapSelect::class, [
     'items' => \panix\mod\novaposhta\models\Warehouses::getList(Yii::$app->settings->get('novaposhta', 'sender_city')),
     'jsOptions' => ['liveSearch' => true],
     'options' => ['data-size' => 10]
 ]); ?>
 
 
-
+<?php if ($model->isNewRecord) { ?>
 <?= $form->field($model, 'SendersPhone')->widget(PhoneInput::class); ?>
-
+<?php } ?>
 
 <?php
 
 $this->registerJs("
-    $('#" . Html::getInputId($model, 'CitySender') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    $('#" . Html::getInputId($model, 'CitySenderRef') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
     console.log(clickedIndex, $(this).val(), previousValue);
     $(this).selectpicker('val');
     $.ajax({
@@ -61,7 +61,7 @@ $this->registerJs("
         success:function(data){
             console.log(data);
             
-            var warehouse = $('#" . Html::getInputId($model, 'SenderAddress') . "');
+            var warehouse = $('#" . Html::getInputId($model, 'SenderAddressRef') . "');
             warehouse.html('');
             $.each(data.items, function(key, value) {
                 warehouse.append('<option value=\"'+key+'\" selected=\"\">'+value+'</option>');

@@ -36,5 +36,6 @@ return [
     'TEMPLATES_SEAT' => 'Шаблоны мест',
     'DEPARTURE' => 'Отправление',
     'COMMON' => 'Общие',
-    'SUCCESS_UPDATE_EXPRESS' => 'ЭН <strong>{0}</strong> успешно изменена.'
+    'SUCCESS_UPDATE_EXPRESS' => 'ЭН <strong>{0}</strong> успешно изменена.',
+    'SUCCESS_CREATE_EXPRESS' => 'ЭН <strong>{0}</strong> успешно создана.'
 ];

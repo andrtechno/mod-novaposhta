@@ -25,7 +25,8 @@ use yii\validators\RequiredValidator;
  */
 class ExpressInvoice extends ActiveRecord
 {
-
+    public $_errors;
+    public $_warnings;
     const route = '/admin/novaposhta/default';
     const MODULE_ID = 'novaposhta';
     public $order;
@@ -36,11 +37,11 @@ class ExpressInvoice extends ActiveRecord
     public $recipient_MiddleName;
     public $recipient_LastName;
     //public $recipient_Phone;
-    public $CityRecipient;
+    // public $CityRecipient;
     public $recipient_Region;
     public $recipient_Email;
-    public $OptionsSeat;
-    public $BackwardDeliveryData;
+    // public $OptionsSeat;
+    // public $BackwardDeliveryData;
 
     //public $recipient_Warehouse;
 
@@ -63,9 +64,9 @@ class ExpressInvoice extends ActiveRecord
 
         $config = Yii::$app->settings->get('novaposhta');
         if ($config->serviceType) {
-            $this->ServiceType = $config->serviceType;
-            $this->CitySender = $config->sender_city;
-            $this->SenderAddress = $config->sender_warehouse;
+            $this->ServiceTypeRef = $config->serviceType;
+            $this->CitySenderRef = $config->sender_city;
+            $this->SenderAddressRef = $config->sender_warehouse;
             $this->SendersPhone = $config->sender_phone;
             $this->SeatsAmount = $config->seatsAmount;
         }
@@ -89,15 +90,15 @@ class ExpressInvoice extends ActiveRecord
                 $this->RecipientsPhone = $this->order->user_phone;
             if ($this->order->delivery_warehouse_ref) {
                 //$this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
-                $this->RecipientAddress = $this->order->delivery_warehouse_ref;
+                $this->RecipientAddressRef = $this->order->delivery_warehouse_ref;
             }
 
             if ($this->order->delivery_city_ref) {
                 $site = Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
                 if ($site) {
-                    $this->CityRecipient = $site->Description;
+                    $this->CityRecipientRef = $site->Description;
                 }
-                $this->CityRecipient = $this->order->delivery_city_ref;
+                $this->CityRecipientRef = $this->order->delivery_city_ref;
             }
 
 
@@ -177,7 +178,11 @@ class ExpressInvoice extends ActiveRecord
             }
         }
     }
+    public function getCalcCubeFormula($width,$height,$length)
+    {
+        return ($width * $height * $length) / 4000;
 
+    }
     public function getCalcCube()
     {
         $result = 0;
@@ -191,7 +196,7 @@ class ExpressInvoice extends ActiveRecord
     {
         $result = 0;
         foreach ($this->OptionsSeat as $index => $row) {
-            $result += $row['volumetricWeight'];
+            $result += $row['weight'];
         }
         return $result;
     }
@@ -218,30 +223,29 @@ class ExpressInvoice extends ActiveRecord
                 'CargoType',
                 // 'VolumeGeneral',
                 // 'Weight',
-                'ServiceType',
+                'ServiceTypeRef',
                 // 'SeatsAmount',
                 'Description',
                 'Cost',
-                'CitySender',
+                'CitySenderRef',
                 'Sender',
-                'SenderAddress',
+                'SenderAddressRef',
                 'ContactSender',
                 'SendersPhone',
                 // 'CityRecipient',
                 // 'Recipient',
-                'RecipientAddress',
                 // 'ContactRecipient',
                 'RecipientsPhone'
             ], 'required'],
-
+           // [['RecipientsPhone','SendersPhone'], 'panix\ext\telinput\PhoneInputValidator'],
 
             //получаель
             [[
                 //'recipient_Phone',
-                'CityRecipient',
+                'CityRecipientRef',
                 //'recipient_Region',
                 //'recipient_Email',
-                'RecipientAddress'
+                'RecipientAddressRef'
             ], 'required'],
 
 
@@ -251,52 +255,156 @@ class ExpressInvoice extends ActiveRecord
             [['recipient_Email'], 'email'],
             [['Description'], 'string', 'max' => 50],
             [['BackwardDeliveryData'], 'safe'],
-            [['order_id'], 'integer'],
+            [['order_id', 'IntDocNumber'], 'integer'],
+
+            //[['OptionsSeat', 'BackwardDeliveryData'], 'string'],
             //[['ref'], 'trim'],
         ];
     }
 
     public function scenarios()
     {
-        $scenarios['create'] = ['recipient_FirstName', 'recipient_LastName', 'CitySender', 'SenderAddress'];
+        $scenarios['create'] = ['recipient_FirstName', 'recipient_LastName', 'CitySenderRef', 'SenderAddressRef'];
         $scenarios['update'] = [
+            'RecipientsPhone',
             'OptionsSeat',
             'BackwardDeliveryData',
-            'RecipientAddress',
-            'CityRecipient',
+            'RecipientAddressRef',
+            'CityRecipientRef',
             'Description',
-            'CitySender',
-            'SenderAddress',
-            'ServiceType',
+            'CitySenderRef',
+            'SenderAddressRef',
+            'ServiceTypeRef',
             'DateTime',
             'CargoType',
             'PaymentMethod',
-            'PayerType'
+            'PayerType',
+            'Cost'
         ];
         return array_merge($scenarios, parent::scenarios());
     }
 
     /* private $old_ie;
+*/
+    public function beforeSave($insert)
+    {
+        /** @var Novaposhta $api */
+        $api = Yii::$app->novaposhta;
+        $this->Weight = $this->getCalcTotalWeight();
+        // Объем груза в куб.м.
+        $this->VolumeGeneral = $this->getCalcCube();
+        $this->SeatsAmount = count($this->OptionsSeat);
 
-     public function beforeSave($insert)
-     {
-         if ($insert) {
-             $this->old_ie = ExpressInvoice::find()->where(['order_id' => $this->order_id])->all();
-         }
-         return parent::beforeSave($insert);
-     }
+        if ($insert) {
 
-     public function afterSave($insert, $changedAttributes)
-     {
-         if ($insert) {
+            $response = $this->create();
+            if ($response['success']) {
+              //  CMS::dump($response['data']);die;
+                $this->Ref = $response['data'][0]['Ref'];
+            }
 
-             foreach ($this->old_ie as $ie) {
-              //   $ie->delete();
-             }
+            //CMS::dump($this->attributes);die;
+            // $this->old_ie = ExpressInvoice::find()->where(['order_id' => $this->order_id])->all();
+        } else {
+            $params = [];
 
-         }
-         parent::afterSave($insert, $changedAttributes);
-     }*/
+            $params['Ref'] = $this->Ref;
+            $params['Description'] = $this->Description;
+            $params['PayerType'] = $this->PayerType;
+            $params['PaymentMethod'] = $this->PaymentMethod;
+            $params['DateTime'] = $this->DateTime;
+            $params['CargoType'] = $this->CargoType;
+            $params['ServiceType'] = $this->ServiceTypeRef;
+            $params['Cost'] = $this->Cost;
+            $params['CitySender'] = $this->CitySenderRef;
+            $params['Sender'] = $this->Sender;
+            $params['SenderAddress'] = $this->SenderAddressRef;
+            $params['ContactSender'] = $this->ContactSender;
+            $params['SendersPhone'] = $this->SendersPhone;
+            $params['CityRecipient'] = $this->CityRecipientRef;
+            $params['Recipient'] = $this->RecipientRef;
+            $params['RecipientAddress'] = $this->RecipientAddressRef;
+            $params['ContactRecipient'] = $this->ContactRecipient;
+            $params['RecipientsPhone'] = $this->RecipientsPhone;
+            $params['SeatsAmount'] = count($this->OptionsSeat);
+            $params['Weight'] = $this->getCalcTotalWeight();
+            //$params['VolumeWeight'] = $this->getCalcTotalWeight();
+            // Объем груза в куб.м.
+            $params['VolumeGeneral'] = $this->getCalcCube();
+            if ($this->OptionsSeat) {
+                $params['OptionsSeat'] = $this->OptionsSeat;
+
+            }
+           // CMS::dump($this->BackwardDeliveryData);die;
+            if ($this->BackwardDeliveryData)
+                $params['BackwardDeliveryData'] = $this->BackwardDeliveryData;
+         //  CMS::dump($params);die;
+            $response = $api->model('InternetDocument')->update($params);
+
+
+        }
+
+        if ($response['success']) {
+
+
+            $data = $api->getDocument($this->Ref);
+          //  CMS::dump($data);die;
+            if ($data['success']) {
+                //  CMS::dump($data);die;
+                $this->ContactRecipient = $data['data'][0]['ContactRecipient'];
+                $this->ContactRecipientRef = $data['data'][0]['ContactRecipientRef'];
+
+                $this->CityRecipient = $data['data'][0]['CityRecipient'];
+                $this->RecipientAddress = $data['data'][0]['RecipientAddress'];
+
+
+                $this->CitySender = $data['data'][0]['CitySender'];
+                $this->SenderAddress = $data['data'][0]['SenderAddress'];
+
+                $this->RecipientRef = $data['data'][0]['RecipientRef'];
+
+                $this->ServiceType = $data['data'][0]['ServiceType'];
+
+                $this->CostOnSite = $data['data'][0]['CostOnSite'];
+            }else{
+                foreach ($data['errors'] as $key => $error) {
+                    $this->_errors[] = $data['errorCodes'][$key] . ' - ' . $error;
+                }
+            }
+
+
+
+            $this->IntDocNumber = $response['data'][0]['IntDocNumber'];
+
+            if ($this->order_id) {
+                $order = Order::findOne($this->order_id);
+                if ($order) {
+
+                    $order->ttn = $this->IntDocNumber;
+                    $order->delivery_price = $this->CostOnSite;
+                    $order->save(false);
+                }
+            }
+            if (isset($response['warnings'])) {
+                foreach ($response['warnings'] as $warn) {
+                    $this->_warnings[] = $warn;
+                }
+            }
+        } else {
+
+            foreach ($response['errors'] as $key => $error) {
+                $this->_errors[] = $response['errorCodes'][$key] . ' - ' . $error;
+            }
+
+            return false;
+        }
+        $this->BackwardDeliveryData = json_encode($this->BackwardDeliveryData);
+        $this->OptionsSeat = json_encode($this->OptionsSeat);
+        //CMS::dump($this->attributes);die;
+        return parent::beforeSave($insert);
+    }
+
+
 
     public function paymentFormsList()
     {
@@ -350,6 +458,12 @@ class ExpressInvoice extends ActiveRecord
 
 //CMS::dump($senderInfo);die;
         // print_r($this->DateTime);die;
+
+
+       // $this->Weight = $this->getCalcTotalWeight();
+        // Объем груза в куб.м.
+       // $this->VolumeGeneral = $this->getCalcCube();
+        //$this->SeatsAmount = count($this->OptionsSeat);
         $result = $api->newInternetDocument(
         // Данные отправителя
             [
@@ -366,9 +480,9 @@ class ExpressInvoice extends ActiveRecord
                 // 'City' => 'Белгород-Днестровский',
                 // Область отправления
                 // 'Region' => 'Одесская',
-                'CitySender' => $this->CitySender,//$city['data'][0]['Ref'],
+                'CitySender' => $this->CitySenderRef,//$city['data'][0]['Ref'],
                 // Отделение отправления по ID (в данном случае - в первом попавшемся)
-                'SenderAddress' => $this->SenderAddress,//$senderWarehouses['data'][0]['Ref'],
+                'SenderAddress' => $this->SenderAddressRef,//$senderWarehouses['data'][0]['Ref'],
                 // Отделение отправления по адресу
                 // 'Warehouse' => $senderWarehouses['data'][0]['DescriptionRu'],
             ],
@@ -380,18 +494,18 @@ class ExpressInvoice extends ActiveRecord
                 'MiddleName' => ($this->recipient_MiddleName) ? $this->recipient_MiddleName : '',
                 'LastName' => $this->recipient_LastName,
                 'Phone' => $this->RecipientsPhone,
-                'City' => $this->CityRecipient,
+                'City' => $this->CityRecipientRef,
                 'Region' => ($this->recipient_Region) ? $this->recipient_Region : '',
                 'Email' => ($this->recipient_Email) ? $this->recipient_Email : '',
                 //'Warehouse' => $this->RecipientAddress,
-                'CityRecipient' => $this->CityRecipient,
-                'RecipientAddress' => $this->RecipientAddress
+                'CityRecipient' => $this->CityRecipientRef,
+                'RecipientAddress' => $this->RecipientAddressRef
             ],
             [
                 // Дата отправления
                 'DateTime' => $this->DateTime,
                 // Тип доставки, дополнительно - getServiceTypes()
-                'ServiceType' => $this->ServiceType,
+                'ServiceType' => $this->ServiceTypeRef,
                 // Тип оплаты, дополнительно - getPaymentForms()
                 'PaymentMethod' => $this->PaymentMethod,
                 // Кто оплачивает за доставку
@@ -399,16 +513,16 @@ class ExpressInvoice extends ActiveRecord
                 // Стоимость груза в грн
                 'Cost' => $this->Cost,
                 // Кол-во мест
-                'SeatsAmount' => count($this->OptionsSeat),
+                'SeatsAmount' => $this->SeatsAmount,
                 // Описание груза
                 'Description' => $this->Description,
                 // Тип доставки, дополнительно - getCargoTypes
                 'CargoType' => $this->CargoType,
                 // Вес груза
-                'Weight' => $this->getCalcTotalWeight(),
-                'VolumeWeight' => $this->getCalcTotalWeight(),
+                'Weight' => $this->Weight,
+                'VolumeWeight' => $this->Weight,
                 // Объем груза в куб.м.
-                'VolumeGeneral' => $this->getCalcCube(),
+                'VolumeGeneral' => $this->VolumeGeneral,
 
 
                 //Параметр груза для каждого места отправления
@@ -420,16 +534,10 @@ class ExpressInvoice extends ActiveRecord
         );
 
         //  CMS::dump($this->attributes);die;
-        /*if ($result['success']) {
-            foreach ($result['warnings'] as $warning) {
-                Yii::$app->session->setFlash('warning', $warning);
-            }
-            $this->_invoice = $result['data'];
 
-            return $result['data'];
-        } else {
 
-        }*/
+
+
         return $result;
     }
 
@@ -438,20 +546,20 @@ class ExpressInvoice extends ActiveRecord
         return $this->hasOne(Order::class, ['id' => 'order_id']);
     }
 
-    public function beforeDelete()
+    public function afterDelete()
     {
         $delete = Yii::$app->novaposhta->model('InternetDocument')->delete(['DocumentRefs' => $this->Ref]);
 
-        if ($delete['success']) {
-            return parent::beforeDelete();
-        }
-        return false;
+
+        parent::afterDelete();
+
+
     }
 
     public function attributeLabels()
     {
         return array_merge([
-            'CityRecipient' => self::t('RECIPIENT_CITY'),
+            'CityRecipientRef' => self::t('RECIPIENT_CITY'),
             'recipient_LastName' => self::t('RECIPIENT_LASTNAME'),
             'recipient_FirstName' => self::t('RECIPIENT_FIRSTNAME'),
             'recipient_MiddleName' => self::t('RECIPIENT_MIDDLENAME'),

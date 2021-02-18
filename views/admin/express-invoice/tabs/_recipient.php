@@ -22,24 +22,29 @@ use panix\ext\bootstrapselect\BootstrapSelect;
     <?= $form->field($model, 'recipient_LastName'); ?>
     <?= $form->field($model, 'recipient_MiddleName'); ?>
     <?= $form->field($model, 'recipient_Email'); ?>
-<?php } ?>
+
 <?php
+    //todo: bug input tel format AND senderphone
 if ($model->RecipientsPhone) {
     $call = Html::a(Html::icon('phone') . ' Позвонить', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light']);
 } else {
     $call = '';
 }
 ?>
-
 <?= $form->field($model, 'RecipientsPhone', [
     'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}{call}\n{error}{endWrapper}",
     'parts' => [
         '{call}' => $call
     ]
-])->widget(PhoneInput::class); ?>
+])->widget(PhoneInput::class,[
+    'jsOptions' => [
+        'autoPlaceholder' => 'off'
+    ]
+]); ?>
+<?php } ?>
 
 
-<?= $form->field($model, 'CityRecipient')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'CityRecipientRef')->widget(BootstrapSelect::class, [
     'items' => ArrayHelper::map(Cities::find()->all(), 'Ref', 'DescriptionRu'),
     'jsOptions' => ['liveSearch' => true],
     'options' => ['data-size' => 10]
@@ -50,7 +55,7 @@ if ($model->RecipientsPhone) {
 
 
 
-<?= $form->field($model, 'RecipientAddress')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'RecipientAddressRef')->widget(BootstrapSelect::class, [
     'items' => Warehouses::getList($model->CityRecipient),
     'jsOptions' => ['liveSearch' => true],
     'options' => ['data-size' => 10]
@@ -61,7 +66,7 @@ if ($model->RecipientsPhone) {
 
 //CMS::dump($test);
 $this->registerJs("
-    $('#" . Html::getInputId($model, 'CityRecipient') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    $('#" . Html::getInputId($model, 'CityRecipientRef') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
     console.log(clickedIndex, $(this).val(), previousValue);
     $(this).selectpicker('val');
     $.ajax({
@@ -69,7 +74,7 @@ $this->registerJs("
         type:'GET',
         data:{id:$(this).val()},
         success:function(data){
-            var warehouse = $('#" . Html::getInputId($model, 'RecipientAddress') . "');
+            var warehouse = $('#" . Html::getInputId($model, 'RecipientAddressRef') . "');
             warehouse.html('');
             $.each(data.items, function(key, value) {
                 warehouse.append('<option value=\"'+key+'\" selected=\"\">'+value+'</option>');
