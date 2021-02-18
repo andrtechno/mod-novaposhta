@@ -2,6 +2,8 @@
 
 namespace panix\mod\novaposhta\models;
 
+use Yii;
+
 /**
  * This is the model class for table "novaposhta_errors".
  *
@@ -19,5 +21,26 @@ class Errors extends CommonActiveRecord
     public static function tableName()
     {
         return '{{%novaposhta__errors}}';
+    }
+
+    /**
+     * @param integer $code
+     * @return string
+     */
+    public static function run($code)
+    {
+        $find = parent::findOne(['MessageCode' => $code]);
+        return $find->getMessage();
+    }
+
+    public function getMessage()
+    {
+        $lang = Yii::$app->language;
+        if ($lang == 'ua' && $this->MessageDescriptionUA) {
+            return $this->MessageDescriptionUA;
+        } elseif ($lang == 'ru' && $this->MessageDescriptionRU) {
+            return $this->MessageDescriptionRU;
+        }
+        return $this->MessageText;
     }
 }

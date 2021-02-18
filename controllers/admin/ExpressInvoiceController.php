@@ -9,6 +9,7 @@ use panix\mod\cart\widgets\delivery\novaposhta\api\NovaPoshtaApi;
 use panix\mod\discounts\models\DiscountSearch;
 use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\Cities;
+use panix\mod\novaposhta\models\Errors;
 use panix\mod\novaposhta\models\ExpressInvoice;
 use panix\mod\novaposhta\models\ExpressInvoiceForm;
 use panix\mod\novaposhta\models\search\ExpressInvoiceSearch;

@@ -44,7 +44,7 @@ class NovaposhtaController extends ConsoleController
         Cities::getDb()->createCommand()->truncateTable(Cities::tableName())->execute();
         $cities = $this->api->getCities();
 
-        $s=[
+        $s = [
             'Description',
             'DescriptionRu',
             'Ref',
@@ -73,7 +73,7 @@ class NovaposhtaController extends ConsoleController
                 $data2[] = array_values($city);
 
 
-                $data[]=[
+                $data[] = [
                     $city['Description'],
                     $city['DescriptionRu'],
                     $city['Ref'],
@@ -102,6 +102,7 @@ class NovaposhtaController extends ConsoleController
             Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), $s, $data)->execute();
         }
     }
+
     /**
      * Update warehouses
      */
@@ -230,11 +231,27 @@ class NovaposhtaController extends ConsoleController
     }
 
     /**
+     * Recommend run one month for update db
+     * @throws \yii\db\Exception
+     */
+    public function actionErrors()
+    {
+        Errors::getDb()->createCommand()->truncateTable(Errors::tableName())->execute();
+        $response = $this->api->model('CommonGeneral')->method('getMessageCodeText')->execute();
+
+        if ($response['success']) {
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            Errors::getDb()->createCommand()->batchInsert(Errors::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
+
+    /**
      * Update references
      */
     public function actionReference()
     {
-
 
 
         //$typesOfPayers = $this->api->getTypesOfPayers();
@@ -261,10 +278,7 @@ class NovaposhtaController extends ConsoleController
             ->execute();
 
 
-
-
 //print_r($test);die;
-
 
 
         $this->cargoTypes();
@@ -275,7 +289,6 @@ class NovaposhtaController extends ConsoleController
         $this->tiresWheelsList();
         $this->typesOfCounterparties();
         $this->serviceTypes();
-       // $this->errors();
 
     }
 
@@ -387,21 +400,6 @@ class NovaposhtaController extends ConsoleController
                 $data[] = array_values($item);
             }
             OwnershipForms::getDb()->createCommand()->batchInsert(OwnershipForms::tableName(), array_keys($response['data'][0]), $data)->execute();
-        }
-    }
-
-
-    private function errors()
-    {
-        Errors::getDb()->createCommand()->truncateTable(Errors::tableName())->execute();
-        $response = $this->api->model('CommonGeneral')->method('getMessageCodeText')->execute();
-
-        if ($response['success']) {
-print_r($response['data']);die;
-            foreach ($response['data'] as $item) {
-                $data[] = array_values($item);
-            }
-            Errors::getDb()->createCommand()->batchInsert(Errors::tableName(), array_keys($response['data'][0]), $data)->execute();
         }
     }
 

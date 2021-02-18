@@ -2,19 +2,13 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
-use Mpdf\Tag\P;
+use Yii;
 use panix\engine\CMS;
-use panix\engine\plugins\content\codehighlight\CodeShortcodes;
 use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\counterparties\Counterparties;
 use panix\mod\novaposhta\models\forms\CounterpartyForm;
-use Yii;
-use panix\mod\pages\models\Pages;
-use panix\mod\pages\models\PagesSearch;
 use panix\engine\controllers\AdminController;
-use yii\web\Response;
-use yii\widgets\ActiveForm;
-
+use panix\mod\novaposhta\models\Errors;
 
 class CounterpartiesController extends AdminController
 {
@@ -174,32 +168,32 @@ class CounterpartiesController extends AdminController
                 } else {
 
                     if (in_array(20000100526, $result['errorCodes'])) { //FirstName
-                        $model->addError('FirstName', 'FirstName has invalid characters');
+                        $model->addError('FirstName', Errors::run(20000100526));
                     }
                     if (in_array(20000100532, $result['errorCodes'])) { //LastName
-                        $model->addError('LastName', 'LastName has invalid characters');
+                        $model->addError('LastName', Errors::run(20000100532));
                     }
                     if (in_array(20000100552, $result['errorCodes'])) { //Phone
-                        $model->addError('Phone', 'Phone invalid format');
+                        $model->addError('Phone', Errors::run(20000100552));
                     }
                     if (in_array(20000100516, $result['errorCodes'])) { //Phone
-                        $model->addError('CounterpartyType', 'CounterpartyType is not specified');
+                        $model->addError('CounterpartyType', Errors::run(20000100516));
                     }
                     if (in_array(20000900772, $result['errorCodes'])) { //Phone
-                        $model->addError('CounterpartyProperty', 'CounterpartyProperty is invalid');
+                        $model->addError('CounterpartyProperty', Errors::run(20000900772));
                     }
 
                     if (in_array(20000900760, $result['errorCodes'])) { //CompanyName
-                        $model->addError('CompanyName', 'CompanyName is invalid');
+                        $model->addError('CompanyName', Errors::run(20000900760));
                     }
                     if (in_array(20000900766, $result['errorCodes'])) { //LastName
-                        $model->addError('LastName', 'LastName must be empty');
+                        $model->addError('LastName', Errors::run(20000900766));
                     }
                     if (in_array(20000900756, $result['errorCodes'])) { //Phone
-                        $model->addError('Phone', 'Phone must be empty');
+                        $model->addError('Phone', Errors::run(20000900756));
                     }
                     if (in_array(20000200235, $result['errorCodes'])) { //OwnershipForm
-                        $model->addError('OwnershipForm', 'OwnershipForm is not specified');
+                        $model->addError('OwnershipForm', Errors::run(20000200235));
                     }
 
                     //   CMS::dump($result);die;

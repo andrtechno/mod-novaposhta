@@ -26,7 +26,8 @@ class m170501_125135_novaposhta_errors extends Migration
             'MessageDescriptionRU' => $this->text()->null(),
             'MessageDescriptionUA' => $this->text()->null(),
         ], $tableOptions);
-        $this->addPrimaryKey('MessageCode', Errors::tableName(), 'MessageCode');
+        //$this->addPrimaryKey('MessageCode', Errors::tableName(), 'MessageCode');
+        $this->createIndex('MessageCode', Errors::tableName(), 'MessageCode');
 
     }
 

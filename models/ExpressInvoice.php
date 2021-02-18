@@ -368,7 +368,7 @@ class ExpressInvoice extends ActiveRecord
                 $this->CostOnSite = $data['data'][0]['CostOnSite'];
             }else{
                 foreach ($data['errors'] as $key => $error) {
-                    $this->_errors[] = $data['errorCodes'][$key] . ' - ' . $error;
+                    $this->_errors[] = Errors::run($data['errorCodes'][$key]);
                 }
             }
 
@@ -393,7 +393,7 @@ class ExpressInvoice extends ActiveRecord
         } else {
 
             foreach ($response['errors'] as $key => $error) {
-                $this->_errors[] = $response['errorCodes'][$key] . ' - ' . $error;
+                $this->_errors[] = Errors::run($response['errorCodes'][$key]);
             }
 
             return false;
