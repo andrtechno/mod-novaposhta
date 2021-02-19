@@ -178,11 +178,13 @@ class ExpressInvoice extends ActiveRecord
             }
         }
     }
-    public function getCalcCubeFormula($width,$height,$length)
+
+    public function getCalcCubeFormula($width, $height, $length)
     {
         return ($width * $height * $length) / 4000;
 
     }
+
     public function getCalcCube()
     {
         $result = 0;
@@ -237,7 +239,7 @@ class ExpressInvoice extends ActiveRecord
                 // 'ContactRecipient',
                 'RecipientsPhone'
             ], 'required'],
-           // [['RecipientsPhone','SendersPhone'], 'panix\ext\telinput\PhoneInputValidator'],
+            // [['RecipientsPhone','SendersPhone'], 'panix\ext\telinput\PhoneInputValidator'],
 
             //получаель
             [[
@@ -299,7 +301,7 @@ class ExpressInvoice extends ActiveRecord
 
             $response = $this->create();
             if ($response['success']) {
-              //  CMS::dump($response['data']);die;
+                //  CMS::dump($response['data']);die;
                 $this->Ref = $response['data'][0]['Ref'];
             }
 
@@ -335,10 +337,10 @@ class ExpressInvoice extends ActiveRecord
                 $params['OptionsSeat'] = $this->OptionsSeat;
 
             }
-           // CMS::dump($this->BackwardDeliveryData);die;
+            // CMS::dump($this->BackwardDeliveryData);die;
             if ($this->BackwardDeliveryData)
                 $params['BackwardDeliveryData'] = $this->BackwardDeliveryData;
-         //  CMS::dump($params);die;
+            //  CMS::dump($params);die;
             $response = $api->model('InternetDocument')->update($params);
 
 
@@ -348,7 +350,7 @@ class ExpressInvoice extends ActiveRecord
 
 
             $data = $api->getDocument($this->Ref);
-          //  CMS::dump($data);die;
+            //  CMS::dump($data);die;
             if ($data['success']) {
                 //  CMS::dump($data);die;
                 $this->ContactRecipient = $data['data'][0]['ContactRecipient'];
@@ -366,12 +368,11 @@ class ExpressInvoice extends ActiveRecord
                 $this->ServiceType = $data['data'][0]['ServiceType'];
 
                 $this->CostOnSite = $data['data'][0]['CostOnSite'];
-            }else{
+            } else {
                 foreach ($data['errors'] as $key => $error) {
                     $this->_errors[] = Errors::run($data['errorCodes'][$key]);
                 }
             }
-
 
 
             $this->IntDocNumber = $response['data'][0]['IntDocNumber'];
@@ -393,7 +394,11 @@ class ExpressInvoice extends ActiveRecord
         } else {
 
             foreach ($response['errors'] as $key => $error) {
-                $this->_errors[] = Errors::run($response['errorCodes'][$key]);
+                if (isset($response['errorCodes'][$key])) {
+                    $this->_errors[] = Errors::run($response['errorCodes'][$key]);
+                } else {
+                    $this->_errors[] = $error;
+                }
             }
 
             return false;
@@ -403,7 +408,6 @@ class ExpressInvoice extends ActiveRecord
         //CMS::dump($this->attributes);die;
         return parent::beforeSave($insert);
     }
-
 
 
     public function paymentFormsList()
@@ -460,9 +464,9 @@ class ExpressInvoice extends ActiveRecord
         // print_r($this->DateTime);die;
 
 
-       // $this->Weight = $this->getCalcTotalWeight();
+        // $this->Weight = $this->getCalcTotalWeight();
         // Объем груза в куб.м.
-       // $this->VolumeGeneral = $this->getCalcCube();
+        // $this->VolumeGeneral = $this->getCalcCube();
         //$this->SeatsAmount = count($this->OptionsSeat);
         $result = $api->newInternetDocument(
         // Данные отправителя
@@ -536,8 +540,6 @@ class ExpressInvoice extends ActiveRecord
         //  CMS::dump($this->attributes);die;
 
 
-
-
         return $result;
     }
 
@@ -545,12 +547,13 @@ class ExpressInvoice extends ActiveRecord
     {
         return $this->hasOne(Order::class, ['id' => 'order_id']);
     }
-public function afterFind()
-{
-    $this->BackwardDeliveryData = json_decode($this->BackwardDeliveryData,true);
-    $this->OptionsSeat = json_decode($this->OptionsSeat,true);
-    parent::afterFind();
-}
+
+    public function afterFind()
+    {
+        $this->BackwardDeliveryData = json_decode($this->BackwardDeliveryData, true);
+        $this->OptionsSeat = json_decode($this->OptionsSeat, true);
+        parent::afterFind();
+    }
 
     public function afterDelete()
     {
