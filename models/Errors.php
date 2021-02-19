@@ -30,7 +30,7 @@ class Errors extends CommonActiveRecord
     public static function run($code)
     {
         $find = parent::findOne(['MessageCode' => $code]);
-        return $find->getMessage();
+        return ($find) ? $find->getMessage() : $code;
     }
 
     public function getMessage()
