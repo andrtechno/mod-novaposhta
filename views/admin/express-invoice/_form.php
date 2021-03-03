@@ -111,8 +111,13 @@ $(document).on('click','.btn-template',function(){
     var volumetricheight = $(this).data('volumetricheight');
     var volumetricwidth = $(this).data('volumetricwidth');
     var volumetriclength = $(this).data('volumetriclength');
+
     var message = $(this).data('message');
     
+    $('.btn-template:not(.btn-outline-danger)').removeClass('btn-secondary').addClass('btn-outline-secondary');
+    $(this).not('.btn-outline-danger').addClass('btn-secondary').removeClass('btn-outline-secondary');
+
+
     $('#expressinvoice-optionsseat-0-weight').val(weight);
     $('#expressinvoice-optionsseat-0-volumetricheight').val(volumetricheight);
     $('#expressinvoice-optionsseat-0-volumetricwidth').val(volumetricwidth);
