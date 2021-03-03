@@ -392,15 +392,15 @@ class ExpressInvoice extends ActiveRecord
                 }
             }
         } else {
-
-            foreach ($response['errors'] as $key => $error) {
-                if (isset($response['errorCodes'][$key])) {
-                    $this->_errors[] = Errors::run($response['errorCodes'][$key]);
-                } else {
-                    $this->_errors[] = $error;
+            if (isset($response['errors'])) {
+                foreach ($response['errors'] as $key => $error) {
+                    if (isset($response['errorCodes'][$key])) {
+                        $this->_errors[] = Errors::run($response['errorCodes'][$key]);
+                    } else {
+                        $this->_errors[] = $error;
+                    }
                 }
             }
-
             return false;
         }
         $this->BackwardDeliveryData = json_encode($this->BackwardDeliveryData);
