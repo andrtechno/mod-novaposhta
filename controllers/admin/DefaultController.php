@@ -30,8 +30,8 @@ class DefaultController extends AdminController
             }
 
         }
-
-        return $this->render('settings', ['model' => $model]);
+        $senderData = Yii::$app->novaposhta->getCounterparties('Sender', 1, '', '');
+        return $this->render('settings', ['model' => $model, 'senderData' => $senderData]);
     }
 
     public function actionIndex()

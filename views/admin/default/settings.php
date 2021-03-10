@@ -42,17 +42,17 @@ die;*/
                 echo panix\engine\bootstrap\Tabs::widget([
                     'items' => [
                         [
-                            'label' => Yii::t('novaposhta/default','COMMON'),
+                            'label' => Yii::t('novaposhta/default', 'COMMON'),
                             'content' => $this->render('_main', ['form' => $form, 'model' => $model]),
                             'active' => true,
                         ],
                         [
-                            'label' => Yii::t('novaposhta/default','DEPARTURE'),
-                            'content' => $this->render('_sender', ['form' => $form, 'model' => $model]),
+                            'label' => Yii::t('novaposhta/default', 'DEPARTURE'),
+                            'content' => $this->render('_sender', ['form' => $form, 'model' => $model, 'senderData' => $senderData]),
                             'headerOptions' => [],
                         ],
                         [
-                            'label' => Yii::t('novaposhta/default','TEMPLATES_SEAT'),
+                            'label' => Yii::t('novaposhta/default', 'TEMPLATES_SEAT'),
                             'content' => $this->render('_template', ['form' => $form, 'model' => $model]),
                             'headerOptions' => [],
                         ],
@@ -76,7 +76,9 @@ die;*/
                 <h5><?= $this->context->pageName ?></h5>
             </div>
             <div class="card-body">
-                <div class="alert alert-info m-3">Для постоянного обновление базы новой почты, необходимо запустить CRON задачи</div>
+                <div class="alert alert-info m-3">Для постоянного обновление базы новой почты, необходимо запустить CRON
+                    задачи
+                </div>
                 <table class="table table-striped">
                     <tr>
                         <th>Комманда</th>
