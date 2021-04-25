@@ -28,8 +28,9 @@ class m170908_125125_novaposhta_area extends Migration
             'Description' => $this->string(255)->null(),
 
         ], $tableOptions);
-
-        $this->addPrimaryKey('Ref', Area::tableName(), 'Ref');
+        if ($this->db->driverName != 'pgsql') {
+            $this->addPrimaryKey('Ref', Area::tableName(), 'Ref');
+        }
         //$this->createIndex('Ref', Area::tableName(), 'Ref');
 
     }

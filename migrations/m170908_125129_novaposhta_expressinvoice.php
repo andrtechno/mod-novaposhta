@@ -26,20 +26,15 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
             'order_id' => $this->integer()->unsigned()->null(),
 
 
-            'IntDocNumber'=>$this->integer(11)->unsigned()->null()->comment('afterSave'),
-            'CostOnSite'=>$this->money(10,2)->null()->comment('afterSave'),
-            'ContactRecipient'=>$this->string(255)->null()->comment('afterSave'),
-            'CityRecipient'=>$this->string(255)->null()->comment('afterSave'),
-            'RecipientAddress'=>$this->string(255)->null()->comment('afterSave'),
-            'CitySender'=>$this->string(255)->null()->comment('afterSave'),
-            'SenderAddress'=>$this->string(255)->null()->comment('afterSave'),
-
+            'IntDocNumber' => $this->integer(11)->unsigned()->null()->comment('afterSave'),
+            'CostOnSite' => $this->money(10, 2)->null()->comment('afterSave'),
+            'ContactRecipient' => $this->string(255)->null()->comment('afterSave'),
+            'CityRecipient' => $this->string(255)->null()->comment('afterSave'),
+            'RecipientAddress' => $this->string(255)->null()->comment('afterSave'),
+            'CitySender' => $this->string(255)->null()->comment('afterSave'),
+            'SenderAddress' => $this->string(255)->null()->comment('afterSave'),
             'OptionsSeat' => $this->text()->null(),
             'BackwardDeliveryData' => $this->text()->null(),
-
-
-
-
             'PayerType' => $this->string(36)->null(),
             'PaymentMethod' => $this->string(36)->null(),
             'DateTime' => $this->string(36)->null(),
@@ -64,8 +59,9 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
 
 
         ], $tableOptions);
-
-        $this->addPrimaryKey('Ref', ExpressInvoice::tableName(), 'Ref');
+        if ($this->db->driverName != 'pgsql') {
+            $this->addPrimaryKey('Ref', ExpressInvoice::tableName(), 'Ref');
+        }
         //$this->createIndex('Ref', ExpressInvoice::tableName(), 'Ref');
         $this->createIndex('order_id', ExpressInvoice::tableName(), 'order_id');
 

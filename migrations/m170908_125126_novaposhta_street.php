@@ -29,8 +29,9 @@ class m170908_125126_novaposhta_street extends Migration
             'StreetsType' => $this->string(255)->null(),
 
         ], $tableOptions);
-
-        $this->addPrimaryKey('Ref', Street::tableName(), 'Ref');
+        if ($this->db->driverName != 'pgsql') {
+            $this->addPrimaryKey('Ref', Street::tableName(), 'Ref');
+        }
         //$this->createIndex('Ref', Street::tableName(), 'Ref');
         $this->createIndex('StreetsTypeRef', Street::tableName(), 'StreetsTypeRef');
 

@@ -38,7 +38,7 @@ class m170908_125129_novaposhta_reference extends Migration
             'TypeOfPacking' => $this->string(36)->null(),
             'PackagingForPlace' => $this->boolean()->null(),
         ], $tableOptions);
-        $this->addPrimaryKey('Ref', Packs::tableName(), 'Ref');
+
         //$this->createIndex('Ref', Packs::tableName(), 'Ref');
 
         $this->createTable(Pallets::tableName(), [
@@ -50,7 +50,8 @@ class m170908_125129_novaposhta_reference extends Migration
 
 
         //$this->createIndex('Ref', Pallets::tableName(), 'Ref');
-        $this->addPrimaryKey('Ref', Pallets::tableName(), 'Ref');
+
+
 
 
         $this->createTable(CargoTypes::tableName(), [
@@ -59,7 +60,7 @@ class m170908_125129_novaposhta_reference extends Migration
         ], $tableOptions);
 
         //$this->createIndex('Ref', CargoTypes::tableName(), 'Ref');
-        $this->addPrimaryKey('Ref', CargoTypes::tableName(), 'Ref');
+
 
         $this->createTable(TypesOfPayersForRedelivery::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
@@ -86,7 +87,7 @@ class m170908_125129_novaposhta_reference extends Migration
             'Ref' => $this->string(36)->null(),
             'Description' => $this->string(36)->null(),
         ], $tableOptions);
-        $this->addPrimaryKey('Ref', TypesCounterparties::tableName(), 'Ref');
+
 
 
         $this->createTable(ServiceTypes::tableName(), [
@@ -94,7 +95,7 @@ class m170908_125129_novaposhta_reference extends Migration
             'Description' => $this->string(36)->null(),
         ], $tableOptions);
 
-        $this->addPrimaryKey('Ref', ServiceTypes::tableName(), 'Ref');
+
 
         $this->createTable(OwnershipForms::tableName(), [
             'Ref' => $this->string(36)->null(),
@@ -102,8 +103,15 @@ class m170908_125129_novaposhta_reference extends Migration
             'FullName' => $this->string(255)->null(),
         ], $tableOptions);
 
-        $this->addPrimaryKey('Ref', OwnershipForms::tableName(), 'Ref');
 
+        if ($this->db->driverName != 'pgsql') {
+            $this->addPrimaryKey('Ref', Pallets::tableName(), 'Ref');
+            $this->addPrimaryKey('Ref', OwnershipForms::tableName(), 'Ref');
+            $this->addPrimaryKey('Ref', ServiceTypes::tableName(), 'Ref');
+            $this->addPrimaryKey('Ref', TypesCounterparties::tableName(), 'Ref');
+            $this->addPrimaryKey('Ref', CargoTypes::tableName(), 'Ref');
+            $this->addPrimaryKey('Ref', Packs::tableName(), 'Ref');
+        }
 
     }
 

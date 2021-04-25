@@ -38,9 +38,9 @@ class m170908_125123_novaposhta_counterparties extends Migration
             'CityDescription' => $this->string(255)->null(),
 
         ], $tableOptions);
-
-        $this->addPrimaryKey('Ref', Counterparties::tableName(), 'Ref');
-
+        if ($this->db->driverName != 'pgsql') {
+            $this->addPrimaryKey('Ref', Counterparties::tableName(), 'Ref');
+        }
     }
 
     public function down()

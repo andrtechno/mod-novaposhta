@@ -59,8 +59,9 @@ class m170908_125124_novaposhta_warehouses extends Migration
             'Direct' => $this->string(255)->null(),
         ], $tableOptions);
 
-
-        $this->addPrimaryKey('Ref', Warehouses::tableName(), 'Ref');
+        if ($this->db->driverName != 'pgsql') {
+            $this->addPrimaryKey('Ref', Warehouses::tableName(), 'Ref');
+        }
         $this->createIndex('CityRef', Warehouses::tableName(), 'CityRef');
         //$this->createIndex('Ref', Warehouses::tableName(), 'Ref');
         $this->createIndex('SettlementRef', Warehouses::tableName(), 'SettlementRef');
