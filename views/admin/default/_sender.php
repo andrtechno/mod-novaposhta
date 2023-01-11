@@ -7,7 +7,7 @@ use panix\engine\CMS;
 use panix\mod\novaposhta\models\Area;
 use panix\mod\novaposhta\models\ServiceTypes;
 use panix\mod\novaposhta\models\Warehouses;
-use panix\ext\bootstrapselect\BootstrapSelect;
+use panix\ext\select2\Select2;
 use panix\ext\telinput\PhoneInput;
 
 /**
@@ -41,15 +41,13 @@ if ($contacts['success']) {
 <?= $form->field($model, 'sender_phone')->widget(PhoneInput::class, ['value' => $contacts['data'][0]['Phones']]); ?>
 <?php // $form->field($model, 'sender_phone')->textInput(['value' => $contacts['data'][0]['Phones']]); ?>
 <?= $form->field($model, 'sender_area')->dropDownList(Area::getList()); ?>
-<?= $form->field($model, 'sender_city')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'sender_city')->widget(Select2::class, [
     'items' => Cities::getList(['IsBranch' => 1]),
-    'jsOptions' => ['liveSearch' => true]
 ]); ?>
 
 
-<?= $form->field($model, 'sender_warehouse')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'sender_warehouse')->widget(Select2::class, [
     'items' => [],
-    'jsOptions' => ['liveSearch' => true]
 ]); ?>
 <?= $form->field($model, 'seatsAmount') ?>
 

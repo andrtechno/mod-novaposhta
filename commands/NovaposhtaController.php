@@ -15,6 +15,7 @@ use panix\mod\novaposhta\models\TiresWheels;
 use panix\mod\novaposhta\models\TypesCounterparties;
 use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
 use panix\mod\novaposhta\models\Warehouses;
+use panix\mod\novaposhta\models\WarehouseTypes;
 use Yii;
 use panix\engine\console\controllers\ConsoleController;
 use yii\helpers\Console;
@@ -37,6 +38,33 @@ class NovaposhtaController extends ConsoleController
     }
 
     /**
+     * First LOAD
+     */
+    public function actionIndex()
+    {
+        $result = $this->api
+            ->model('Address')
+            ->method('getWarehouseTypes')
+            ->execute();
+
+        WarehouseTypes::getDb()->createCommand()->truncateTable(WarehouseTypes::tableName())->execute();
+        $fields = ['Ref', 'Description', 'DescriptionRu'];
+        if ($result['success']) {
+            $data = [];
+            foreach ($result['data'] as $city) {
+                $data[] = [
+                    $city['Ref'],
+                    $city['Description'],
+                    $city['DescriptionRu']
+                ];
+
+            }
+            WarehouseTypes::getDb()->createCommand()->batchInsert(WarehouseTypes::tableName(), $fields, $data)->execute();
+        }
+
+    }
+
+    /**
      * Update cities
      */
     public function actionCities()
@@ -44,7 +72,7 @@ class NovaposhtaController extends ConsoleController
         Cities::getDb()->createCommand()->truncateTable(Cities::tableName())->execute();
         $cities = $this->api->getCities();
 
-        $s = [
+        $fields = [
             'Description',
             'DescriptionRu',
             'Ref',
@@ -70,9 +98,6 @@ class NovaposhtaController extends ConsoleController
         if ($cities['success']) {
             $data = [];
             foreach ($cities['data'] as $k => $city) {
-                $data2[] = array_values($city);
-
-
                 $data[] = [
                     $city['Description'],
                     $city['DescriptionRu'],
@@ -99,7 +124,7 @@ class NovaposhtaController extends ConsoleController
 
             }
 
-            Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), $s, $data)->execute();
+            Cities::getDb()->createCommand()->batchInsert(Cities::tableName(), $fields, $data)->execute();
         }
     }
 
@@ -112,14 +137,18 @@ class NovaposhtaController extends ConsoleController
 
         Warehouses::getDb()->createCommand()->truncateTable(Warehouses::tableName())->execute();
 
+
         $result = $this->api
             ->model('Address')
-            ->method('getWarehouses')
+            ->method('getWarehouses')->params([
+                'TypeOfWarehouseRef' => '841339c7-591a-42e2-8233-7a0a00f0ed6f' //Почтовое отделение
+            ])
             ->execute();
 
         $list = [];
         $total = count($result['data']);
         $i = 0;
+
         foreach ($result['data'] as $d) {
             $i++;
             $list[] = [

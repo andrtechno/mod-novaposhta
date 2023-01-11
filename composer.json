@@ -15,7 +15,7 @@
     "require": {
         "panix/engine": "*",
         "panix/wgt-multiple-input": "*",
-        "panix/wgt-bootstrap-select": "*"
+        "panix/wgt-select2": "*"
     },
     "autoload": {
         "psr-4": {
