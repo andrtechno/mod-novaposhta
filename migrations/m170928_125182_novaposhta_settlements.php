@@ -43,14 +43,14 @@ class m170928_125182_novaposhta_settlements extends Migration
             'IndexCOATSU1' => $this->string(36)->null(),
             'Index1' => $this->string(10)->null(),
             'Index2' => $this->string(10)->null(),
-            'Delivery1' => $this->string(36)->null(),
-            'Delivery2' => $this->string(36)->null(),
-            'Delivery3' => $this->string(36)->null(),
-            'Delivery4' => $this->string(36)->null(),
-            'Delivery5' => $this->string(36)->null(),
-            'Delivery6' => $this->string(36)->null(),
-            'Delivery7' => $this->string(36)->null(),
-            'Warehouse' => $this->string(36)->null(),
+            'Delivery1' => $this->boolean()->null(),
+            'Delivery2' => $this->boolean()->null(),
+            'Delivery3' => $this->boolean()->null(),
+            'Delivery4' => $this->boolean()->null(),
+            'Delivery5' => $this->boolean()->null(),
+            'Delivery6' => $this->boolean()->null(),
+            'Delivery7' => $this->boolean()->null(),
+            'Warehouse' => $this->boolean()->null(),
 
         ], $tableOptions);
 
