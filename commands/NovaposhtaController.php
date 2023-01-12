@@ -11,6 +11,7 @@ use panix\mod\novaposhta\models\OwnershipForms;
 use panix\mod\novaposhta\models\Packs;
 use panix\mod\novaposhta\models\Pallets;
 use panix\mod\novaposhta\models\ServiceTypes;
+use panix\mod\novaposhta\models\Settlements;
 use panix\mod\novaposhta\models\TiresWheels;
 use panix\mod\novaposhta\models\TypesCounterparties;
 use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
@@ -42,6 +43,61 @@ class NovaposhtaController extends ConsoleController
      */
     public function actionIndex()
     {
+
+        $result2 = $this->api
+            ->model('AddressGeneral')
+            ->method('getSettlements')
+            ->execute();
+        Settlements::getDb()->createCommand()->truncateTable(Settlements::tableName())->execute();
+        $fields = ['Ref', 'Description', 'DescriptionRu', 'DescriptionTranslit', 'Latitude', 'Longitude', 'SettlementType', 'SettlementTypeDescription', 'SettlementTypeDescriptionRu', 'SettlementTypeDescriptionTranslit',
+            'Region', 'RegionsDescription', 'RegionsDescriptionRu', 'RegionsDescriptionTranslit', 'Area',
+            'AreaDescription', 'AreaDescriptionRu', 'AreaDescriptionTranslit', 'IndexCOATSU1',
+            'Index1', 'Index2', 'Delivery1', 'Delivery2', 'Delivery3', 'Delivery4', 'Delivery5', 'Delivery6', 'Delivery7',
+            'Warehouse'];
+
+
+        if ($result2['success']) {
+            $data = [];
+            foreach ($result2['data'] as $settlement) {
+                $data[] = [
+                    $settlement['Ref'],
+                    $settlement['Description'],
+                    $settlement['DescriptionRu'],
+                    $settlement['DescriptionTranslit'],
+                    $settlement['Latitude'],
+                    $settlement['Longitude'],
+                    $settlement['SettlementType'],
+                    $settlement['SettlementTypeDescription'],
+                    $settlement['SettlementTypeDescriptionRu'],
+                    $settlement['SettlementTypeDescriptionTranslit'],
+                    $settlement['Region'],
+                    $settlement['RegionsDescription'],
+                    $settlement['RegionsDescriptionRu'],
+                    $settlement['RegionsDescriptionTranslit'],
+                    $settlement['Area'],
+                    $settlement['AreaDescription'],
+                    $settlement['AreaDescriptionRu'],
+                    $settlement['AreaDescriptionTranslit'],
+                    $settlement['IndexCOATSU1'],
+                    $settlement['Index1'],
+                    $settlement['Index2'],
+                    $settlement['Delivery1'],
+                    $settlement['Delivery2'],
+                    $settlement['Delivery3'],
+                    $settlement['Delivery4'],
+                    $settlement['Delivery5'],
+                    $settlement['Delivery6'],
+                    $settlement['Delivery7'],
+                    $settlement['Warehouse'],
+                ];
+
+            }
+            Settlements::getDb()->createCommand()->batchInsert(Settlements::tableName(), $fields, $data)->execute();
+        }
+
+
+        print_r($result2);
+        die;
         $result = $this->api
             ->model('Address')
             ->method('getWarehouseTypes')
