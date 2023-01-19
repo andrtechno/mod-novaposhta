@@ -37,7 +37,17 @@ class NovaposhtaController extends ConsoleController
         $this->api = Yii::$app->novaposhta;
         return parent::beforeAction($action);
     }
+    public function actionIsWh()
+    {
+        $cities = Cities::find()->limit(10000)->where(['warehouse'=>0])->all();
+        foreach($cities as $c){
+            if($c->getWarehouses()->count()){
+                $c->warehouse = 1;
+                $c->save(false);
+            }
 
+        }
+    }
     /**
      * First LOAD
      */
