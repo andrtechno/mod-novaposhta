@@ -88,19 +88,32 @@ class ExpressInvoice extends ActiveRecord
             $this->order = Order::findModel(Yii::$app->request->get('order_id'));
             if ($this->order->user_phone)
                 $this->RecipientsPhone = $this->order->user_phone;
-            if ($this->order->delivery_warehouse_ref) {
-                //$this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
-                $this->RecipientAddressRef = $this->order->delivery_warehouse_ref;
-            }
 
-            if ($this->order->delivery_city_ref) {
-                $site = Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
-                if ($site) {
-                    $this->CityRecipientRef = $site->Description;
+            $data = $this->order->getDeliveryData();
+            if ($data['type'] == 'warehouse') {
+                if ($data['warehouse_ref']) {
+                    $this->RecipientAddressRef = $data['warehouse_ref'];
+                    //$this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
+                    // $this->RecipientAddressRef = $this->order->delivery_warehouse_ref;
+                }else{
+
                 }
-                $this->CityRecipientRef = $this->order->delivery_city_ref;
-            }
 
+                if ($data['city_ref']) {
+                    $site = Cities::findOne(['Ref' => $data['city_ref']]);
+                    if ($site) {
+                        $this->CityRecipientRef = $site->getDescription();
+                    }
+                    $this->CityRecipientRef = $data['city_ref'];
+                }
+                if ($data['region_ref']) {
+                    $region = Area::findOne(['Ref' => $data['region_ref']]);
+                    if ($region) {
+                        $this->RecipientRegionRef = $region->getDescription();
+                    }
+                    $this->RecipientRegionRef = $data['region_ref'];
+                }
+            }
 
             foreach ($this->order->products as $product) {
                 $original = $product->originalProduct;
@@ -120,8 +133,6 @@ class ExpressInvoice extends ActiveRecord
             $this->recipient_FirstName = $this->order->user_name;
             $this->recipient_LastName = $this->order->user_lastname;
             $this->recipient_Email = $this->order->user_email;
-            //$this->recipient_City = Cities::findOne(['Ref' => $this->order->delivery_city_ref]);
-            // $this->CityRecipient = $this->order->delivery_city_ref;
 
             $this->CargoType = 'Parcel';
             if ($this->order->products) {
