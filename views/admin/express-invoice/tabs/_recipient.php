@@ -6,7 +6,7 @@ use panix\engine\Html;
 use yii\helpers\ArrayHelper;
 use panix\mod\novaposhta\models\Warehouses;
 use panix\mod\novaposhta\models\Cities;
-use panix\ext\bootstrapselect\BootstrapSelect;
+use panix\ext\select2\Select2;
 
 /**
  * @var \yii\web\View $this
@@ -43,22 +43,27 @@ if ($model->RecipientsPhone) {
 ]); ?>
 <?php } ?>
 
+<?php //echo $form->field($model, 'recipient_Region'); ?>
+<?= $form->field($model, 'RecipientRegionRef')->widget(Select2::class, [
+    'items' => ArrayHelper::map(\panix\mod\novaposhta\models\Area::find()->all(), 'Ref', 'DescriptionRu'),
+    'clientOptions' => [],
+    //'options' => []
+]); ?>
 
-<?= $form->field($model, 'CityRecipientRef')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'CityRecipientRef')->widget(Select2::class, [
     'items' => ArrayHelper::map(Cities::find()->all(), 'Ref', 'DescriptionRu'),
-    'jsOptions' => ['liveSearch' => true],
-    'options' => ['data-size' => 10]
+    'clientOptions' => [],
+    //'options' => []
 ]); ?>
 
 
-<?= $form->field($model, 'recipient_Region'); ?>
 
 
 
-<?= $form->field($model, 'RecipientAddressRef')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'RecipientAddressRef')->widget(Select2::class, [
     'items' => Warehouses::getList($model->CityRecipient),
-    'jsOptions' => ['liveSearch' => true],
-    'options' => ['data-size' => 10]
+    'clientOptions' => [],
+    //'options' => []
 ]); ?>
 <?php
 

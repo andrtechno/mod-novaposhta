@@ -1,9 +1,11 @@
 <?php
+
 use panix\engine\CMS;
-use panix\ext\bootstrapselect\BootstrapSelect;
+use panix\ext\select2\Select2;
 use panix\ext\telinput\PhoneInput;
 use yii\helpers\ArrayHelper;
 use panix\engine\Html;
+
 /**
  * @var \yii\web\View $this
  * @var \yii\bootstrap4\ActiveForm $form
@@ -12,15 +14,22 @@ use panix\engine\Html;
 
 
 $senderData = $api->getCounterparties('Sender', 1, '', '');
-//CMS::dump($senderData['data']);
-$contacts = $api->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
-$contactsList = [];
-if ($contacts['success']) {
-    foreach ($contacts['data'] as $contact) {
-        $contactsList[$contact['Ref']] = $contact;
-    }
-}
 
+if ($senderData['success']) {
+
+
+    $contacts = $api->getCounterpartyContactPersons($senderData['data'][0]['Ref']);
+    $contactsList = [];
+    if ($contacts['success']) {
+        foreach ($contacts['data'] as $contact) {
+            $contactsList[$contact['Ref']] = $contact;
+        }
+    }
+
+
+}else{
+    throw new ErrorException($senderData['errors'][0]);
+}
 
 ?>
 
@@ -30,22 +39,22 @@ if ($contacts['success']) {
     return $data['Description'] . ', ' . CMS::phone_format($data['Phones']);
 }));
 ?>
-<?= $form->field($model, 'CitySenderRef')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'CitySenderRef')->widget(Select2::class, [
     'items' => \panix\mod\novaposhta\models\Cities::getList(['IsBranch' => 1]),
-    'jsOptions' => ['liveSearch' => true],
-    'options' => ['data-size' => 10]
+    'clientOptions' => [],
+    'options' => []
 ]); ?>
 
 
-<?= $form->field($model, 'SenderAddressRef')->widget(BootstrapSelect::class, [
+<?= $form->field($model, 'SenderAddressRef')->widget(Select2::class, [
     'items' => \panix\mod\novaposhta\models\Warehouses::getList(Yii::$app->settings->get('novaposhta', 'sender_city')),
-    'jsOptions' => ['liveSearch' => true],
-    'options' => ['data-size' => 10]
+    'clientOptions' => [],
+    'options' => []
 ]); ?>
 
 
 <?php if ($model->isNewRecord) { ?>
-<?= $form->field($model, 'SendersPhone')->widget(PhoneInput::class); ?>
+    <?= $form->field($model, 'SendersPhone')->widget(PhoneInput::class); ?>
 <?php } ?>
 
 <?php

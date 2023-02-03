@@ -56,6 +56,7 @@ class m170908_125129_novaposhta_expressinvoice extends Migration
             'RecipientAddressRef' => $this->string(36)->null(),
             'ContactRecipientRef' => $this->string(36)->null(),
             'RecipientsPhone' => $this->string(36)->null(),
+            'RecipientRegionRef' => $this->string(36)->null(),
 
 
         ], $tableOptions);
