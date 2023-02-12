@@ -96,7 +96,7 @@ class Module extends WebModule implements BootstrapInterface
     }
     public function getAdminSidebar()
     {
-        return $this->adminMenu['modules']['items'][0]['items'];
+        return Yii::$app->findMenu['modules']['items'];
     }
 
     public function getInfo()
