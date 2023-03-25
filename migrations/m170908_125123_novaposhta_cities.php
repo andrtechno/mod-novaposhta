@@ -43,7 +43,7 @@ class m170908_125123_novaposhta_cities extends Migration
             'Postomat' => $this->tinyInteger(1)->null(),
             'AreaDescription' => $this->string(255)->null(),
             'AreaDescriptionRu' => $this->string(255)->null(),
-            'warehouse' => $this->boolean()->defaultValue(0),
+            'warehouse' => $this->boolean()->defaultValue(false),
         ], $tableOptions);
 
         $this->addPrimaryKey('Ref', Cities::tableName(), 'Ref');
