@@ -10,6 +10,7 @@ use panix\engine\grid\GridView;
  * @var \panix\mod\novaposhta\models\Cities $model
  */
 
+//CMS::dump($model->streets);
 
 ?>
 
@@ -17,18 +18,15 @@ use panix\engine\grid\GridView;
         <div class="col-lg-5">
             <div class="card">
                 <div class="card-header">
-                    <h5><?= $this->context->pageName; ?> <span class="float-right">Статус: <span
-                                    class="h6 badge badge-secondary">123</span></span></h5>
+                    <h5><?= $this->context->pageName; ?></h5>
                 </div>
                 <div class="card-body p-3">
                     <?php CMS::dump($model->attributes); ?>
-
                 </div>
             </div>
         </div>
         <div class="col-lg-7">
             <?php
-
 
             $searchModel = new WarehousesSearch();
             $dataProvider = $searchModel->search(\yii\helpers\ArrayHelper::merge(Yii::$app->request->getQueryParams(), ['WarehousesSearch' => ['CityRef' => $model->Ref]]));

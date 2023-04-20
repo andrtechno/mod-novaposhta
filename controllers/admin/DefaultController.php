@@ -2,6 +2,7 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
+use Yii;
 use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\OwnershipForms;
 use panix\mod\novaposhta\models\Packs;
@@ -12,7 +13,6 @@ use panix\mod\novaposhta\models\TiresWheels;
 use panix\mod\novaposhta\models\TypesCounterparties;
 use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
 use panix\mod\novaposhta\models\WarehouseTypes;
-use Yii;
 use panix\mod\novaposhta\models\SettingsForm;
 use panix\engine\controllers\AdminController;
 
@@ -67,6 +67,7 @@ class DefaultController extends AdminController
 
     public function actionAddReferences()
     {
+
         CargoTypes::loadAll();
         Pallets::loadAll();
         Packs::loadAll();

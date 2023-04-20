@@ -74,10 +74,12 @@ class Cities extends ActiveRecord
     {
         return $this->hasMany(Warehouses::class, ['CityRef' => 'Ref']);
     }
+
     public function getArea()
     {
         return $this->hasOne(Area::class, ['Ref' => 'Area']);
     }
+
     public static function getList($wheres = [])
     {
         $result = [];
@@ -85,7 +87,7 @@ class Cities extends ActiveRecord
         if ($wheres) {
             $query->where($wheres);
         }
-        $query->orderBy(['Description'=>SORT_ASC]);
+        $query->orderBy(['Description' => SORT_ASC]);
         $list = $query->asArray()->all();
         if ($list) {
             foreach ($list as $item) {
@@ -102,6 +104,20 @@ class Cities extends ActiveRecord
 
 
         return $result;
+    }
+
+    public function getStreets()
+    {
+        $response = Yii::$app->novaposhta->model('Address')
+            ->method('getStreet')
+            ->params(['CityRef' => $this->Ref,'Page'=>1])
+            ->execute();
+
+        if ($response['success']) {
+            return $response;
+
+        }
+        return [];
     }
 
 }
