@@ -26,4 +26,21 @@ class OwnershipForms extends CommonActiveRecord
     {
         return (Yii::$app->language == 'ru') ? $this->DescriptionRu : $this->Description;
     }
+
+    public static function loadAll()
+    {
+        self::getDb()->createCommand()->truncateTable(self::tableName())->execute();
+        $response = Yii::$app->novaposhta
+            ->model('Common')
+            ->method('getOwnershipFormsList')
+            ->execute();
+
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            self::getDb()->createCommand()->batchInsert(self::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
 }

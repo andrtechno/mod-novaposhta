@@ -48,4 +48,26 @@ class WarehouseTypes extends ActiveRecord
         ];
     }
 
+    public static function loadAll()
+    {
+        $result = Yii::$app->novaposhta->model('Address')
+            ->method('getWarehouseTypes')
+            ->execute();
+
+        self::getDb()->createCommand()->truncateTable(self::tableName())->execute();
+        $fields = ['Ref', 'Description', 'DescriptionRu'];
+        if ($result['success']) {
+            $data = [];
+            foreach ($result['data'] as $city) {
+                $data[] = [
+                    $city['Ref'],
+                    $city['Description'],
+                    $city['DescriptionRu']
+                ];
+
+            }
+            self::getDb()->createCommand()->batchInsert(self::tableName(), $fields, $data)->execute();
+        }
+    }
+
 }

@@ -1,4 +1,5 @@
 <?php
+
 use panix\engine\grid\GridView;
 use panix\engine\Html;
 
@@ -90,7 +91,7 @@ echo GridView::widget([
                 'view' => function ($url, $model, $key) {
                     return Html::a(Html::icon('eye'), ['view', 'id' => $model['Ref']], [
                         'title' => Yii::t('app/default', 'View'),
-
+                        'data-pjax' => 0,
                         'class' => 'd-flex align-items-center btn btn-sm btn-outline-secondary']);
                 },
             ]

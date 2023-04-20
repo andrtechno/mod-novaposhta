@@ -24,7 +24,6 @@ class ServiceTypes extends ActiveRecord
         return new CommonQuery(get_called_class());
     }
 
-
     /**
      * @inheritdoc
      */
@@ -69,5 +68,17 @@ class ServiceTypes extends ActiveRecord
         return $result;
     }
 
+    public static function loadAll()
+    {
+        self::getDb()->createCommand()->truncateTable(self::tableName())->execute();
+        $response = Yii::$app->novaposhta->getServiceTypes();
+        if ($response['success']) {
+            $data = [];
+            foreach ($response['data'] as $item) {
+                $data[] = array_values($item);
+            }
+            self::getDb()->createCommand()->batchInsert(self::tableName(), array_keys($response['data'][0]), $data)->execute();
+        }
+    }
 
 }

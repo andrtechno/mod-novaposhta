@@ -2,6 +2,16 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
+use panix\mod\novaposhta\models\CargoTypes;
+use panix\mod\novaposhta\models\OwnershipForms;
+use panix\mod\novaposhta\models\Packs;
+use panix\mod\novaposhta\models\Pallets;
+use panix\mod\novaposhta\models\ServiceTypes;
+use panix\mod\novaposhta\models\Settlements;
+use panix\mod\novaposhta\models\TiresWheels;
+use panix\mod\novaposhta\models\TypesCounterparties;
+use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
+use panix\mod\novaposhta\models\WarehouseTypes;
 use Yii;
 use panix\mod\novaposhta\models\SettingsForm;
 use panix\engine\controllers\AdminController;
@@ -22,6 +32,13 @@ class DefaultController extends AdminController
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $model = new SettingsForm;
 
+            $this->buttons[] = [
+                'label' => Yii::t('novaposhta/admin', 'Add references'),
+                'url' => ['add-references'],
+                'icon' => 'add',
+                'options' => ['class' => 'btn btn-success']
+            ];
+
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
                 $model->save();
@@ -38,9 +55,30 @@ class DefaultController extends AdminController
     {
         $this->pageName = Yii::t('novaposhta/default', 'MODULE_NAME');
         $this->view->params['breadcrumbs'][] = $this->pageName;
-
+        $this->buttons[] = [
+            'label' => Yii::t('novaposhta/admin', 'Add references'),
+            'url' => ['add-references'],
+            'icon' => 'add',
+            'options' => ['class' => 'btn btn-success']
+        ];
         $items = Yii::$app->getModule($this->module->id)->getAdminMenu()['modules']['items'][0]['items'];
         return $this->render('index', ['items' => $items]);
     }
 
+    public function actionAddReferences()
+    {
+        CargoTypes::loadAll();
+        Pallets::loadAll();
+        Packs::loadAll();
+        OwnershipForms::loadAll();
+        TypesOfPayersForRedelivery::loadAll();
+        TiresWheels::loadAll();
+        TypesCounterparties::loadAll();
+        ServiceTypes::loadAll();
+
+        WarehouseTypes::loadAll();
+        Settlements::loadAll();
+        Yii::$app->session->addFlash('success','Success');
+        return $this->redirect(['index']);
+    }
 }

@@ -21,7 +21,9 @@ var map = L.map('leaflet-map', {
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'
 }).addTo(map);
-
+//L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+//attribution: 'CartoDB'
+//}).addTo(map);
 
 var markerIcon = L.icon({
     iconUrl: 'http://pixelion.com.ua/uploads/YWIYuQTR9H.png',
