@@ -261,6 +261,7 @@ class Novaposhta extends Component
             'language' => $this->language,
             'methodProperties' => $params,
         );
+        //echo json_encode($data);die;
         // Convert data to neccessary format
         $post = 'xml' == $this->format
             ? $this->array2xml($data)
@@ -375,19 +376,22 @@ class Novaposhta extends Component
      * Get cities of company NovaPoshta.
      *
      * @param int $page Num of page
+     * @param int $limit Numbers of page
      * @param string $city Find city by russian or ukrainian word OR GUID
      *
      * @return mixed
      */
-    public function getCities($page = 0, $city = '')
+    public function getCities($page = 0, $limit = 150, $city = '')
     {
         $data = [];
         $data['Page'] = $page;
         if (CMS::isGuid($city)) {
             $data['Ref'] = $city;
         } else {
-            $data['FindByString'] = $city;
+            //$data['FindByString'] = $city;
         }
+        $data['Limit'] = $limit;
+
         return $this->request('Address', 'getCities', $data);
     }
 

@@ -9,6 +9,7 @@ return [
     'CREATE_EXPRESS_WAYBILL_CART' => 'Створити &laquo;ЕН&raquo; для &laquo;Нової пошти&raquo;',
     'UPDATE_EXPRESS_WAYBILL_CART' => 'Змінити &laquo;ЕН&raquo;',
     'WAREHOUSES' => 'Склади',
+    'AREAS' => 'Області',
     'CITIES' => 'Міста',
     'RECEPTION' => 'Прийом',
     'SCHEDULE' => 'Графік роботи',

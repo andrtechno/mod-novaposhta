@@ -2,15 +2,15 @@
 
 namespace panix\mod\novaposhta\models\search;
 
-use panix\mod\novaposhta\models\Cities;
+use panix\mod\novaposhta\models\Area;
 use Yii;
 use yii\base\Model;
 use panix\engine\data\ActiveDataProvider;
 
 /**
- * CitiesSearch represents the model behind the search form about `panix\mod\novaposhta\models\Cities`.
+ * AreaSearch represents the model behind the search form about `panix\mod\novaposhta\models\Area`.
  */
-class CitiesSearch extends Cities
+class AreaSearch extends Area
 {
 
     /**
@@ -43,7 +43,7 @@ class CitiesSearch extends Cities
      */
     public function search($params)
     {
-        $query = Cities::find()->orderBy(['Description'=>SORT_ASC]);
+        $query = Area::find()->orderBy(['Description'=>SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -61,12 +61,8 @@ class CitiesSearch extends Cities
 
         if(Yii::$app->language == 'ru'){
             $query->andFilterWhere(['like', 'DescriptionRu', $this->Description]);
-            $query->andFilterWhere(['like', 'AreaDescriptionRu', $this->AreaDescriptionRu]);
-            $query->andFilterWhere(['like', 'SettlementTypeDescriptionRu', $this->SettlementTypeDescriptionRu]);
         }else{
             $query->andFilterWhere(['like', 'Description', $this->Description]);
-            $query->andFilterWhere(['like', 'AreaDescription', $this->AreaDescription]);
-            $query->andFilterWhere(['like', 'SettlementTypeDescription', $this->SettlementTypeDescription]);
         }
 
 

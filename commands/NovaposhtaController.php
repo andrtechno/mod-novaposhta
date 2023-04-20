@@ -105,9 +105,6 @@ class NovaposhtaController extends ConsoleController
             Settlements::getDb()->createCommand()->batchInsert(Settlements::tableName(), $fields, $data)->execute();
         }
 
-
-        print_r($result2);
-        die;
         $result = $this->api
             ->model('Address')
             ->method('getWarehouseTypes')
@@ -179,7 +176,7 @@ class NovaposhtaController extends ConsoleController
                     $city['SettlementType'],
                     $city['IsBranch'],
                     $city['PreventEntryNewStreetsUser'],
-                    (is_array($city['Conglomerates'])) ? json_encode($city['Conglomerates']) : $city['Conglomerates'],
+                    (isset($city['Conglomerates']))?(is_array($city['Conglomerates'])) ? json_encode($city['Conglomerates']) : $city['Conglomerates']:null,
                     $city['CityID'],
                     $city['SettlementTypeDescription'],
                     $city['SettlementTypeDescriptionRu'],
@@ -299,15 +296,12 @@ class NovaposhtaController extends ConsoleController
      */
     public function actionArea()
     {
-
-
         Area::getDb()->createCommand()->truncateTable(Area::tableName())->execute();
 
         $result = $this->api
             ->model('Address')
             ->method('getAreas')
             ->execute();
-
 
         if ($result['success']) {
             $total = count($result['data']);

@@ -7,7 +7,7 @@ use panix\engine\Html;
  * @var \yii\web\View $this
  * @var \panix\mod\novaposhta\models\Warehouses $model
  */
-CMS::dump($model->attributes);
+//CMS::dump($model->attributes);
 if ($model->Latitude && $model->Longitude) {
     \panix\engine\assets\LeafletAsset::register($this);
     $this->registerJs("

@@ -74,7 +74,10 @@ class Cities extends ActiveRecord
     {
         return $this->hasMany(Warehouses::class, ['CityRef' => 'Ref']);
     }
-
+    public function getArea()
+    {
+        return $this->hasOne(Area::class, ['Ref' => 'Area']);
+    }
     public static function getList($wheres = [])
     {
         $result = [];

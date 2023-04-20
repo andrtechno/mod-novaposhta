@@ -26,15 +26,9 @@ GridView::widget([
                 return $model->description;
             }
         ],
-        [
-            'attribute' => 'Area',
-            'header' => Yii::t('novaposhta/default', 'Area'),
-            'format' => 'raw',
-            'contentOptions' => ['class' => 'text-left'],
-            'value' => function ($model) {
-                return $model->area->description;
-            }
-        ],
+
+
+
         [
             'class' => 'panix\engine\grid\columns\ActionColumn',
             'template' => '{view}',

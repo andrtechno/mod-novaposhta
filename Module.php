@@ -76,6 +76,12 @@ class Module extends WebModule implements BootstrapInterface
                                 'visible' => Yii::$app->user->can('/novaposhta/admin/cities/index') || Yii::$app->user->can('/novaposhta/admin/cities/*'),
                             ],
                             [
+                                'label' => Yii::t('novaposhta/default', 'AREAS'),
+                                'url' => ['/admin/novaposhta/area'],
+                                'icon' => 'location-map',
+                                'visible' => Yii::$app->user->can('/novaposhta/admin/area/index') || Yii::$app->user->can('/novaposhta/admin/area/*'),
+                            ],
+                            [
                                 'label' => Yii::t('novaposhta/default', 'WAREHOUSES'),
                                 'url' => ['/admin/novaposhta/warehouses'],
                                 'icon' => 'location',
@@ -96,7 +102,8 @@ class Module extends WebModule implements BootstrapInterface
     }
     public function getAdminSidebar()
     {
-        return Yii::$app->findMenu['modules']['items'];
+        $menu = $this->getAdminMenu();
+        return \yii\helpers\ArrayHelper::merge($menu['modules']['items'], $menu['modules']['items'][0]['items']);
     }
 
     public function getInfo()
