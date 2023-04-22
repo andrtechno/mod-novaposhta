@@ -2,6 +2,7 @@
 
 namespace panix\mod\novaposhta\models;
 
+use panix\engine\CMS;
 use panix\mod\novaposhta\models\query\CommonQuery;
 use Yii;
 use panix\engine\db\ActiveRecord;

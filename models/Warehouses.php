@@ -143,4 +143,34 @@ class Warehouses extends ActiveRecord
 
         return $result;
     }
+
+
+    public static function getList2($ref)
+    {
+        $lang = (Yii::$app->language == 'ru') ? 'ru' : 'uk';
+        //$items = Yii::$app->cache->get("np_warehouses_{$lang}_{$ref}");
+
+        //if ($items === false) {
+            $result = Yii::$app->novaposhta->model('Address')
+                ->method('getWarehouses')
+                ->params([
+                    'CityRef' => $ref,
+                    'Limit' => 999,
+                    'Page' => 1,
+                    'TypeOfWarehouseRef' => '9a68df70-0267-42a8-bb5c-37f427e36ee4' //'9a68df70-0267-42a8-bb5c-37f427e36ee4', '841339c7-591a-42e2-8233-7a0a00f0ed6f'
+                ])
+                ->execute();
+
+            if ($result['success']) {
+                $items = [];
+                foreach ($result['data'] as $item) {
+                    $items[$item['Ref']] = (Yii::$app->language == 'ru') ? $item['DescriptionRu'] : $item['Description'];
+                }
+                //Yii::$app->cache->set("np_warehouses_{$lang}_{$ref}", $items, 86400 * 7);
+            }
+        //}
+
+        return $items;
+    }
+
 }

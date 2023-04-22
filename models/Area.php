@@ -48,16 +48,23 @@ class Area extends CommonActiveRecord
 
         return $result;
     }
-    public static function _loadAll()
+
+    public static function getList2()
     {
-        self::getDb()->createCommand()->truncateTable(self::tableName())->execute();
-        $response = Yii::$app->novaposhta->getCargoTypes();
-        if ($response['success']) {
-            $data = [];
-            foreach ($response['data'] as $item) {
-                $data[] = array_values($item);
+        $lang = (Yii::$app->language == 'ru') ? 'ru' : 'uk';
+        $items = Yii::$app->cache->get("np_area_{$lang}");
+
+        if ($items === false) {
+            $result = Yii::$app->novaposhta->model('Address')->method('getAreas')->execute();
+
+            if ($result['success']) {
+                $items = [];
+                foreach ($result['data'] as $item) {
+                    $items[$item['Ref']] = (Yii::$app->language == 'ru') ? $item['DescriptionRu'] : $item['Description'];
+                }
+                Yii::$app->cache->set("np_area_{$lang}", $items,0);
             }
-            self::getDb()->createCommand()->batchInsert(self::tableName(), array_keys($response['data'][0]), $data)->execute();
         }
+        return $items;
     }
 }

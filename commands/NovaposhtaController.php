@@ -53,11 +53,8 @@ class NovaposhtaController extends ConsoleController
      */
     public function actionIndex()
     {
-
         Settlements::loadAll();
-
         WarehouseTypes::loadAll();
-
     }
 
     /**

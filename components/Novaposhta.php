@@ -388,7 +388,7 @@ class Novaposhta extends Component
         if (CMS::isGuid($city)) {
             $data['Ref'] = $city;
         } else {
-            //$data['FindByString'] = $city;
+            $data['FindByString'] = $city;
         }
         $data['Limit'] = $limit;
 

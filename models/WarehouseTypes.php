@@ -70,4 +70,26 @@ class WarehouseTypes extends ActiveRecord
         }
     }
 
+
+    public static function getList2()
+    {
+        $lang = (Yii::$app->language == 'ru') ? 'ru' : 'uk';
+        $items = Yii::$app->cache->get("np_type_warehouses_{$lang}");
+
+        if ($items === false) {
+            $result = Yii::$app->novaposhta->model('Address')
+                ->method('getWarehouseTypes')
+                ->execute();
+
+            if ($result['success']) {
+                $items = [];
+                foreach ($result['data'] as $item) {
+                    $items[$item['Ref']] = (Yii::$app->language == 'ru') ? $item['DescriptionRu'] : $item['Description'];
+                }
+                Yii::$app->cache->set("np_type_warehouses_{$lang}", $items, 0);
+            }
+        }
+
+        return $items;
+    }
 }
