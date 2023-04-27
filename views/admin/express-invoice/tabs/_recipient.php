@@ -7,6 +7,7 @@ use yii\helpers\ArrayHelper;
 use panix\mod\novaposhta\models\Warehouses;
 use panix\mod\novaposhta\models\Cities;
 use panix\ext\select2\Select2;
+use panix\mod\novaposhta\models\Area;
 
 /**
  * @var \yii\web\View $this
@@ -23,48 +24,84 @@ use panix\ext\select2\Select2;
     <?= $form->field($model, 'recipient_MiddleName'); ?>
     <?= $form->field($model, 'recipient_Email'); ?>
 
-<?php
+    <?php
     //todo: bug input tel format AND senderphone
-if ($model->RecipientsPhone) {
-    $call = Html::a(Html::icon('phone') . ' Позвонить', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light']);
-} else {
-    $call = '';
-}
-?>
-<?= $form->field($model, 'RecipientsPhone', [
-   // 'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}{call}\n{error}{endWrapper}",
-    'parts' => [
-        '{call}' => $call
-    ]
-])->widget(PhoneInput::class,[
-    'jsOptions' => [
-        'autoPlaceholder' => 'off'
-    ]
-]); ?>
+    if ($model->RecipientsPhone) {
+        $call = Html::a(Html::icon('phone') . ' Позвонить', 'tel:' . $model->RecipientsPhone, ['class' => 'mt-2 mt-lg-0 float-none float-lg-right btn btn-light']);
+    } else {
+        $call = '';
+    }
+    ?>
+    <?= $form->field($model, 'RecipientsPhone', [
+        // 'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}{call}\n{error}{endWrapper}",
+        'parts' => [
+            '{call}' => $call
+        ]
+    ])->widget(PhoneInput::class, [
+        'jsOptions' => [
+            'autoPlaceholder' => 'off'
+        ]
+    ]); ?>
 <?php } ?>
 
 <?php //echo $form->field($model, 'recipient_Region'); ?>
-<?= $form->field($model, 'RecipientRegionRef')->widget(Select2::class, [
-    'items' => ArrayHelper::map(\panix\mod\novaposhta\models\Area::find()->all(), 'Ref', 'DescriptionRu'),
-    'clientOptions' => [],
-    //'options' => []
-]); ?>
+<?php
+if (Yii::$app->request->get('order_id')) {
+    $area = Area::findOne($model->RecipientRegionRef);
+    ?>
+    <div class="form-group row">
+        <div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">
+            <span class="col-form-label"><?= $model->getAttributeLabel('RecipientRegionRef'); ?></span>
+        </div>
+        <div class="col-sm-8 col-md-8 col-lg-9 col-xl-8"><?= $area->getDescription(); ?></div>
+    </div>
+    <?php
+} else {
+    echo $form->field($model, 'RecipientRegionRef')->widget(Select2::class, [
+        'items' => ArrayHelper::map(Area::find()->all(), 'Ref', 'DescriptionRu'),
+    ]);
+}
+?>
 
-<?= $form->field($model, 'CityRecipientRef')->widget(Select2::class, [
-    'items' => ArrayHelper::map(Cities::find()->all(), 'Ref', 'DescriptionRu'),
-    'clientOptions' => [],
-    //'options' => []
-]); ?>
 
+<?php
+if (Yii::$app->request->get('order_id')) {
+    $city = Cities::findOne($model->CityRecipientRef);
+    ?>
+    <div class="form-group row">
+        <div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">
+            <span class="col-form-label"><?= $model->getAttributeLabel('CityRecipientRef'); ?></span>
+        </div>
+        <div class="col-sm-8 col-md-8 col-lg-9 col-xl-8"><?= $city->getDescription(); ?></div>
+    </div>
+    <?php
+} else {
+    echo $form->field($model, 'CityRecipientRef')->widget(Select2::class, [
+        'items' => ArrayHelper::map(Cities::find()->all(), 'Ref', 'DescriptionRu'),
+    ]);
+}
+?>
 
+<?php
+if (Yii::$app->request->get('order_id')) {
+    $city = Warehouses::findOne($model->RecipientAddressRef);
+    ?>
+    <div class="form-group row">
+        <div class="col-sm-4 col-md-4 col-lg-3 col-xl-4">
+            <span class="col-form-label"><?= $model->getAttributeLabel('RecipientAddressRef'); ?></span>
+        </div>
+        <div class="col-sm-8 col-md-8 col-lg-9 col-xl-8"><?= $city->getDescription(); ?></div>
+    </div>
+    <?php
+} else {
+    echo $form->field($model, 'RecipientAddressRef')->widget(Select2::class, [
+        'items' => Warehouses::getList($model->CityRecipient),
+        'clientOptions' => [],
+        //'options' => []
+    ]);
+}
+?>
 
-
-
-<?= $form->field($model, 'RecipientAddressRef')->widget(Select2::class, [
-    'items' => Warehouses::getList($model->CityRecipient),
-    'clientOptions' => [],
-    //'options' => []
-]); ?>
 <?php
 
 //$test = Yii::$app->novaposhta->getCounterpartyAddresses('3a2b18fc-94a7-11e9-9937-005056881c6b');
