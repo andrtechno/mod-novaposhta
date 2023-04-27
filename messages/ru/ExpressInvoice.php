@@ -13,7 +13,7 @@ return [
     'LENGTH' => 'Длина (см)',
 
     'VOLUMEGENERAL' => 'Объем груза в куб.м.',
-
+    'RECIPIENTREGIONREF' => 'Регион',
     'DATETIME' => 'Дата отправления',
     'RECIPIENT_FIRSTNAME' => 'Имя',
     'RECIPIENT_MIDDLENAME' => 'Отчество',

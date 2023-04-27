@@ -90,28 +90,29 @@ class ExpressInvoice extends ActiveRecord
                 $this->RecipientsPhone = $this->order->user_phone;
 
             $data = $this->order->getDeliveryData();
+            //print_r($data);die;
             if ($data['type'] == 'warehouse') {
-                if ($data['warehouse_ref']) {
-                    $this->RecipientAddressRef = $data['warehouse_ref'];
+                if ($data['warehouse']) {
+                    $this->RecipientAddressRef = $data['warehouse'];
                     //$this->RecipientAddress = Warehouses::findOne(['Ref' => $this->order->delivery_warehouse_ref]);
                     // $this->RecipientAddressRef = $this->order->delivery_warehouse_ref;
                 }else{
 
                 }
 
-                if ($data['city_ref']) {
-                    $site = Cities::findOne(['Ref' => $data['city_ref']]);
+                if ($data['city']) {
+                    $site = Cities::findOne(['Ref' => $data['city']]);
                     if ($site) {
                         $this->CityRecipientRef = $site->getDescription();
                     }
-                    $this->CityRecipientRef = $data['city_ref'];
+                    $this->CityRecipientRef = $data['city'];
                 }
-                if ($data['region_ref']) {
-                    $region = Area::findOne(['Ref' => $data['region_ref']]);
+                if ($data['area']) {
+                    $region = Area::findOne(['Ref' => $data['area']]);
                     if ($region) {
                         $this->RecipientRegionRef = $region->getDescription();
                     }
-                    $this->RecipientRegionRef = $data['region_ref'];
+                    $this->RecipientRegionRef = $data['area'];
                 }
             }
 
@@ -238,6 +239,7 @@ class ExpressInvoice extends ActiveRecord
                 // 'Weight',
                 'ServiceTypeRef',
                 // 'SeatsAmount',
+                'RecipientRegionRef',
                 'Description',
                 'Cost',
                 'CitySenderRef',

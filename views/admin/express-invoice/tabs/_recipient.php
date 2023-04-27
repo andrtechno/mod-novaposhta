@@ -32,7 +32,7 @@ if ($model->RecipientsPhone) {
 }
 ?>
 <?= $form->field($model, 'RecipientsPhone', [
-    'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}{call}\n{error}{endWrapper}",
+   // 'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{hint}\n{beginWrapper}{input}{call}\n{error}{endWrapper}",
     'parts' => [
         '{call}' => $call
     ]

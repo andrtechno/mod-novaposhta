@@ -13,7 +13,7 @@ return [
     'LENGTH' => 'Length (cm)',
 
     'VOLUMEGENERAL' => 'Cargo volume in cubic meters',
-
+    'RECIPIENTREGIONREF' => 'Area',
     'DATETIME' => 'Departure date',
     'RECIPIENT_FIRSTNAME' => 'Name',
     'RECIPIENT_MIDDLENAME' => 'Middle name',
