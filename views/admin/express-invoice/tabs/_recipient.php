@@ -3,6 +3,8 @@
 use panix\engine\CMS;
 use panix\ext\telinput\PhoneInput;
 use panix\engine\Html;
+use panix\mod\cart\components\delivery\DeliverySystemManager;
+use panix\mod\cart\models\Delivery;
 use yii\helpers\ArrayHelper;
 use panix\mod\novaposhta\models\Warehouses;
 use panix\mod\novaposhta\models\Cities;
@@ -96,17 +98,37 @@ if (Yii::$app->request->get('order_id')) {
 } else {
     echo $form->field($model, 'RecipientAddressRef')->widget(Select2::class, [
         'items' => Warehouses::getList($model->CityRecipient),
-        'clientOptions' => [],
-        //'options' => []
     ]);
 }
 ?>
+    <div id="delivery-form">
+        <?php
 
+        /*$order = \panix\mod\cart\models\Order::findOne(Yii::$app->request->get('order_id'));
+
+        //if (!Yii::$app->request->post() && !$model->isNewRecord && $order->delivery_id) {
+            $delivery = Delivery::findOne($order->delivery_id);
+            if ($delivery->system) {
+                $manager = new DeliverySystemManager();
+                $system = $manager->getSystemClass($delivery->system);
+                $order->deliveryModel = $system->getModel();
+            }
+
+       // }
+
+        if ($order->delivery_id) {
+            $delivery = \panix\mod\cart\models\Delivery::findOne($order->delivery_id);
+            $system = $delivery->getDeliverySystemClass();
+            if ($system instanceof \panix\mod\cart\components\delivery\BaseDeliverySystem) {
+                echo $system->processRequestAdmin2($delivery, $order);
+            }
+        }*/
+        ?>
+    </div>
 <?php
-
 //$test = Yii::$app->novaposhta->getCounterpartyAddresses('3a2b18fc-94a7-11e9-9937-005056881c6b');
 
-//CMS::dump($test);
+
 $this->registerJs("
     $('#" . Html::getInputId($model, 'CityRecipientRef') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
     console.log(clickedIndex, $(this).val(), previousValue);
