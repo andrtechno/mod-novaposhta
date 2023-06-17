@@ -78,7 +78,7 @@ if ($all['success']) {
 <?php
 //CMS::dump($test);die;
 
-
+/*
 //Получение сроков доставки
 $sender_city = $api->getCity('Белгород-Днестровский', 'Одесская');
 $sender_city_ref = $sender_city['data'][0]['Ref'];
@@ -105,4 +105,4 @@ $price = 2450;
 $result = $api->getDocumentPrice($sender_city_ref, $recipient_city_ref, 'WarehouseWarehouse', $weight, $price, 'Cargo');
 
 
-CMS::dump($result);
+CMS::dump($result);*/

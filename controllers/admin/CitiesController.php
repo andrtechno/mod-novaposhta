@@ -37,11 +37,9 @@ class CitiesController extends AdminController
                     'data' => $cities['data'],
                 ]));
             }*/
-           // echo $page_number;
-           // echo '<br>';
+            // echo $page_number;
+            // echo '<br>';
         }
-
-
 
 
         $this->pageName = Yii::t('novaposhta/default', 'CITIES');
@@ -50,7 +48,12 @@ class CitiesController extends AdminController
             'url' => ['/novaposhta/admin/default/index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
-
+        $this->buttons[] = [
+            'label' => Yii::t('novaposhta/default', 'Add cities'),
+            'url' => ['add'],
+            'icon' => 'add',
+            'options' => ['class' => 'btn btn-success']
+        ];
         $searchModel = new CitiesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
@@ -76,5 +79,26 @@ class CitiesController extends AdminController
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $api = Yii::$app->novaposhta;
         return $this->render('view', ['model' => $model, 'api' => $api]);
+    }
+
+    public function actionAdd()
+    {
+        $api = Yii::$app->novaposhta;
+        Cities::getDb()->createCommand()->truncateTable(Cities::tableName())->execute();
+
+        $limit = 250;
+        $getTotal = $api->getCities(1, 1);
+        $total_pages = ceil($getTotal['info']['totalCount'] / $limit);
+
+        for ($page_number = 1; $page_number <= $total_pages; $page_number++) {
+            $cities = Yii::$app->novaposhta->getCities($page_number, $limit);
+            if ($cities['success']) {
+                Yii::$app->queue->push(new QueueCities([
+                    'data' => $cities['data'],
+                ]));
+            }
+        }
+        Yii::$app->session->addFlash('success', Yii::t('novaposhta/default', 'В очередь добавлено {0} очередей, {1} городов', [$total_pages, $getTotal['info']['totalCount']]));
+        return $this->redirect(['index']);
     }
 }

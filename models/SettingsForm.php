@@ -77,13 +77,14 @@ class SettingsForm extends SettingsModel
             }
         }
     }
+
     public function rules()
     {
         return [
             ['templates', 'validateTemplateRequire', 'skipOnEmpty' => false],
             ['templates', 'validateTemplateNumber'],
             [['api_key'], 'required'],
-            [['contact', 'serviceType', 'sender', 'sender_phone', 'sender_area', 'sender_city', 'sender_warehouse','seatsAmount'], 'string'],
+            [['contact', 'serviceType', 'sender', 'sender_phone', 'sender_area', 'sender_city', 'sender_warehouse', 'seatsAmount'], 'string'],
             // ['comments', 'boolean'],
         ];
     }

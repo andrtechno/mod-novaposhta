@@ -25,7 +25,7 @@ class AreaController extends AdminController
 
         if (!$dataProvider->totalCount) {
             $this->buttons[] = [
-                'label' => Yii::t('novaposhta/admin', 'Add areas'),
+                'label' => Yii::t('novaposhta/default', 'Add areas'),
                 'url' => ['add'],
                 'icon' => 'add',
                 'options' => ['class' => 'btn btn-success']
@@ -33,8 +33,6 @@ class AreaController extends AdminController
         }
 
         $this->view->params['breadcrumbs'][] = $this->pageName;
-
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -62,9 +60,7 @@ class AreaController extends AdminController
     public function actionAdd()
     {
         Area::getDb()->createCommand()->truncateTable(Area::tableName())->execute();
-
         $result = Yii::$app->novaposhta->model('Address')->method('getAreas')->execute();
-
         if ($result['success']) {
             $list = [];
             foreach ($result['data'] as $key => $d) {

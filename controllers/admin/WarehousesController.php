@@ -27,14 +27,12 @@ class WarehousesController extends AdminController
 
         $searchModel = new WarehousesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-        if (!$dataProvider->totalCount) {
-            $this->buttons[] = [
-                'label' => Yii::t('novaposhta/admin', 'Add warehouses'),
-                'url' => ['add'],
-                'icon' => 'add',
-                'options' => ['class' => 'btn btn-success']
-            ];
-        }
+        $this->buttons[] = [
+            'label' => Yii::t('novaposhta/admin', 'Add warehouses'),
+            'url' => ['add'],
+            'icon' => 'add',
+            'options' => ['class' => 'btn btn-success']
+        ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -80,27 +78,25 @@ class WarehousesController extends AdminController
     public function actionAdd()
     {
 
-        $limit = 200;
+        $limit = 250;
         Warehouses::getDb()->createCommand()->truncateTable(Warehouses::tableName())->execute();
         $result = Yii::$app->novaposhta->model('Address')
             ->method('getWarehouses')->params([
                 'Limit' => $limit,
-                'Page'=>1,
-               // 'TypeOfWarehouseRef' => '841339c7-591a-42e2-8233-7a0a00f0ed6f' //Почтовое отделение
+                'Page' => 1,
             ])
             ->execute();
 
 
         $total_pages = ceil($result['info']['totalCount'] / $limit);
         for ($page_number = 1; $page_number <= $total_pages; $page_number++) {
-
-           Yii::$app->queue->push(new QueueWarehouse([
+            Yii::$app->queue->push(new QueueWarehouse([
                 'limit' => $limit,
                 'page' => $page_number
             ]));
         }
 
-        Yii::$app->session->addFlash('success','Success add warehouses in queue '.$total_pages);
+        Yii::$app->session->addFlash('success', 'Success add warehouses in queue ' . $total_pages);
         return $this->redirect(['index']);
     }
 }
