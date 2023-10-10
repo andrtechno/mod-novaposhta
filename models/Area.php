@@ -63,6 +63,8 @@ class Area extends CommonActiveRecord
                     $items[$item['Ref']] = (Yii::$app->language == 'ru') ? $item['DescriptionRu'] : $item['Description'];
                 }
                 Yii::$app->cache->set("np_area_{$lang}", $items,0);
+            }else{
+                throw new ErrorException('NovaPoshta: '.$result['errors'][0]);
             }
         }
         return $items;
