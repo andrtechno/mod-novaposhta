@@ -2,10 +2,9 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
-use panix\mod\novaposhta\models\search\AreaSearch;
-use panix\mod\novaposhta\models\Area;
 use Yii;
 use panix\engine\controllers\AdminController;
+use yii\data\ArrayDataProvider;
 
 
 class AreaController extends AdminController
@@ -14,61 +13,40 @@ class AreaController extends AdminController
 
     public function actionIndex()
     {
+        /* @var $api \panix\mod\novaposhta\components\Novaposhta */
         $api = Yii::$app->novaposhta;
+
+        $result = $api->getAreas();
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $result['data'],
+            'pagination' => ['pageSize' => 100]
+        ]);
+
+
         $this->pageName = Yii::t('novaposhta/default', 'AREAS');
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['/novaposhta/admin/default/index']
         ];
-        $searchModel = new AreaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
-        if (!$dataProvider->totalCount) {
-            $this->buttons[] = [
-                'label' => Yii::t('novaposhta/default', 'Add areas'),
-                'url' => ['add'],
-                'icon' => 'add',
-                'options' => ['class' => 'btn btn-success']
-            ];
-        }
-
         $this->view->params['breadcrumbs'][] = $this->pageName;
+        $this->buttons[] = [
+            'label' => Yii::t('novaposhta/default', 'Очистить кэш'),
+            'url' => ['clear'],
+            'icon' => 'trashcan',
+            'options' => ['class' => 'btn btn-warning']
+        ];
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
         ]);
     }
 
-
-    public function actionView($id)
+    public function actionClear()
     {
-        $model = Area::findOne($id);
-        $this->pageName = $model->getDescription();
-        $this->view->params['breadcrumbs'][] = [
-            'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
-            'url' => '#'
-        ];
-        $this->view->params['breadcrumbs'][] = [
-            'label' => Yii::t('novaposhta/default', 'AREAS'),
-            'url' => ['/novaposhta/admin/area/index']
-        ];
-        $this->view->params['breadcrumbs'][] = $this->pageName;
-        $api = Yii::$app->novaposhta;
-        return $this->render('view', ['model' => $model, 'api' => $api]);
-    }
-
-    public function actionAdd()
-    {
-        Area::getDb()->createCommand()->truncateTable(Area::tableName())->execute();
-        $result = Yii::$app->novaposhta->model('Address')->method('getAreas')->execute();
-        if ($result['success']) {
-            $list = [];
-            foreach ($result['data'] as $key => $d) {
-                $list[] = array_values($d);
-            }
-            Area::getDb()->createCommand()->batchInsert(Area::tableName(), array_keys($result['data'][0]), $list)->execute();
-        }
-        Yii::$app->session->addFlash('success', 'Areas created!');
+        Yii::$app->cache->delete('np-areas');
+        Yii::$app->session->addFlash('success', 'Cleat list areas success');
         return $this->redirect(['index']);
     }
+
 }

@@ -14,7 +14,7 @@ use panix\engine\Html;
 
 
 $senderData = $api->getCounterparties('Sender', 1, '', '');
-
+$phone = '';
 if ($senderData['success']) {
 
 
@@ -23,14 +23,21 @@ if ($senderData['success']) {
     if ($contacts['success']) {
         foreach ($contacts['data'] as $contact) {
             $contactsList[$contact['Ref']] = $contact;
+            $phone = $contact['Phones'];
         }
     }
 
 
-}else{
+} else {
     throw new ErrorException($senderData['errors'][0]);
 }
-
+$config = Yii::$app->settings->get('novaposhta');
+if (isset($config->city)) {
+    $model->CitySenderRef = $config->sender_city;
+}
+if (isset($config->warehouse)) {
+    $model->SenderAddressRef = $config->sender_warehouse;
+}
 ?>
 
 
@@ -39,49 +46,20 @@ if ($senderData['success']) {
     return $data['Description'] . ', ' . CMS::phone_format($data['Phones']);
 }));
 ?>
-<?= $form->field($model, 'CitySenderRef')->widget(Select2::class, [
-    'items' => \panix\mod\novaposhta\models\Cities::getList(['IsBranch' => 1]),
-    'clientOptions' => [],
-    'options' => []
-]); ?>
 
+<div id="sender-ajax">
+    <?php
+    $system = new \panix\mod\novaposhta\components\System();
+    echo $system->processRequestSender();
 
-<?= $form->field($model, 'SenderAddressRef')->widget(Select2::class, [
-    'items' => \panix\mod\novaposhta\models\Warehouses::getList(Yii::$app->settings->get('novaposhta', 'sender_city')),
-    'clientOptions' => [],
-    'options' => []
-]); ?>
+    ?>
+</div>
 
 
 <?php if ($model->isNewRecord) { ?>
+    <?php
+    $model->SendersPhone = (strpos('+', $phone)) ? $phone : '+' . $phone;
+    ?>
     <?= $form->field($model, 'SendersPhone')->widget(PhoneInput::class); ?>
 <?php } ?>
 
-<?php
-
-$this->registerJs("
-    $('#" . Html::getInputId($model, 'CitySenderRef') . "').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-    console.log(clickedIndex, $(this).val(), previousValue);
-    $(this).selectpicker('val');
-    $.ajax({
-        url:'/admin/novaposhta/warehouses/by-city',
-        type:'GET',
-        data:{id:$(this).val()},
-        success:function(data){
-            console.log(data);
-            
-            var warehouse = $('#" . Html::getInputId($model, 'SenderAddressRef') . "');
-            warehouse.html('');
-            $.each(data.items, function(key, value) {
-                warehouse.append('<option value=\"'+key+'\" selected=\"\">'+value+'</option>');
-            });
-
-            warehouse.selectpicker('refresh');
-       
-        }
-    });
-});
-
-
-");
-?>

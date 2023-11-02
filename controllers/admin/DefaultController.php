@@ -2,6 +2,9 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
+use panix\mod\cart\components\delivery\BaseDeliverySystem;
+use panix\mod\cart\components\delivery\DeliverySystemManager;
+use panix\mod\cart\models\Delivery;
 use Yii;
 use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\OwnershipForms;
@@ -15,11 +18,35 @@ use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
 use panix\mod\novaposhta\models\WarehouseTypes;
 use panix\mod\novaposhta\models\SettingsForm;
 use panix\engine\controllers\AdminController;
+use yii\web\ForbiddenHttpException;
 
 class DefaultController extends AdminController
 {
 
     public $icon = 'settings';
+
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+
+    public function actionProcess($type)
+    {
+        $manager = new DeliverySystemManager();
+        $system = $manager->getSystemClass('novaposhta');
+
+        if ($system instanceof BaseDeliverySystem) {
+            if($type=='recipient'){
+                return $system->processRequestRecipient();
+            }else{
+                return $system->processRequestSender();
+            }
+
+        } else {
+            throw new ForbiddenHttpException();
+        }
+    }
 
     public function actionSettings()
     {
@@ -32,14 +59,27 @@ class DefaultController extends AdminController
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $model = new SettingsForm;
 
-            $this->buttons[] = [
-                'label' => Yii::t('novaposhta/admin', 'Add references'),
-                'url' => ['add-references'],
-                'icon' => 'add',
-                'options' => ['class' => 'btn btn-success']
-            ];
+        $this->buttons[] = [
+            'label' => Yii::t('novaposhta/admin', 'Add references'),
+            'url' => ['add-references'],
+            'icon' => 'add',
+            'options' => ['class' => 'btn btn-success']
+        ];
+        $post = Yii::$app->request->post();
+        if ($model->load($post)) {
+            if (isset($post['DynamicModel']['area'])) {
+                $model->sender_area = $post['DynamicModel']['area'];
+            }
+            if (isset($post['DynamicModel']['city'])) {
+                $model->sender_city = $post['DynamicModel']['city'];
+            }
+            if (isset($post['DynamicModel']['warehouse'])) {
+                $model->sender_warehouse = $post['DynamicModel']['warehouse'];
+            }
 
-        if ($model->load(Yii::$app->request->post())) {
+
+
+            //
             if ($model->validate()) {
                 $model->save();
                 Yii::$app->session->setFlash("success", Yii::t('app/default', 'SUCCESS_UPDATE'));
@@ -79,7 +119,7 @@ class DefaultController extends AdminController
 
         WarehouseTypes::loadAll();
         Settlements::loadAll();
-        Yii::$app->session->addFlash('success','Success');
+        Yii::$app->session->addFlash('success', 'Success');
         return $this->redirect(['index']);
     }
 }

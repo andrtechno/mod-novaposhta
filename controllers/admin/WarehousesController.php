@@ -2,12 +2,11 @@
 
 namespace panix\mod\novaposhta\controllers\admin;
 
-use panix\engine\CMS;
-use panix\mod\novaposhta\components\QueueWarehouse;
-use panix\mod\novaposhta\models\search\WarehousesSearch;
+use panix\engine\controllers\AdminController;
 use panix\mod\novaposhta\models\Warehouses;
 use Yii;
-use panix\engine\controllers\AdminController;
+use yii\data\ArrayDataProvider;
+use yii\data\Pagination;
 
 
 class WarehousesController extends AdminController
@@ -25,25 +24,76 @@ class WarehousesController extends AdminController
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
 
-        $searchModel = new WarehousesSearch();
+        /*$searchModel = new WarehousesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         $this->buttons[] = [
             'label' => Yii::t('novaposhta/admin', 'Add warehouses'),
             'url' => ['add'],
             'icon' => 'add',
             'options' => ['class' => 'btn btn-success']
-        ];
+        ];*/
+
+        $currentPage = Yii::$app->request->get('page', 1);
+        $data = [];
+        $np = Yii::$app->novaposhta->model('Address')->method('getWarehouses');
+        $result = $np->params(['Limit' => 50, 'Page' => $currentPage])->execute();
+        if ($result['success']) {
+
+            //FAKE items for pagination
+            $keys = array_keys($result['data'][0]);
+            $key_list = [];
+
+            foreach ($keys as $key) {
+                if (in_array($key, ['Reception', 'Schedule', 'Delivery'])) {
+                    $key_list[$key] = [];
+                } else {
+                    $key_list[$key] = $key;
+                }
+            }
+            //beginning add
+            for ($i = 1; $i <= 50 * ($currentPage - 1); $i++) {
+                array_unshift($result['data'], $key_list);
+            }
+            //end add
+            for ($i = 1; $i <= ($result['info']['totalCount'] - 50 * $currentPage - 1); $i++) {
+                array_push($result['data'], $key_list);
+            }
+            //END FAKE
+
+
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $result['data'],
+                'pagination' => [
+                    'pageSize' => 50,
+                ],
+                'sort' => [
+                    'attributes' => ['id', 'name'],
+                ],
+            ]);
+        }
+
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
+            //'searchModel' => $searchModel,
         ]);
     }
 
 
-    public function actionView($id)
+    public function actionView($number, $city)
     {
-        $model = Warehouses::findOne($id);
-        $this->pageName = ($model->DescriptionRu) ? $model->DescriptionRu : $model->Description;
+        $api = Yii::$app->novaposhta;
+        $np = $api->model('Address')->method('getWarehouses');
+        $result = $np->params(['WarehouseId' => $number, 'CityRef' => $city])->execute();
+        if (!$result['success']) {
+            return $this->error404('Error!');
+        }
+        $data = $result['data'][0];
+        // print_r($result);
+        // die;
+
+        $model = Warehouses::findOne($number);
+        $this->pageName = (Yii::$app->language == 'ru') ? $data['DescriptionRu'] : $data['Description'];
         $this->view->params['breadcrumbs'][] = [
             'label' => Yii::t('novaposhta/default', 'MODULE_NAME'),
             'url' => ['/novaposhta/admin/default/index']
@@ -53,50 +103,8 @@ class WarehousesController extends AdminController
             'url' => ['index']
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
-        $api = Yii::$app->novaposhta;
-        return $this->render('view', ['model' => $model, 'api' => $api]);
+
+        return $this->render('view', ['data' => $data, 'api' => $api]);
     }
 
-
-    /**
-     * @param $id int City Id
-     * @return \yii\web\Response JSON result
-     */
-    public function actionByCity($id)
-    {
-        $model = Warehouses::find()->where(['CityRef' => $id])->orderBy(['Number' => SORT_ASC])->all();
-        $result = [];
-        if ($model) {
-            $result['total'] = count($model);
-            foreach ($model as $item) {
-                $result['items'][$item->Ref] = $item->getDescription();
-            }
-        }
-        return $this->asJson($result);
-    }
-
-    public function actionAdd()
-    {
-
-        $limit = 250;
-        Warehouses::getDb()->createCommand()->truncateTable(Warehouses::tableName())->execute();
-        $result = Yii::$app->novaposhta->model('Address')
-            ->method('getWarehouses')->params([
-                'Limit' => $limit,
-                'Page' => 1,
-            ])
-            ->execute();
-
-
-        $total_pages = ceil($result['info']['totalCount'] / $limit);
-        for ($page_number = 1; $page_number <= $total_pages; $page_number++) {
-            Yii::$app->queue->push(new QueueWarehouse([
-                'limit' => $limit,
-                'page' => $page_number
-            ]));
-        }
-
-        Yii::$app->session->addFlash('success', 'Success add warehouses in queue ' . $total_pages);
-        return $this->redirect(['index']);
-    }
 }

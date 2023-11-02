@@ -5,8 +5,18 @@ use panix\engine\bootstrap\ActiveForm;
 use panix\ext\telinput\PhoneInput;
 
 $form = ActiveForm::begin([
-
-    'enableClientValidation'=>false
+    'id' => 'express-invoice-form',
+    'enableClientValidation' => false,
+    'fieldConfig' => [
+        'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
+        'horizontalCssClasses' => [
+            'label' => 'col-form-label',
+            'offset' => 'offset-sm-4 offset-lg-3 offset-xl-4',
+            'wrapper' => 'col-sm-8 col-md-8 col-lg-9 col-xl-8',
+            'error' => '',
+            'hint' => '',
+        ],
+    ]
 ]);
 
 ?>
@@ -46,7 +56,7 @@ $form = ActiveForm::begin([
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <h5>Параметры отправления</h5>
+                <h5><?= Yii::t('novaposhta/default', 'DEPARTURE_PARAMS'); ?></h5>
             </div>
             <div class="card-body" style="background-color: #f6f6f6;">
 

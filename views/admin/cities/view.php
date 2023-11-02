@@ -27,10 +27,10 @@ use panix\engine\grid\GridView;
         </div>
         <div class="col-lg-7">
             <?php
-
-            $searchModel = new WarehousesSearch();
+            $ware = Yii::$app->novaposhta->getWarehouses(Yii::$app->request->get('id'));
+CMS::dump($ware);die;
+            /*$searchModel = new WarehousesSearch();
             $dataProvider = $searchModel->search(\yii\helpers\ArrayHelper::merge(Yii::$app->request->getQueryParams(), ['WarehousesSearch' => ['CityRef' => $model->Ref]]));
-            //$dataProvider = $searchModel->search(\yii\helpers\ArrayHelper::merge(Yii::$app->request->getQueryParams(),['CityRef'=>$model->Ref]));
 
             echo GridView::widget([
                 'tableOptions' => ['class' => 'table table-striped'],
@@ -48,64 +48,6 @@ use panix\engine\grid\GridView;
                             return $model->description;
                         }
                     ],
-                    /* [
-                        'attribute' => 'Reception',
-                        'header' => Yii::t('novaposhta/default', 'RECEPTION'),
-                        'format' => 'raw',
-                        'contentOptions' => ['class' => 'text-left'],
-                        'value' => function ($model) {
-                            $result = '';
-                            foreach ($model->getReceptionList() as $day => $value) {
-                                if ($value == '-') {
-                                    $result .= '<strong>' . $day . ':</strong> &mdash;<br>';
-                                } else {
-                                    list($from, $to) = explode('-', $value);
-                                    $result .= '<strong>' . $day . ':</strong> с ' . $from . ' по ' . $to . '<br>';
-                                }
-
-                            }
-                            return $result;
-                        }
-                    ],
-                   [
-                        'attribute' => 'Schedule',
-                        'header' => Yii::t('novaposhta/default', 'SCHEDULE'),
-                        'format' => 'raw',
-                        'contentOptions' => ['class' => 'text-left'],
-                        'value' => function ($model) {
-                            $result = '';
-                            foreach ($model->getScheduleList() as $day => $value) {
-                                if ($value == '-') {
-                                    $result .= '<strong>' . $day . ':</strong> <span class="text-danger">выходной</span><br>';
-                                } else {
-                                    list($from, $to) = explode('-', $value);
-                                    $result .= '<strong>' . $day . ':</strong> с ' . $from . ' по ' . $to . '<br>';
-                                }
-
-                            }
-                            return $result;
-                        }
-                    ],
-                    [
-                        'attribute' => 'Delivery',
-                        'header' => Yii::t('novaposhta/default', 'DELIVERY'),
-                        'format' => 'raw',
-                        'contentOptions' => ['class' => 'text-left'],
-                        'value' => function ($model) {
-                            $result = '';
-                            foreach ($model->getDeliveryList() as $day => $value) {
-                                if ($value == '-') {
-                                    $result .= '<strong>' . $day . ':</strong> &mdash;<br>';
-                                } else {
-                                    list($from, $to) = explode('-', $value);
-                                    $result .= '<strong>' . $day . ':</strong> с ' . $from . ' по ' . $to . '<br>';
-                                }
-
-                            }
-                            return $result;
-                        }
-                    ],*/
-
                     [
                         'class' => 'panix\engine\grid\columns\ActionColumn',
                         'template' => '{view}',
@@ -120,7 +62,7 @@ use panix\engine\grid\GridView;
                         ]
                     ]
                 ]
-            ]);
+            ]);*/
 
             ?>
         </div>

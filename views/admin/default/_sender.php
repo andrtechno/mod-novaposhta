@@ -4,7 +4,6 @@ use panix\engine\Html;
 use panix\mod\novaposhta\models\Cities;
 use yii\helpers\ArrayHelper;
 use panix\engine\CMS;
-use panix\mod\novaposhta\models\Area;
 use panix\mod\novaposhta\models\ServiceTypes;
 use panix\mod\novaposhta\models\Warehouses;
 use panix\ext\select2\Select2;
@@ -40,16 +39,14 @@ if ($contacts['success']) {
 ?>
 <?= $form->field($model, 'sender_phone')->widget(PhoneInput::class, ['value' => $contacts['data'][0]['Phones']]); ?>
 <?php // $form->field($model, 'sender_phone')->textInput(['value' => $contacts['data'][0]['Phones']]); ?>
-<?= $form->field($model, 'sender_area')->dropDownList(Area::getList()); ?>
-<?= $form->field($model, 'sender_city')->widget(Select2::class, [
-    'items' => Cities::getList(['IsBranch' => 1]),
-]); ?>
-
-
-<?= $form->field($model, 'sender_warehouse')->widget(Select2::class, [
-    'items' => [],
-]); ?>
 <?= $form->field($model, 'seatsAmount') ?>
+<div id="sender-ajax">
+    <?php
+    $system = new \panix\mod\novaposhta\components\System();
+    echo $system->processRequestSender();
+    ?>
+</div>
+
 
 <?php
 

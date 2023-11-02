@@ -12,6 +12,7 @@ use panix\ext\bootstrapselect\BootstrapSelect;
  * @var \panix\mod\novaposhta\models\ExpressInvoiceForm $model
  */
 $form = ActiveForm::begin([
+    'id' => 'express-invoice-form',
     'fieldConfig' => [
         'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
         'horizontalCssClasses' => [
@@ -72,7 +73,7 @@ $this->registerCss('
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <h5>Параметры отправления</h5>
+                <h5><?= Yii::t('novaposhta/default', 'DEPARTURE_PARAMS'); ?></h5>
             </div>
             <div class="card-body" style="background-color: #f6f6f6;">
 
@@ -81,7 +82,7 @@ $this->registerCss('
 
             </div>
             <div class="card-footer text-center">
-                <?= Html::submitButton('Создать ЭН', ['class' => 'btn btn-success']); ?>
+                <?= Html::submitButton(Yii::t('novaposhta/default', 'CREATE_EI'), ['class' => 'btn btn-success']); ?>
             </div>
         </div>
     </div>

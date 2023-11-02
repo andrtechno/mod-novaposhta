@@ -8,6 +8,7 @@ use panix\mod\novaposhta\models\search\CitiesSearch;
 use panix\mod\novaposhta\models\Cities;
 use Yii;
 use panix\engine\controllers\AdminController;
+use yii\data\ArrayDataProvider;
 
 
 class CitiesController extends AdminController
@@ -16,30 +17,55 @@ class CitiesController extends AdminController
 
     public function actionIndex()
     {
-
-
         /* @var $api \panix\mod\novaposhta\components\Novaposhta */
         $api = Yii::$app->novaposhta;
 
 
-        $limit = 250;
-        $getTotal = $api->getCities(1, 1);
-        //CMS::dump($getTotal);die;
-//echo $getTotal['info']['totalCount'];
-        //echo '<br>';
-        //echo '<br>';
-        $total_pages = ceil($getTotal['info']['totalCount'] / $limit);
+        $currentPage = Yii::$app->request->get('page', 1);
+        $data = [];
+        $result = $api->getCities($currentPage, 50);
 
-        for ($page_number = 1; $page_number <= $total_pages; $page_number++) {
-            /*$cities = Yii::$app->novaposhta->getCities($page_number, $limit);
-            if ($cities['success']) {
-                Yii::$app->queue->push(new QueueCities([
-                    'data' => $cities['data'],
-                ]));
-            }*/
-            // echo $page_number;
-            // echo '<br>';
+        if ($result['success']) {
+
+            //FAKE items for pagination
+            $keys = array_keys($result['data'][0]);
+            $key_list = [];
+
+            foreach ($keys as $key) {
+                //if (in_array($key, ['Delivery'])) {
+                //    $key_list[$key] = [];
+                //} else {
+                $key_list[$key] = $key;
+                // }
+            }
+            //beginning add
+            for ($b = 1; $b <= 50 * ($currentPage - 1); $b++) {
+                array_unshift($result['data'], $key_list);
+            }
+            //echo ($result['info']['totalCount'] - 50 * $currentPage);die;
+            //end add
+            for ($e = 0; $e <= ($result['info']['totalCount'] - 50 * $currentPage - 1); $e++) {
+                array_push($result['data'], $key_list);
+            }
+            //END FAKE
+
         }
+
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $result['data'],
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+            'sort' => [
+                'attributes' => ['id', 'name'],
+            ],
+        ]);
+
+        $areas = Yii::$app->novaposhta->getAreas();
+        $areas = \yii\helpers\ArrayHelper::map($areas['data'], 'Ref', function ($res) {
+            return (Yii::$app->language == 'ru') ? $res['DescriptionRu'] : $res['Description'];
+        });
 
 
         $this->pageName = Yii::t('novaposhta/default', 'CITIES');
@@ -49,17 +75,14 @@ class CitiesController extends AdminController
         ];
         $this->view->params['breadcrumbs'][] = $this->pageName;
         $this->buttons[] = [
-            'label' => Yii::t('novaposhta/default', 'Add cities'),
-            'url' => ['add'],
-            'icon' => 'add',
-            'options' => ['class' => 'btn btn-success']
+            'label' => Yii::t('novaposhta/default', 'Очистить кэш'),
+            'url' => ['clear'],
+            'icon' => 'trashcan',
+            'options' => ['class' => 'btn btn-warning']
         ];
-        $searchModel = new CitiesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
+            'areas' => $areas,
         ]);
     }
 
@@ -81,24 +104,10 @@ class CitiesController extends AdminController
         return $this->render('view', ['model' => $model, 'api' => $api]);
     }
 
-    public function actionAdd()
+    public function actionClear()
     {
-        $api = Yii::$app->novaposhta;
-        Cities::getDb()->createCommand()->truncateTable(Cities::tableName())->execute();
-
-        $limit = 250;
-        $getTotal = $api->getCities(1, 1);
-        $total_pages = ceil($getTotal['info']['totalCount'] / $limit);
-
-        for ($page_number = 1; $page_number <= $total_pages; $page_number++) {
-            $cities = Yii::$app->novaposhta->getCities($page_number, $limit);
-            if ($cities['success']) {
-                Yii::$app->queue->push(new QueueCities([
-                    'data' => $cities['data'],
-                ]));
-            }
-        }
-        Yii::$app->session->addFlash('success', Yii::t('novaposhta/default', 'В очередь добавлено {0} очередей, {1} городов', [$total_pages, $getTotal['info']['totalCount']]));
+        Yii::$app->cache->delete('np-cities');
+        Yii::$app->session->addFlash('success', 'Cleat list areas success');
         return $this->redirect(['index']);
     }
 }

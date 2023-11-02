@@ -3,7 +3,6 @@
 namespace panix\mod\novaposhta\commands;
 
 use panix\mod\novaposhta\components\Novaposhta;
-use panix\mod\novaposhta\models\Area;
 use panix\mod\novaposhta\models\CargoTypes;
 use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\Errors;
@@ -15,7 +14,6 @@ use panix\mod\novaposhta\models\Settlements;
 use panix\mod\novaposhta\models\TiresWheels;
 use panix\mod\novaposhta\models\TypesCounterparties;
 use panix\mod\novaposhta\models\TypesOfPayersForRedelivery;
-use panix\mod\novaposhta\models\Warehouses;
 use panix\mod\novaposhta\models\WarehouseTypes;
 use Yii;
 use panix\engine\console\controllers\ConsoleController;
@@ -65,7 +63,7 @@ class NovaposhtaController extends ConsoleController
     public function actionCities()
     {
         Cities::getDb()->createCommand()->truncateTable(Cities::tableName())->execute();
-        $cities = $this->api->getCities();
+        $cities = $this->api->getCities(0, 99999);
 
         $fields = [
             'Description',
@@ -126,11 +124,11 @@ class NovaposhtaController extends ConsoleController
     /**
      * Update warehouses
      */
-    public function actionWarehouses()
+    public function __actionWarehouses()
     {
 
 
-        Warehouses::getDb()->createCommand()->truncateTable(Warehouses::tableName())->execute();
+        //Warehouses::getDb()->createCommand()->truncateTable(Warehouses::tableName())->execute();
 
 
         $result = $this->api
@@ -139,6 +137,7 @@ class NovaposhtaController extends ConsoleController
                 'TypeOfWarehouseRef' => '841339c7-591a-42e2-8233-7a0a00f0ed6f' //Почтовое отделение
             ])
             ->execute();
+
 
         $list = [];
         $total = count($result['data']);
@@ -221,34 +220,6 @@ class NovaposhtaController extends ConsoleController
             'CategoryOfWarehouse',
             'Direct',
         ], $list)->execute();
-    }
-
-    /**
-     * Update areas
-     */
-    public function actionArea()
-    {
-        Area::getDb()->createCommand()->truncateTable(Area::tableName())->execute();
-
-        $result = $this->api
-            ->model('Address')
-            ->method('getAreas')
-            ->execute();
-
-        if ($result['success']) {
-            $total = count($result['data']);
-            $i = 0;
-            Console::startProgress($i, $total);
-            $list = [];
-
-            foreach ($result['data'] as $key => $d) {
-                $i++;
-                $list[] = array_values($d);
-                Console::updateProgress($i, $total);
-            }
-            Area::getDb()->createCommand()->batchInsert(Area::tableName(), array_keys($result['data'][0]), $list)->execute();
-            Console::endProgress(false);
-        }
     }
 
     /**

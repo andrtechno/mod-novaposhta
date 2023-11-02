@@ -2,7 +2,7 @@
 
 use panix\engine\Html;
 use panix\engine\grid\GridView;
-use panix\engine\widgets\Pjax;
+use yii\widgets\Pjax;
 use panix\engine\CMS;
 
 /**
@@ -11,14 +11,16 @@ use panix\engine\CMS;
  */
 
 Pjax::begin([
-    'dataProvider' => $dataProvider,
+
 ]);
 ?>
 <?php
 echo $this->render('_grid', [
     'dataProvider' => $dataProvider,
-    'searchModel' => $searchModel,
+   // 'searchModel' => $searchModel,
     'title' => $this->context->pageName
 ]);
+
+
 ?>
 <?php Pjax::end(); ?>

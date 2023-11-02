@@ -5,13 +5,13 @@ use panix\engine\Html;
 
 /**
  * @var \yii\web\View $this
- * @var \panix\mod\novaposhta\models\Warehouses $model
+ * @var $data
  */
-//CMS::dump($model->attributes);
-if ($model->Latitude && $model->Longitude) {
+;
+if ($data['Latitude'] && $data['Longitude']) {
     \panix\engine\assets\LeafletAsset::register($this);
     $this->registerJs("
-    var coords = [" . $model->Latitude . ", " . $model->Longitude . "];
+    var coords = [" . $data['Latitude'] . ", " . $data['Longitude'] . "];
 var map = L.map('leaflet-map', {
     center: coords,
     zoom: 13
@@ -47,47 +47,43 @@ L.marker(coords,{
     <div class="card">
         <div class="card-header">
             <h5><?= $this->context->pageName; ?> <span class="float-right">Статус: <span
-                            class="h6 badge badge-secondary"><?= $model->WarehouseStatus; ?></span></span></h5>
+                            class="h6 badge badge-secondary"><?= $data['WarehouseStatus']; ?></span></span></h5>
         </div>
         <div class="card-body p-3">
             <div class="row">
                 <div class="col-sm-7">
-                    <?php if ($model->Phone) { ?>
+                    <?php if ($data['Phone']) { ?>
                         <div>
-                            <?= Yii::t('novaposhta/default', 'PHONE'); ?>  <?= Html::tel($model->Phone); ?>
+                            <?= Yii::t('novaposhta/default', 'PHONE'); ?>  <?= Html::tel($data['Phone']); ?>
                         </div>
                     <?php } ?>
                     <div>
-                        <?= $model->CategoryOfWarehouse; ?>
+                        <?= $data['CategoryOfWarehouse']; ?>
                     </div>
 
-                    <?php
-                    //$s = \panix\mod\novaposhta\models\ServiceTypes::findOne(['Ref'=>$model->TypeOfWarehouse]);
-                    // CMS::dump($s);
-                    ?>
-                    <div><?= $model->getShortAddress(); ?></div>
+                    <div><?= (Yii::$app->language == 'ru') ? $dara['ShortAddressRu'] : $data['ShortAddress'] ?></div>
                     <div>
-                        Вес до: <strong><?= $model->PlaceMaxWeightAllowed; ?> кг.</strong>
+                        Вес до: <strong><?= $data['PlaceMaxWeightAllowed']; ?>/<?= $data['TotalMaxWeightAllowed']; ?> кг.</strong>
                     </div>
 
                     <b>Доступні послуги та сервіси:</b>
                     <ul>
-                        <?php if ($model->PostFinance) { ?>
+                        <?php if ($data['PostFinance']) { ?>
                             <li>Наличие кассы Пост-Финанс</li>
                         <?php } ?>
-                        <?php if ($model->PaymentAccess) { ?>
+                        <?php if ($data['PaymentAccess']) { ?>
                             <li>PaymentAccess</li>
                         <?php } ?>
-                        <?php if ($model->SelfServiceWorkplacesCount) { ?>
+                        <?php if ($data['SelfServiceWorkplacesCount']) { ?>
                             <li>Зона самообслуговування</li>
                         <?php } ?>
-                        <?php if ($model->BicycleParking) { ?>
+                        <?php if ($data['BicycleParking']) { ?>
                             <li>Велопарковка</li>
                         <?php } ?>
-                        <?php if ($model->POSTerminal) { ?>
+                        <?php if ($data['POSTerminal']) { ?>
                             <li>Оплата карткою</li>
                         <?php } ?>
-                        <?php if ($model->InternationalShipping) { ?>
+                        <?php if ($data['InternationalShipping']) { ?>
                             <li>Возможность оформления Международного отправления</li>
                         <?php } ?>
 
@@ -108,20 +104,38 @@ L.marker(coords,{
 
                         <tr>
                             <td class="font-weight-bold">Графік роботи</td>
-                            <?php foreach ($model->getScheduleList() as $schedule) { ?>
+                            <?php
+                            $list = [];
+                            foreach ($data['Schedule'] as $day => $time) {
+                                $list[Yii::t('novaposhta/default', $day)] = $time;
+                            }
+
+                            foreach ($list as $schedule) { ?>
                                 <td class="text-center"><?= $schedule; ?></td>
                             <?php } ?>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Прийом відправлення для відправки в той же день</td>
-                            <?php foreach ($model->getDelivery() as $delivery) { ?>
+                            <?php
+                            $list = [];
+                            foreach ($data['Delivery'] as $day => $time) {
+                                $list[Yii::t('novaposhta/default', $day)] = $time;
+                            }
+
+                            foreach ($list as $delivery) { ?>
 
                                 <td class="text-center"><?= $delivery; ?></td>
                             <?php } ?>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Час прибуття відправлення</td>
-                            <?php foreach ($model->getReceptions() as $reception) { ?>
+                            <?php
+
+                            $list = [];
+                            foreach ($data['Reception'] as $day => $time) {
+                                $list[Yii::t('novaposhta/default', $day)] = $time;
+                            }
+                            foreach ($list as $reception) { ?>
 
                                 <td class="text-center"><?= $reception; ?></td>
                             <?php } ?>
@@ -137,3 +151,4 @@ L.marker(coords,{
     </div>
 
 <?php
+//print_r($data);

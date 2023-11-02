@@ -383,16 +383,29 @@ class Novaposhta extends Component
      */
     public function getCities($page = 0, $limit = 150, $city = '')
     {
+        $cacheKey = 'np-cities';
         $data = [];
         $data['Page'] = $page;
         if (CMS::isGuid($city)) {
             $data['Ref'] = $city;
+            $cacheKey = 'np-cities-' . $city;
         } else {
             $data['FindByString'] = $city;
         }
         $data['Limit'] = $limit;
 
-        return $this->request('Address', 'getCities', $data);
+
+        $result = Yii::$app->cache->get($cacheKey);
+
+        if ($result === false) {
+            $result = $this->request('Address', 'getCities', $data);
+            if ($result['success']) {
+                Yii::$app->cache->set($cacheKey, $result, 86400 * 30);
+            }
+        }
+
+        return $result;
+        //return $this->request('Address', 'getCities', $data);
     }
 
     /**
@@ -405,11 +418,26 @@ class Novaposhta extends Component
      */
     public function getWarehouses($cityRef, $page = 0, $limit = 100)
     {
-        return $this->request('Address', 'getWarehouses', array(
-            'CityRef' => $cityRef,
-            'Page' => $page,
-            'Limit' => $limit
-        ));
+
+        $cacheKey = 'np-warehouses';
+        if ($cityRef) {
+            $cacheKey .= '-' . $cityRef;
+        }
+        $result = Yii::$app->cache->get($cacheKey);
+
+        if ($result === false) {
+            $result = $this->request('Address', 'getWarehouses', [
+                'CityRef' => $cityRef,
+                'Page' => $page,
+                'Limit' => $limit
+            ]);
+            if ($result['success']) {
+                Yii::$app->cache->set($cacheKey, $result, 86400);
+            }
+        }
+
+        return $result;
+
     }
 
     /**
@@ -555,10 +583,23 @@ class Novaposhta extends Component
      */
     public function getAreas($ref = '', $page = 0)
     {
-        return $this->request('Address', 'getAreas', array(
-            'Ref' => $ref,
-            'Page' => $page,
-        ));
+        $cacheKey = 'np-areas';
+        if (!empty($ref)) {
+            $cacheKey = 'np-areas-' . $ref;
+        }
+        $result = Yii::$app->cache->get($cacheKey);
+
+        if ($result === false) {
+            $result = $this->request('Address', 'getAreas', [
+                'Ref' => $ref,
+                'Page' => $page,
+            ]);
+            if ($result['success']) {
+                Yii::$app->cache->set($cacheKey, $result, 86400 * 365);
+            }
+        }
+
+        return $result;
     }
 
     /**

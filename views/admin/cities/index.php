@@ -5,15 +5,18 @@ use panix\engine\grid\GridView;
 use panix\engine\widgets\Pjax;
 use panix\engine\CMS;
 
+//$cities = Yii::$app->novaposhta->getCities(0, 100);
+
+
 Pjax::begin([
-    'dataProvider' => $dataProvider,
+    //'dataProvider' => $dataProvider,
 ]);
 ?>
 <?=
 GridView::widget([
     'tableOptions' => ['class' => 'table table-striped'],
     'dataProvider' => $dataProvider,
-    'filterModel' => $searchModel,
+    //'filterModel' => $searchModel,
 
     'layoutOptions' => ['title' => $this->context->pageName],
     'columns' => [
@@ -23,16 +26,17 @@ GridView::widget([
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-left'],
             'value' => function ($model) {
-                return $model->description;
+                return $model['Description'];
             }
         ],
         [
             'attribute' => 'Area',
-            'header' => Yii::t('novaposhta/default', 'Area'),
+            'header' => Yii::t('novaposhta/default', 'AREA'),
             'format' => 'raw',
             'contentOptions' => ['class' => 'text-left'],
-            'value' => function ($model) {
-                return $model->area->description;
+            'value' => function ($model) use ($areas) {
+
+                return $areas[$model['Area']];
             }
         ],
         [

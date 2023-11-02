@@ -9,6 +9,7 @@ return [
     'CREATE_EXPRESS_WAYBILL_CART' => 'Создать &laquo;ЭН&raquo; для &laquo;Новой почты&raquo;',
     'UPDATE_EXPRESS_WAYBILL_CART' => 'Изменить &laquo;ЭН&raquo;',
     'WAREHOUSES' => 'Склады',
+    'AREA' => 'Область',
     'AREAS' => 'Области',
     'CITIES' => 'Города',
     'RECEPTION' => 'Прием',
@@ -38,5 +39,10 @@ return [
     'DEPARTURE' => 'Отправление',
     'COMMON' => 'Общие',
     'SUCCESS_UPDATE_EXPRESS' => 'ЭН <strong>{0}</strong> успешно изменена.',
-    'SUCCESS_CREATE_EXPRESS' => 'ЭН <strong>{0}</strong> успешно создана.'
+    'SUCCESS_CREATE_EXPRESS' => 'ЭН <strong>{0}</strong> успешно создана.',
+    'DEPARTURE_PARAMS' => 'Параметры отправки',
+    'RETURN_DELIVERY' => 'Обратная доставка',
+    'NUM_SEATS' => 'Количество мест',
+    'EXAMPLE' => 'Например: 1.5',
+    'CREATE_EI' => 'Создать ЭН'
 ];

@@ -8,6 +8,7 @@ use panix\mod\cart\models\Order;
 use panix\mod\novaposhta\components\Novaposhta;
 use panix\mod\novaposhta\models\query\CommonQuery;
 use panix\engine\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\validators\NumberValidator;
 use yii\validators\RequiredValidator;
@@ -108,9 +109,13 @@ class ExpressInvoice extends ActiveRecord
                     $this->CityRecipientRef = $data['city'];
                 }
                 if ($data['area']) {
-                    $region = Area::findOne(['Ref' => $data['area']]);
-                    if ($region) {
-                        $this->RecipientRegionRef = $region->getDescription();
+                    $areas = Yii::$app->novaposhta->getAreas();
+
+                    if ($areas['data']) {
+                        $area = ArrayHelper::map($areas['data'], 'Ref', function ($res) {
+                            return $res['Description'];
+                        });
+                        $this->RecipientRegionRef = $area[$data['area']];
                     }
                     $this->RecipientRegionRef = $data['area'];
                 }

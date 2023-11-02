@@ -7,24 +7,6 @@ use yii\helpers\ArrayHelper;
 use panix\engine\CMS;
 use yii\httpclient\Client;
 
-/*
-$doc = new \simplehtmldom\HtmlWeb();
-$html= $doc->load('https://ramosu.com.ua/makiyazh/');
-foreach($html->find('.product-thumb .h4-replace a') as $element) {
-
-    $load_product= $doc->load($element->href);
-    foreach($load_product->find('.big_image .thumbnail') as $element) {
-        CMS::dump($element,30);
-       // echo $element->innertext;
-
-        die;
-    }
-
-
-}
-
-die;*/
-
 ?>
 <div class="row">
     <div class="col-sm-6">
@@ -33,7 +15,19 @@ die;*/
                 <h5><?= $this->context->pageName ?></h5>
             </div>
             <?php
-            $form = ActiveForm::begin();
+            $form = ActiveForm::begin([
+                    'id'=>'settings-form',
+                'fieldConfig' => [
+                    'template' => "<div class=\"col-sm-4 col-md-4 col-lg-3 col-xl-4\">{label}</div>\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
+                    'horizontalCssClasses' => [
+                        'label' => 'col-form-label',
+                        'offset' => 'offset-sm-4 offset-lg-3 offset-xl-4',
+                        'wrapper' => 'col-sm-8 col-md-8 col-lg-9 col-xl-8',
+                        'error' => '',
+                        'hint' => '',
+                    ],
+                ]
+                ]);
             ?>
             <div class="card-body">
 
@@ -96,28 +90,8 @@ die;*/
                     </tr>
                     <tr>
                         <td>
-                            <code>php cmd novaposhta/novaposhta/warehouses</code>
-                            <div class="text-muted">Обновление складов.</div>
-                        </td>
-                        <td class="text-center">
-                            0 0 * * 0
-                            <div class="text-muted">(Раз в неделю)</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             <code>php cmd novaposhta/novaposhta/reference</code>
                             <div class="text-muted">Дополнительные справочники.</div>
-                        </td>
-                        <td class="text-center">
-                            0 0 1 * *
-                            <div class="text-muted">(Раз в месяц)</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <code>php cmd novaposhta/novaposhta/area</code>
-                            <div class="text-muted">Области.</div>
                         </td>
                         <td class="text-center">
                             0 0 1 * *

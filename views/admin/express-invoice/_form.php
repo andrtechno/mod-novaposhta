@@ -43,10 +43,9 @@ $templates = Yii::$app->settings->get('novaposhta', 'templates');
             </div>
         </div>
     </div>
-
+    <h4 class="text-center mt-3"><?= Yii::t('novaposhta/default', 'RETURN_DELIVERY'); ?></h4>
 <?php
 
-echo '<h4 class="text-center mt-3">Обратная доставка</h4>';
 
 echo MultipleInput::widget([
     'model' => $model,
@@ -151,16 +150,16 @@ JS;
         </div>
     </div>
 <?php } ?>
+
+<h4 class="text-center mt-3"><?= Yii::t('novaposhta/default', 'NUM_SEATS'); ?></h4>
+
 <?php
-echo '<h4 class="text-center mt-3">Количество мест</h4>';
-
-
 $columns = [];
 $columns[] = [
     'name' => 'weight',
     'title' => $model::t('WEIGHT'),
     'enableError' => true,
-    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => Yii::t('novaposhta/default', 'EXAMPLE')],
     'columnOptions' => ['class' => 'text-center'],
     'headerOptions' => [
         'style' => 'width: 100px;',
@@ -170,7 +169,7 @@ $columns[] = [
     'name' => 'volumetricHeight',
     'title' => $model::t('HEIGHT'),
     'enableError' => true,
-    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => Yii::t('novaposhta/default', 'EXAMPLE')],
     'headerOptions' => [
         'style' => 'width: 100px;',
     ],
@@ -179,7 +178,7 @@ $columns[] = [
     'name' => 'volumetricWidth',
     'title' => $model::t('WIDTH'),
     'enableError' => true,
-    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => Yii::t('novaposhta/default', 'EXAMPLE')],
     'headerOptions' => [
         'style' => 'width: 100px;',
     ],
@@ -188,7 +187,7 @@ $columns[] = [
     'name' => 'volumetricLength',
     'title' => $model::t('LENGTH'),
     'enableError' => true,
-    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => $model::t('Например: 1.5')],
+    'options' => ['class' => 'form-control m-auto', 'autocomplete' => 'off', 'placeholder' => Yii::t('novaposhta/default', 'EXAMPLE')],
     'headerOptions' => [
         'style' => 'width: 100px;',
     ],
