@@ -67,14 +67,14 @@ class DefaultController extends AdminController
         ];
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
-            if (isset($post['DynamicModel']['area'])) {
-                $model->sender_area = $post['DynamicModel']['area'];
+            if (isset($post['NovaposhtaModel']['area'])) {
+                $model->sender_area = $post['NovaposhtaModel']['area'];
             }
-            if (isset($post['DynamicModel']['city'])) {
-                $model->sender_city = $post['DynamicModel']['city'];
+            if (isset($post['NovaposhtaModel']['city'])) {
+                $model->sender_city = $post['NovaposhtaModel']['city'];
             }
-            if (isset($post['DynamicModel']['warehouse'])) {
-                $model->sender_warehouse = $post['DynamicModel']['warehouse'];
+            if (isset($post['NovaposhtaModel']['warehouse'])) {
+                $model->sender_warehouse = $post['NovaposhtaModel']['warehouse'];
             }
 
 
