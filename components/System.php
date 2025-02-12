@@ -5,6 +5,7 @@ namespace panix\mod\novaposhta\components;
 use panix\mod\cart\models\forms\OrderCreateForm;
 use panix\mod\cart\widgets\delivery\novaposhta\api\NovaPoshtaApi;
 use panix\mod\cart\widgets\delivery\novaposhta\DeliveryAsset;
+use panix\mod\cart\widgets\delivery\novaposhta\NovaposhtaModel;
 use panix\mod\novaposhta\models\Cities;
 use panix\mod\novaposhta\models\RecipientDynamicModel;
 use panix\mod\novaposhta\models\Warehouses;
@@ -126,7 +127,7 @@ class System
 
     public function getModel()
     {
-        $model = new \yii\base\DynamicModel(['type', 'city', 'warehouse', 'area', 'address', 'typesList']);
+        $model = new NovaposhtaModel(['type', 'city', 'warehouse', 'area', 'address', 'typesList']);
         $model->addRule(['type', 'address', 'city', 'warehouse', 'area'], 'safe');
         $model->addRule(['type', 'address', 'city', 'warehouse', 'area'], 'default');
         $model->addRule(['city', 'area', 'type'], 'required');
