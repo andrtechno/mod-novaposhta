@@ -129,7 +129,7 @@ $areas = Yii::$app->novaposhta->getAreas();
 
 if(!Yii::$app->request->isAjax){
 $this->registerJs("
-    $(document).on('change', '#dynamicmodel-city, #dynamicmodel-type, #dynamicmodel-area', function(e, clickedIndex, isSelected, previousValue) {
+    $(document).on('change', '#novaposhtamodel-city, #novaposhtamodel-type, #novaposhtamodel-area', function(e, clickedIndex, isSelected, previousValue) {
         $.ajax({
             url: common.url('/admin/novaposhta/default/process?type=sender'),
             type: 'POST',
