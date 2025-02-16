@@ -116,7 +116,6 @@ class ExpressInvoiceController extends AdminController
         $isNew = $model->isNewRecord;
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
-            print_r($post);die;
             $model->order_id = Yii::$app->request->get('order_id');
             //  print_r($model->attributes);die;
             if ($model->validate()) {
